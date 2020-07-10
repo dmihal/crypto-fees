@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
 import { NextPage, GetServerSideProps } from 'next';
-import { FeeData, getFeeData } from 'data/feeData';
+import { FeeData, getFeeData, getUniswapData } from 'data/feeData';
 
 interface HomeProps {
   data: FeeData[];
@@ -199,7 +199,10 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await Promise.all(ASSETS.map(getFeeData));
+  const assetData = await Promise.all(ASSETS.map(getFeeData));
+  const uniswap = await getUniswapData();
+
+  const data = [...assetData, uniswap];
 
   return { props: { data } };
 };
