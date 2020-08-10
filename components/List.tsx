@@ -40,6 +40,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           border: solid 2px gray;
           border-radius: 8px;
           overflow: hidden;
+          margin: 4px;
         }
 
         .header {
@@ -47,6 +48,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           padding: 0 4px;
           border-bottom: solid 2px #ccc;
           background: #c6c6c6;
+          font-weight: 500;
         }
 
         .header .amount:hover {
@@ -57,11 +59,12 @@ const List: React.FC<ListProps> = ({ data }) => {
         .item {
           display: flex;
           padding: 0 4px;
-          background: #c5dac5;
+          background: #e6efe6;
+          font-size: 18px;
         }
 
         .item.app {
-          background: #c7c7e6;
+          background: #e3e3f2;
         }
 
         .item > div, .header > div {
@@ -75,6 +78,15 @@ const List: React.FC<ListProps> = ({ data }) => {
         .amount {
           min-width: 150px;
           text-align: right;
+        }
+
+        @media (max-width: 600px) {
+          .amount {
+            font-size: 16px;
+          }
+          .name {
+            font-size: 14px;
+          }
         }
       `}</style>
     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Head from 'next/head';
 import { NextPage, GetServerSideProps } from 'next';
 import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data } from 'data/feeData';
@@ -14,8 +14,9 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
   return (
     <div className="container">
       <Head>
-        <title>Create Next App</title>
+        <title>Crypto Fees</title>
         <link rel="icon" href="/favicon.ico" />
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
       </Head>
 
       <main>
@@ -105,8 +106,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         body {
           padding: 0;
           margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-            Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+          font-family: 'Noto Sans TC', sans-serif;
           background: #aaaaaa;
         }
 
