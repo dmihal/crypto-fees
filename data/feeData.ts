@@ -25,7 +25,7 @@ export async function getFeeData(id: string): Promise<FeeData> {
   };
 }
 
-export async function getUniswapData(): Promise<FeeData> {
+export async function getUniswapV2Data(): Promise<FeeData> {
   const days = [...new Array(7)].map((_, num) => Math.floor(Date.now() / 1000 / 86400 - num) * 86400);
 
   const request = await fetch("https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2", {
@@ -49,9 +49,39 @@ export async function getUniswapData(): Promise<FeeData> {
 
   return {
     id: 'uniswap-v2',
-    // name
     category: 'app',
     sevenDayMA,
     oneDay: parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeUSD) * 0.003,
+  };
+}
+
+
+export async function getUniswapV1Data(): Promise<FeeData> {
+  const days = [...new Array(7)].map((_, num) => Math.floor(Date.now() / 1000 / 86400 - num) * 86400);
+
+  const request = await fetch("https://api.thegraph.com/subgraphs/name/graphprotocol/uniswap", {
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `{
+        uniswapDayDatas(where:{date_in: ${JSON.stringify(days)}}) {
+          date
+          dailyVolumeInUSD
+        }
+      }`,
+      variables: null
+    }),
+    "method": "POST",
+  });
+  const { data } = await request.json();
+
+  const sevenDayMA = data.uniswapDayDatas.reduce((total: number, { dailyVolumeInUSD }: any) => total + parseFloat(dailyVolumeInUSD), 0) * 0.003 / data.uniswapDayDatas.length;
+
+  return {
+    id: 'uniswap-v1',
+    category: 'app',
+    sevenDayMA,
+    oneDay: parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeInUSD) * 0.003,
   };
 }
