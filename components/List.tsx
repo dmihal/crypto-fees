@@ -1,23 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FeeData } from 'data/feeData';
 import { protocolNames } from '../constants';
 
 interface ListProps {
   data: FeeData[];
-  sort: string;
-  setSort: (newSort: string) => void;
 }
 
-const List: React.FC<ListProps> = ({ data, sort, setSort }) => {
+const sortByDaily = (a: FeeData, b: FeeData) => b.oneDay - a.oneDay;
+const sortByWeekly = (a: FeeData, b: FeeData) => b.sevenDayMA - a.sevenDayMA;
+
+
+const List: React.FC<ListProps> = ({ data }) => {
+  const [sort, setSort] = useState('daily');
+
+  const sortedData = data.sort(sort === 'weekly' ? sortByWeekly : sortByDaily);
+
   return (
     <div className="list">
       <div className="header">
         <div className="name">Name</div>
-        <div className="amount">1 Day Fees</div>
-        <div className="amount">7 Day Avg. Fees</div>
+        <div className="amount" onClick={() => setSort('daily')}>
+          {sort === 'daily' && '▼'} 1 Day Fees
+        </div>
+        <div className="amount" onClick={() => setSort('weekly')}>
+          {sort === 'weekly' && '▼'} 7 Day Avg. Fees
+        </div>
       </div>
 
-      {data.map((protocol: FeeData) => (
+      {sortedData.map((protocol: FeeData) => (
         <div className={`item ${protocol.category}`} key={protocol.id}>
           <div className="name">{protocolNames[protocol.id]}</div>
           <div className="amount">{protocol.oneDay.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
@@ -34,13 +44,19 @@ const List: React.FC<ListProps> = ({ data, sort, setSort }) => {
 
         .header {
           display: flex;
-          padding: 10px 4px;
+          padding: 0 4px;
           border-bottom: solid 2px #ccc;
+          background: #c6c6c6;
+        }
+
+        .header .amount:hover {
+          cursor: pointer;
+          background: #eee;
         }
 
         .item {
           display: flex;
-          padding: 10px 4px;
+          padding: 0 4px;
           background: #c5dac5;
         }
 
@@ -49,7 +65,7 @@ const List: React.FC<ListProps> = ({ data, sort, setSort }) => {
         }
 
         .item > div, .header > div {
-          padding: 4px;
+          padding: 10px 4px;
         }
 
         .name {
@@ -57,7 +73,7 @@ const List: React.FC<ListProps> = ({ data, sort, setSort }) => {
         }
 
         .amount {
-          min-width: 140px;
+          min-width: 150px;
           text-align: right;
         }
       `}</style>

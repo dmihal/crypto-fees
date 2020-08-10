@@ -8,15 +8,9 @@ interface HomeProps {
   data: FeeData[];
 }
 
-const sortByDaily = (a: FeeData, b: FeeData) => b.oneDay - a.oneDay;
-const sortByWeekly = (a: FeeData, b: FeeData) => b.sevenDayMA - a.sevenDayMA;
-
 const ASSETS = ['eth', 'btc', 'ltc', 'ada', 'xtz', 'bsv', 'bch', 'xrp'];
 
 export const Home: NextPage<HomeProps> = ({ data }) => {
-  const [sort, setSort] = useState('weekly');
-
-  const sortedData = data.sort(sort === 'weekly' ? sortByWeekly : sortByDaily);
   return (
     <div className="container">
       <Head>
@@ -31,16 +25,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
           There's tons of crypto projects. Which ones are people actually paying to use?
         </p>
 
-        <div className="list">
-          <div className="header">
-          </div>
-        </div>
-        <List data={sortedData} sort={sort} setSort={setSort} />
-
-        <button onClick={() => setSort(sort === 'weekly' ? 'daily' : 'weekly')}>
-          Showing {sort === 'weekly' ? '7 day average' : 'previous day'}
-        </button>
-
+        <List data={data} />
       </main>
 
       <footer>
