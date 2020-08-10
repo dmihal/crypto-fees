@@ -17,10 +17,19 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         <title>Crypto Fees</title>
         <link rel="icon" href="/favicon.ico" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
+      
+        <meta property="og:title" content="Crypto Fees" />
+        <meta property="og:image" content="https://cryptofees.info/screenshot.jpg" />
+        <meta property="og:description" content="There's tons of crypto projects. Which ones are people actually paying to use?" />
+
+        <meta name="twitter:title" content="Crypto Fees" />
+        <meta name="twitter:description" content="There's tons of crypto projects. Which ones are people actually paying to use?" />
+        <meta name="twitter:image" content="https://cryptofees.info/screenshot.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
       <main>
-        <h1 className="title">Crypto Fee Stats</h1>
+        <h1 className="title">Crypto Fees</h1>
 
         <p className="description">
           There's tons of crypto projects. Which ones are people actually paying to use?
