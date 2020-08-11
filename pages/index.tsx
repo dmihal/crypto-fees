@@ -3,12 +3,15 @@ import Head from 'next/head';
 import { NextPage, GetServerSideProps } from 'next';
 import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data } from 'data/feeData';
 import List from 'components/List';
+import ReactGA from 'react-ga';
 
 interface HomeProps {
   data: FeeData[];
 }
 
 const ASSETS = ['eth', 'btc', 'ltc', 'ada', 'xtz', 'bsv', 'bch', 'xrp'];
+
+ReactGA.initialize("UA-150445352-3")
 
 export const Home: NextPage<HomeProps> = ({ data }) => {
   return (
