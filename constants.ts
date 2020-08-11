@@ -10,4 +10,7 @@ export const protocolNames: { [id: string]: string } = {
   bch: 'Bitcoin Cash',
   xrp: 'Ripple',
   doge: 'Dogecoin',
+  xmr: 'Monero',
+  xlm: 'Stellar',
+  'bnb_mainnet': 'Binance Chain',
 };

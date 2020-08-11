@@ -9,7 +9,7 @@ interface HomeProps {
   data: FeeData[];
 }
 
-const ASSETS = ['eth', 'btc', 'ltc', 'ada', 'xtz', 'bsv', 'bch', 'xrp', 'doge'];
+const ASSETS = ['eth', 'btc', 'ltc', 'ada', 'xtz', 'bsv', 'bch', 'xrp', 'doge', 'xmr', 'xlm', 'bnb_mainnet'];
 
 ReactGA.initialize("UA-150445352-3")
 
