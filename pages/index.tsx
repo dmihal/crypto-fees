@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage, GetServerSideProps } from 'next';
 import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data } from 'data/feeData';
@@ -14,6 +14,11 @@ const ASSETS = ['eth', 'btc', 'ltc', 'ada', 'xtz', 'bsv', 'bch', 'xrp'];
 ReactGA.initialize("UA-150445352-3")
 
 export const Home: NextPage<HomeProps> = ({ data }) => {
+  useEffect(() => {
+    ReactGA.set({ page: window.location.pathname });
+    ReactGA.pageview(window.location.pathname);
+  }, []);
+
   return (
     <div className="container">
       <Head>
