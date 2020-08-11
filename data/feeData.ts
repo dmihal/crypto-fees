@@ -11,9 +11,11 @@ export interface FeeData {
 }
 
 export async function getFeeData(id: string): Promise<FeeData> {
-  const request = await fetch(`https://community-api.coinmetrics.io/v2/assets/${id}/metricdata?metrics=FeeTotUSD&start=2020-07-01`);
+  const startDate = new Date(Date.now() - (86400 * 1000 * 7));
+  const startDateString = `${startDate.getFullYear()}-${(startDate.getMonth() + 1).toString().padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`;
+  const request = await fetch(`https://community-api.coinmetrics.io/v2/assets/${id}/metricdata?metrics=FeeTotUSD&start=${startDateString}`);
   const { metricData } = await request.json();
-
+  console.log(metricData);
   const sevenDayMA = metricData.series.reduce((total: number, value: any) => total + parseFloat(value.values[0]), 0) / metricData.series.length;
 
   return {
@@ -25,16 +27,16 @@ export async function getFeeData(id: string): Promise<FeeData> {
   };
 }
 
-export async function getUniswapV2Data(): Promise<FeeData> {
-  const days = [...new Array(7)].map((_, num) => Math.floor(Date.now() / 1000 / 86400 - num) * 86400);
+const last7Days = () => [...new Array(7)].map((_, num) => Math.floor(Date.now() / 1000 / 86400 - num - 1) * 86400);
 
+export async function getUniswapV2Data(): Promise<FeeData> {
   const request = await fetch("https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2", {
     headers: {
       "content-type": "application/json",
     },
     body: JSON.stringify({
       query: `{
-        uniswapDayDatas(where:{date_in: ${JSON.stringify(days)}}) {
+        uniswapDayDatas(where:{date_in: ${JSON.stringify(last7Days())}}) {
           date
           dailyVolumeUSD
         }
@@ -57,15 +59,13 @@ export async function getUniswapV2Data(): Promise<FeeData> {
 
 
 export async function getUniswapV1Data(): Promise<FeeData> {
-  const days = [...new Array(7)].map((_, num) => Math.floor(Date.now() / 1000 / 86400 - num) * 86400);
-
   const request = await fetch("https://api.thegraph.com/subgraphs/name/graphprotocol/uniswap", {
     headers: {
       "content-type": "application/json",
     },
     body: JSON.stringify({
       query: `{
-        uniswapDayDatas(where:{date_in: ${JSON.stringify(days)}}) {
+        uniswapDayDatas(where:{date_in: ${JSON.stringify(last7Days())}}) {
           date
           dailyVolumeInUSD
         }
@@ -75,6 +75,7 @@ export async function getUniswapV1Data(): Promise<FeeData> {
     "method": "POST",
   });
   const { data } = await request.json();
+  console.log(data);
 
   const sevenDayMA = data.uniswapDayDatas.reduce((total: number, { dailyVolumeInUSD }: any) => total + parseFloat(dailyVolumeInUSD), 0) * 0.003 / data.uniswapDayDatas.length;
 
