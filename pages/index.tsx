@@ -15,7 +15,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
     <div className="container">
       <Head>
         <title>Crypto Fees</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
       
         <meta property="og:title" content="Crypto Fees" />
