@@ -81,11 +81,20 @@ const List: React.FC<ListProps> = ({ data }) => {
         }
 
         @media (max-width: 600px) {
+          .header > div {
+            font-size: 14px;
+          }
+
           .amount {
             font-size: 16px;
+            min-width: 130px;
           }
           .name {
             font-size: 14px;
+          }
+
+          .item > div, .header > div {
+            padding: 8px 2px;
           }
         }
       `}</style>
