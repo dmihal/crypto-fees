@@ -37,8 +37,8 @@ const List: React.FC<ListProps> = ({ data }) => {
 
       <style jsx>{`
         .list {
-          border: solid 2px gray;
-          border-radius: 8px;
+          border: solid 1px lightGray;
+          border-radius: 0px;
           overflow: hidden;
           margin: 4px;
         }
@@ -46,8 +46,8 @@ const List: React.FC<ListProps> = ({ data }) => {
         .header {
           display: flex;
           padding: 0 4px;
-          border-bottom: solid 2px #ccc;
-          background: #c6c6c6;
+          border-bottom: solid 1px lightGray;
+          background: #eee;
           font-weight: 500;
         }
 
@@ -59,16 +59,16 @@ const List: React.FC<ListProps> = ({ data }) => {
         .item {
           display: flex;
           padding: 0 4px;
-          background: #e6efe6;
+          background: #fff;
           font-size: 18px;
         }
 
         .item.app {
-          background: #e3e3f2;
+          background: #FAD3F6;
         }
 
         .item > div, .header > div {
-          padding: 10px 4px;
+          padding: 16px 32px;
         }
 
         .name {
@@ -76,7 +76,7 @@ const List: React.FC<ListProps> = ({ data }) => {
         }
 
         .amount {
-          min-width: 150px;
+          min-width: 250px;
           text-align: right;
         }
 

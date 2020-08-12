@@ -39,9 +39,8 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
       <main>
         <h1 className="title">Crypto Fees</h1>
 
-        <p className="description">
-          There's tons of crypto projects. Which ones are people actually paying to use?
-        </p>
+        <p className="description">There's tons of crypto projects.</p>
+        <p className="description">Which ones are people actually paying to use?</p>
 
         <List data={data} />
       </main>
@@ -56,7 +55,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
       <style jsx>{`
         .container {
           min-height: 100vh;
-          padding: 0 0.5rem;
+          padding: 0.5rem;
           display: flex;
           flex-direction: column;
           justify-content: center;
@@ -64,9 +63,9 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         }
 
         main {
-          padding: 5rem 0;
+          padding: 2rem 0 3rem;
           flex: 1;
-          display: flex;
+          display:flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
@@ -74,9 +73,10 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
         footer {
           width: 100%;
-          height: 100px;
-          border-top: 1px solid #eaeaea;
+          height: auto;
+          border-top: 1px solid lightGray;
           text-align: center;
+          padding: 2rem 0;
         }
 
         a {
@@ -96,7 +96,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         }
 
         .title {
-          margin: 0;
+          margin: 0 0 16px;
           line-height: 1.15;
           font-size: 4rem;
         }
@@ -104,11 +104,13 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         .title,
         .description {
           text-align: center;
+          max-width: 800px;
         }
 
         .description {
           line-height: 1.5;
           font-size: 1.5rem;
+          margin: 4px 0 20px;
         }
 
         @media (max-width: 600px) {
@@ -124,7 +126,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
           padding: 0;
           margin: 0;
           font-family: 'Noto Sans TC', sans-serif;
-          background: #aaaaaa;
+          background: #eeeeee;
         }
 
         * {
