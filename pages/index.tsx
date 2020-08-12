@@ -50,6 +50,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         <div>Uniswap data from The Graph</div>
         <div>Uniswap data does not include Ethereum transaction fees</div>
         <div>Created by <a href="https://twitter.com/dmihal" target="twitter">David Mihal</a></div>
+        <div>Design help from <a href="https://twitter.com/hey_heey_heeey" target="twitter">@heyheeyheeey</a></div>
       </footer>
 
       <style jsx>{`
