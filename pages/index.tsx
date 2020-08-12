@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage, GetServerSideProps } from 'next';
 import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data } from 'data/feeData';
+import { getBalancerData } from 'data/balancer';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -138,12 +139,13 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const assetData = await Promise.all(ASSETS.map(getFeeData));
-  const [uniswapV1, uniswapV2] = await Promise.all([
+  const [uniswapV1, uniswapV2, balancer] = await Promise.all([
     getUniswapV1Data(),
     getUniswapV2Data(),
+    getBalancerData(),
   ]);
 
-  const data = [...assetData, uniswapV1, uniswapV2];
+  const data = [...assetData, uniswapV1, uniswapV2, balancer];
 
   return { props: { data } };
 };
