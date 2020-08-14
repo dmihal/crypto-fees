@@ -27,12 +27,12 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
       
         <meta property="og:title" content="Crypto Fees" />
-        <meta property="og:image" content="https://cryptofees.info/screenshot.jpg" />
+        <meta property="og:image" content="https://cryptofees.info/api/screenshot" />
         <meta property="og:description" content="There's tons of crypto projects. Which ones are people actually paying to use?" />
 
         <meta name="twitter:title" content="Crypto Fees" />
         <meta name="twitter:description" content="There's tons of crypto projects. Which ones are people actually paying to use?" />
-        <meta name="twitter:image" content="https://cryptofees.info/screenshot.jpg" />
+        <meta name="twitter:image" content="https://cryptofees.info/api/screenshot" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
