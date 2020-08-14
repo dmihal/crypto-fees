@@ -39,8 +39,15 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
       <main>
         <h1 className="title">Crypto Fees</h1>
 
-        <p className="description">There's tons of crypto projects.</p>
-        <p className="description">Which ones are people actually paying to use?</p>
+        <p className="description">
+          There's tons of crypto projects.<br />
+          Which ones are people actually paying to use?
+        </p>
+
+        <div>
+          <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" className="twitter-share-button" data-show-count="true">Tweet</a>
+          <script async src="https://platform.twitter.com/widgets.js"></script>
+        </div>
 
         <List data={data} />
       </main>
