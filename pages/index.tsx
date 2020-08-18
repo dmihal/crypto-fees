@@ -148,7 +148,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 };
 
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const assetData = await Promise.all(ASSETS.map(getFeeData));
   const [uniswapV1, uniswapV2, balancer, curve] = await Promise.all([
     getUniswapV1Data(),
@@ -158,6 +158,10 @@ export const getServerSideProps: GetServerSideProps = async () => {
   ]);
 
   const data = [...assetData, uniswapV1, uniswapV2, balancer, curve];
+
+  if (res) {
+    res.setHeader('Cache-Control', 's-maxage=1800');
+  }
 
   return { props: { data } };
 };
