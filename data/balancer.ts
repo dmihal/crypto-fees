@@ -1,23 +1,10 @@
 import { FeeData } from './feeData';
-
-function dayOfYear(): number {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  // @ts-ignore
-  const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
-  const oneDay = 1000 * 60 * 60 * 24;
-  const day = Math.floor(diff / oneDay);
-  return day;
-}
-
-const AUG_17_FIRST_BLOCK = 10674231;
-const AUG_17_DAY = 230;
-const BLOCKS_PER_DAY = 6348;
+import { getBlockDaysAgo } from './time-lib';
 
 export async function getBalancerData(): Promise<FeeData> {
-  const todayBlock = AUG_17_FIRST_BLOCK + ((dayOfYear() - AUG_17_DAY) * BLOCKS_PER_DAY);
-  const yesterdayBlock = todayBlock - BLOCKS_PER_DAY;
-  const weekAgoBlock = todayBlock - (BLOCKS_PER_DAY * 7);
+  const todayBlock = getBlockDaysAgo(0);
+  const yesterdayBlock = getBlockDaysAgo(1);
+  const weekAgoBlock = getBlockDaysAgo(7);
 
   const request = await fetch("https://api.thegraph.com/subgraphs/name/bonustrack/balancer", {
     headers: {
