@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FeeData } from 'data/feeData';
 import { protocolNames } from '../constants';
+import icons from './icons';
 
 interface ListProps {
   data: FeeData[];
@@ -28,7 +29,11 @@ const List: React.FC<ListProps> = ({ data }) => {
       </div>
 
       {sortedData.map((protocol: FeeData) => (
-        <div className={`item ${protocol.category}`} key={protocol.id}>
+        <div
+          className={`item ${protocol.category}`}
+          key={protocol.id}
+          style={{ backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined }}
+        >
           <div className="name">{protocolNames[protocol.id]}</div>
           <div className="amount">{protocol.oneDay.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
           <div className="amount">{protocol.sevenDayMA.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
@@ -49,6 +54,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           border-bottom: solid 1px lightGray;
           background: #eee;
           font-weight: 500;
+          padding-left: 10px;
         }
 
         .header .amount:hover {
@@ -59,12 +65,16 @@ const List: React.FC<ListProps> = ({ data }) => {
         .item {
           display: flex;
           padding: 0 4px;
-          background: #fff;
+          background-color: #fff;
           font-size: 18px;
+          background-repeat: no-repeat;
+          background-position: 10px center;
+          background-size: 20px 20px;
+          padding-left: 10px;
         }
 
         .item.app {
-          background: #FAD3F6;
+          background-color: #FAD3F6;
         }
 
         .item > div, .header > div {
@@ -80,7 +90,10 @@ const List: React.FC<ListProps> = ({ data }) => {
           text-align: right;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
+          .header {
+            padding-left: 30px;
+          }
           .header > div {
             font-size: 14px;
           }
@@ -91,6 +104,11 @@ const List: React.FC<ListProps> = ({ data }) => {
           }
           .name {
             font-size: 14px;
+          }
+
+          .item {
+            padding-left: 30px;
+            background-position: 6px center;
           }
 
           .item > div, .header > div {
