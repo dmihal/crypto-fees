@@ -46,6 +46,10 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
           Which ones are people actually paying to use?
         </p>
 
+        <p style={{ background: 'yellow' }}>
+          Application-level fees temporarily disabled
+        </p>
+
         <div>
           <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" className="twitter-share-button" data-show-count="true">Tweet</a>
           <script async src="https://platform.twitter.com/widgets.js"></script>
@@ -150,14 +154,14 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const assetData = await Promise.all(ASSETS.map(getFeeData));
-  const [uniswapV1, uniswapV2, balancer, curve] = await Promise.all([
-    getUniswapV1Data(),
-    getUniswapV2Data(),
-    getBalancerData(),
-    getCurveData(),
-  ]);
+  // const [uniswapV1, uniswapV2, balancer, curve] = await Promise.all([
+    // getUniswapV1Data(),
+    // getUniswapV2Data(),
+    // getBalancerData(),
+    // getCurveData(),
+  // ]);
 
-  const data = [...assetData, uniswapV1, uniswapV2, balancer, curve];
+  const data = assetData;//[...assetData, uniswapV1, uniswapV2, balancer, curve];
 
   if (res) {
     res.setHeader('Cache-Control', 's-maxage=1800');
