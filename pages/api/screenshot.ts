@@ -1,23 +1,25 @@
 import 'isomorphic-fetch';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-async function getScreenshot() {
-  const request = await fetch(`https://api.vercel.com/v1/projects/Crypto Fees`, {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_APP_VERCEL}`,
-    },
-  });
-  const json = await request.json();
-  const deploymentId = json.latestDeployments[0].id;
+const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-  return `https://vercel.com/api/screenshot?deploymentId=${deploymentId}`;
+async function getScreenshot() {
+  const request = await fetch(`https://api.browshot.com/api/v1/screenshot/create?url=https://cryptofees.info/&instance_id=12&size=screen&cache=${60 * 60 * 24}&key=${process.env.NEXT_APP_BROWSHOT}`)
+  const json = await request.json();
+
+  if (json.status === 'in_queue') {
+    await wait(500);
+    return getScreenshot();
+  }
+
+  return json;
 }
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const screenshot = await getScreenshot();
 
   res.writeHead(302, {
-    Location: screenshot,
+    Location: screenshot.screenshot_url,
   });
   res.end();
 };

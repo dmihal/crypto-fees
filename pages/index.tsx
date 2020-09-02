@@ -34,7 +34,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
         <meta name="twitter:title" content="Crypto Fees" />
         <meta name="twitter:description" content="There's tons of crypto projects. Which ones are people actually paying to use?" />
-        <meta name="twitter:image" content="https://cryptofees.info/api/screenshot?1" />
+        <meta name="twitter:image" content="https://cryptofees.info/api/screenshot?2" />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
