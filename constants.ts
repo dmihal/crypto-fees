@@ -16,4 +16,5 @@ export const protocolNames: { [id: string]: string } = {
   xmr: 'Monero',
   xlm: 'Stellar',
   'bnb_mainnet': 'Binance Chain',
+  zerox: '0x',
 };

@@ -4,6 +4,7 @@ import { NextPage, GetServerSideProps } from 'next';
 import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data, getSushiswapData } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
 import { getCurveData } from 'data/curve';
+import { get0xData } from 'data/zerox';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -149,16 +150,17 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const [assetData, uniswapV1, uniswapV2, balancer, curve] = await Promise.all([
+  const [assetData, uniswapV1, uniswapV2, sushiswap, balancer, zerox, curve] = await Promise.all([
     Promise.all(ASSETS.map(getFeeData)),
     getUniswapV1Data(),
     getUniswapV2Data(),
     getSushiswapData(),
     getBalancerData(),
+    get0xData(),
     getCurveData(),
   ]);
 
-  const data = [...assetData, uniswapV1, uniswapV2, balancer, curve];
+  const data = [...assetData, uniswapV1, uniswapV2, balancer, curve, sushiswap, zerox];
 
   if (res) {
     res.setHeader('Cache-Control', 's-maxage=1800');
