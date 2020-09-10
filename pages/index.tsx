@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage, GetServerSideProps } from 'next';
-import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data } from 'data/feeData';
+import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data, getSushiswapData } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
 import { getCurveData } from 'data/curve';
 import List from 'components/List';
@@ -153,6 +153,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     Promise.all(ASSETS.map(getFeeData)),
     getUniswapV1Data(),
     getUniswapV2Data(),
+    getSushiswapData(),
     getBalancerData(),
     getCurveData(),
   ]);

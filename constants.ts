@@ -1,6 +1,7 @@
 export const protocolNames: { [id: string]: string } = {
   'uniswap-v2': 'Uniswap V2',
   'uniswap-v1': 'Uniswap V1',
+  sushiswap: 'SushiSwap',
   balancer: 'Balancer',
   curve: 'Curve',
   eth: 'Ethereum',
