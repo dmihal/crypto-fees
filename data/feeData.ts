@@ -30,7 +30,7 @@ const last7Days = () => [...new Array(7)].map((_, num) => Math.floor(Date.now() 
 
 
 export async function getSushiswapData(): Promise<FeeData> {
-  const request = await fetch("https://api.thegraph.com/subgraphs/id/QmePtiMXjoFp5YiJeraZhp6YsBQNpLKCKQ4q8DFUjrSk5C", {
+  const request = await fetch("https://api.thegraph.com/subgraphs/name/zippoxer/sushiswap-subgraph-fork", {
     headers: {
       "content-type": "application/json",
     },
