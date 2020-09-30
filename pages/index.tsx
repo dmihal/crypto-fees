@@ -150,17 +150,23 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const [assetData, uniswapV1, uniswapV2, sushiswap, balancer, zerox/*, curve*/] = await Promise.all([
-    Promise.all(ASSETS.map(getFeeData)),
-    getUniswapV1Data(),
-    getUniswapV2Data(),
-    getSushiswapData(),
-    getBalancerData(),
-    get0xData(),
-    // getCurveData(),
+  const handleFailure = (e: any) => {
+    console.warn(e);
+    return null;
+  }
+
+  const [assetData, uniswapV1, uniswapV2, sushiswap, balancer, zerox, curve] = await Promise.all([
+    Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
+    getUniswapV1Data().catch(handleFailure),
+    getUniswapV2Data().catch(handleFailure),
+    getSushiswapData().catch(handleFailure),
+    getBalancerData().catch(handleFailure),
+    get0xData().catch(handleFailure),
+    getCurveData().catch(handleFailure),
   ]);
 
-  const data = [...assetData, uniswapV1, uniswapV2, balancer, /*curve,*/ sushiswap, zerox];
+  const data = [...assetData, uniswapV1, uniswapV2, balancer, curve, sushiswap, zerox]
+    .filter((val: any) => !!val);
 
   if (res) {
     res.setHeader('Cache-Control', 's-maxage=1800');
