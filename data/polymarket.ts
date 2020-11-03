@@ -11,14 +11,17 @@ export async function getPolymarketData(): Promise<FeeData> {
         today: fixedProductMarketMakers(block: {number: $today}){
           feeVolume
           scaledFeeVolume
+          id
         }
         yesterday: fixedProductMarketMakers(block: {number: $yesterday}){
           feeVolume
           scaledFeeVolume
+          id
         }
         weekAgo: fixedProductMarketMakers(block: {number: $weekAgo}){
           feeVolume
           scaledFeeVolume
+          id
         }
       }`,
       variables: {
@@ -51,9 +54,10 @@ export async function getPolymarketData(): Promise<FeeData> {
     if (markets[id].yesterday) {
       oneDay += markets[id].today - markets[id].yesterday;
     }
-    if (markets[id].yesterday) {
+    if (markets[id].weekAgo) {
       sevenDayMA += markets[id].today - markets[id].weekAgo;
     }
   }
+
   return { id: 'polymarket', category: 'app', sevenDayMA, oneDay };
 }
