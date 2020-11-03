@@ -5,6 +5,7 @@ import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data, getSushiswapDa
 import { getBalancerData } from 'data/balancer';
 import { getCurveData } from 'data/curve';
 import { get0xData } from 'data/zerox';
+import { getPolymarketData } from 'data/polymarket';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -155,7 +156,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     return null;
   }
 
-  const [assetData, uniswapV1, uniswapV2, sushiswap, balancer, zerox, curve] = await Promise.all([
+  const [assetData, ...appData] = await Promise.all([
     Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
     getUniswapV1Data().catch(handleFailure),
     getUniswapV2Data().catch(handleFailure),
@@ -163,10 +164,10 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     getBalancerData().catch(handleFailure),
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
+    getPolymarketData().catch(handleFailure),
   ]);
 
-  const data = [...assetData, uniswapV1, uniswapV2, balancer, curve, sushiswap, zerox]
-    .filter((val: any) => !!val);
+  const data = [...assetData, ...appData].filter((val: any) => !!val);
 
   if (res) {
     res.setHeader('Cache-Control', 's-maxage=1800');
