@@ -58,6 +58,7 @@ export async function getPolymarketData(): Promise<FeeData> {
       sevenDayMA += markets[id].today - markets[id].weekAgo;
     }
   }
+  sevenDayMA /= 7;
 
   return { id: 'polymarket', category: 'app', sevenDayMA, oneDay };
 }
