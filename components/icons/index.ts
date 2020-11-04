@@ -8,6 +8,7 @@ import curve from './curve.png';
 import doge from './doge.svg';
 import eth from './eth.svg';
 import ltc from './ltc.svg';
+import omen from './omen.png';
 import polymarket from './polymarket.svg';
 import sushiswap from './sushiswap.png';
 import uniV1 from './uni_v1.png';
@@ -29,6 +30,7 @@ const icons: { [id: string]: string } = {
   doge,
   eth,
   ltc,
+  omen,
   polymarket,
   sushiswap,
   'uniswap-v1': uniV1,

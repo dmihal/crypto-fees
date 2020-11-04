@@ -1,6 +1,7 @@
 export const protocolNames: { [id: string]: string } = {
   balancer: 'Balancer',
   curve: 'Curve',
+  omen: 'Omen',
   polymarket: 'Polymarket',
   'uniswap-v2': 'Uniswap V2',
   'uniswap-v1': 'Uniswap V1',

@@ -4,6 +4,7 @@ import { NextPage, GetServerSideProps } from 'next';
 import { FeeData, getFeeData, getUniswapV1Data, getUniswapV2Data, getSushiswapData } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
 import { getCurveData } from 'data/curve';
+import { getOmenData } from 'data/omen';
 import { get0xData } from 'data/zerox';
 import { getPolymarketData } from 'data/polymarket';
 import List from 'components/List';
@@ -165,6 +166,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
     getPolymarketData().catch(handleFailure),
+    getOmenData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);
