@@ -35,9 +35,8 @@ export async function getOmenData(): Promise<FeeData> {
   });
 
   const { data } = await request.json();
-  console.log(data.today.length)
 
-  const markets: { [id: string]: { today?: number; yesterday?: number; weekAgo?: number } } = {};
+  const markets: { [id: string]: { today?: number; yesterday?: number; weekAgo?: number; fee?: number } } = {};
   for (const market of data.today) {
     markets[market.id] = { today: parseFloat(market.usdVolume), fee: parseInt(market.fee) / 1000000000000000000 };
   }
