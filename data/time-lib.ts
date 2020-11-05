@@ -12,7 +12,7 @@ const NOV_3_FIRST_BLOCK = {
 
 const BLOCKS_PER_DAY = {
   [CHAIN.MAINNET]: 6348,
-  [CHAIN.MATIC]: 43200,
+  [CHAIN.MATIC]: 41891,
 };
 
 function dayOfYear(): number {
