@@ -3,9 +3,11 @@ export const protocolNames: { [id: string]: string } = {
   curve: 'Curve',
   omen: 'Omen',
   polymarket: 'Polymarket',
+  ren: 'Ren Protocol',
   'uniswap-v2': 'Uniswap V2',
   'uniswap-v1': 'Uniswap V1',
   sushiswap: 'SushiSwap',
+
   eth: 'Ethereum',
   btc: 'Bitcoin',
   ltc: 'Litecoin',
