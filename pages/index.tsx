@@ -7,6 +7,7 @@ import { getCurveData } from 'data/curve';
 import { getOmenData } from 'data/omen';
 import { get0xData } from 'data/zerox';
 import { getRenData } from 'data/ren';
+import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
 import List from 'components/List';
 import ReactGA from 'react-ga';
@@ -169,6 +170,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     getPolymarketData().catch(handleFailure),
     getOmenData().catch(handleFailure),
     getRenData().catch(handleFailure),
+    getSynthetixData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);
