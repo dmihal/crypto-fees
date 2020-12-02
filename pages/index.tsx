@@ -153,8 +153,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
   );
 };
 
-
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+export const getStaticProps: GetStaticProps = async ({ res }) => {
   const handleFailure = (e: any) => {
     console.warn(e);
     return null;
@@ -181,7 +180,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     res.setHeader('Cache-Control', 's-maxage=1800');
   }
 
-  return { props: { data } };
+  return { props: { data }, revalidate: 60 };
 };
 
 export default Home
