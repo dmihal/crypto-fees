@@ -7,6 +7,7 @@ import btc from './btc.svg';
 import curve from './curve.png';
 import doge from './doge.svg';
 import eth from './eth.svg';
+import kusama from './kusama.svg';
 import ltc from './ltc.svg';
 import omen from './omen.png';
 import polkadot from './polkadot.svg';
@@ -33,6 +34,7 @@ const icons: { [id: string]: string } = {
   doge,
   eth,
   ren,
+  kusama,
   ltc,
   omen,
   polkadot,

@@ -9,7 +9,7 @@ import { get0xData } from 'data/zerox';
 import { getRenData } from 'data/ren';
 import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
-import { getPolkadotData } from 'data/polkadot';
+import { getPolkadotData, getKusamaData } from 'data/polkadot';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -163,14 +163,15 @@ export const getStaticProps: GetStaticProps = async ({ res }) => {
     Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
     getUniswapV1Data().catch(handleFailure),
     getUniswapV2Data().catch(handleFailure),
-    getSushiswapData().catch(handleFailure),
     getBalancerData().catch(handleFailure),
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
+    getKusamaData().catch(handleFailure),
     getOmenData().catch(handleFailure),
     getPolymarketData().catch(handleFailure),
     getPolkadotData().catch(handleFailure),
     getRenData().catch(handleFailure),
+    getSushiswapData().catch(handleFailure),
     getSynthetixData().catch(handleFailure),
   ]);
 
