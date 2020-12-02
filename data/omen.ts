@@ -1,12 +1,12 @@
-import { FeeData} from './feeData';
+import { FeeData } from './feeData';
 import { getBlockDaysAgo } from './time-lib';
 
 export async function getOmenData(): Promise<FeeData> {
   const request = await fetch('https://api.thegraph.com/subgraphs/name/gnosis/omen', {
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
-    "body": JSON.stringify({
+    body: JSON.stringify({
       query: `query volumeOverTime($today: Int!, $yesterday: Int!, $weekAgo: Int!){
         today: fixedProductMarketMakers(block: {number: $today}, first: 1000) {
           id
@@ -29,22 +29,38 @@ export async function getOmenData(): Promise<FeeData> {
         yesterday: getBlockDaysAgo(1),
         weekAgo: getBlockDaysAgo(7),
       },
-      operationName: "volumeOverTime"
+      operationName: 'volumeOverTime',
     }),
-    method: "POST",
+    method: 'POST',
   });
 
   const { data } = await request.json();
 
-  const markets: { [id: string]: { today?: number; yesterday?: number; weekAgo?: number; fee?: number } } = {};
+  const markets: {
+    [id: string]: {
+      today?: number;
+      yesterday?: number;
+      weekAgo?: number;
+      fee?: number;
+    };
+  } = {};
   for (const market of data.today) {
-    markets[market.id] = { today: parseFloat(market.usdVolume), fee: parseInt(market.fee) / 1000000000000000000 };
+    markets[market.id] = {
+      today: parseFloat(market.usdVolume),
+      fee: parseInt(market.fee) / 1000000000000000000,
+    };
   }
   for (const market of data.yesterday) {
-    markets[market.id] = { ...markets[market.id], yesterday: parseFloat(market.usdVolume) };
+    markets[market.id] = {
+      ...markets[market.id],
+      yesterday: parseFloat(market.usdVolume),
+    };
   }
   for (const market of data.weekAgo) {
-    markets[market.id] = { ...markets[market.id], weekAgo: parseFloat(market.usdVolume) };
+    markets[market.id] = {
+      ...markets[market.id],
+      weekAgo: parseFloat(market.usdVolume),
+    };
   }
 
   let oneDay = 0;

@@ -19,7 +19,7 @@ function dayOfYear(): number {
   const now = new Date();
   const start = new Date(now.getUTCFullYear(), 0, 0);
   // @ts-ignore
-  const diff = (now - start) + ((start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000);
+  const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
   const oneDay = 1000 * 60 * 60 * 24;
   const day = Math.floor(diff / oneDay);
 
@@ -28,11 +28,10 @@ function dayOfYear(): number {
   return dayWithYearOffset;
 }
 
-
 export function getBlockDaysAgo(numDaysAgo: number, chain: CHAIN = CHAIN.MAINNET): number {
   const nov3FirstBlock = NOV_3_FIRST_BLOCK[chain];
   const blocksPerDay = BLOCKS_PER_DAY[chain];
 
-  const todayBlock = nov3FirstBlock + ((dayOfYear() - NOV_3_DAY) * blocksPerDay);
-  return todayBlock - (blocksPerDay * numDaysAgo);
+  const todayBlock = nov3FirstBlock + (dayOfYear() - NOV_3_DAY) * blocksPerDay;
+  return todayBlock - blocksPerDay * numDaysAgo;
 }

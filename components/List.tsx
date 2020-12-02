@@ -10,7 +10,6 @@ interface ListProps {
 const sortByDaily = (a: FeeData, b: FeeData) => b.oneDay - a.oneDay;
 const sortByWeekly = (a: FeeData, b: FeeData) => b.sevenDayMA - a.sevenDayMA;
 
-
 const List: React.FC<ListProps> = ({ data }) => {
   const [sort, setSort] = useState('daily');
 
@@ -32,11 +31,23 @@ const List: React.FC<ListProps> = ({ data }) => {
         <div
           className={`item ${protocol.category}`}
           key={protocol.id}
-          style={{ backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined }}
+          style={{
+            backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
+          }}
         >
           <div className="name">{protocol.name || protocolNames[protocol.id]}</div>
-          <div className="amount">{protocol.oneDay.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
-          <div className="amount">{protocol.sevenDayMA.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
+          <div className="amount">
+            {protocol.oneDay.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+          </div>
+          <div className="amount">
+            {protocol.sevenDayMA.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+          </div>
         </div>
       ))}
 
@@ -74,10 +85,11 @@ const List: React.FC<ListProps> = ({ data }) => {
         }
 
         .item.app {
-          background-color: #FAD3F6;
+          background-color: #fad3f6;
         }
 
-        .item > div, .header > div {
+        .item > div,
+        .header > div {
           padding: 16px 32px;
         }
 
@@ -111,13 +123,14 @@ const List: React.FC<ListProps> = ({ data }) => {
             background-position: 6px center;
           }
 
-          .item > div, .header > div {
+          .item > div,
+          .header > div {
             padding: 8px 2px;
           }
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
 
 export default List;

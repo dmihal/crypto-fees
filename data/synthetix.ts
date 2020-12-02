@@ -8,12 +8,14 @@ export async function getSynthetixData(): Promise<FeeData> {
   const yesterdayBlock = getBlockDaysAgo(1);
   const weekAgoBlock = getBlockDaysAgo(7);
 
-  const request = await fetch("https://api.thegraph.com/subgraphs/name/synthetixio-team/synthetix-exchanges", {
-    headers: {
-      "content-type": "application/json",
-    },
-    body: JSON.stringify({
-      query: `{
+  const request = await fetch(
+    'https://api.thegraph.com/subgraphs/name/synthetixio-team/synthetix-exchanges',
+    {
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `{
         now: total(id: "mainnet", block: {number: ${todayBlock}}) {
           totalFeesGeneratedInUSD
         }
@@ -24,17 +26,25 @@ export async function getSynthetixData(): Promise<FeeData> {
           totalFeesGeneratedInUSD
         }
       }`,
-      variables: null,
-    }),
-    method: "POST",
-  });
+        variables: null,
+      }),
+      method: 'POST',
+    }
+  );
 
   const { data } = await request.json();
 
   return {
     id: 'synthetix',
     category: 'app',
-    sevenDayMA: (parseInt(data.now.totalFeesGeneratedInUSD) - parseInt(data.weekAgo.totalFeesGeneratedInUSD)) / EIGHTEEN_DECIMALS / 7,
-    oneDay: (parseInt(data.now.totalFeesGeneratedInUSD) - parseInt(data.yesterday.totalFeesGeneratedInUSD)) / EIGHTEEN_DECIMALS,
+    sevenDayMA:
+      (parseInt(data.now.totalFeesGeneratedInUSD) -
+        parseInt(data.weekAgo.totalFeesGeneratedInUSD)) /
+      EIGHTEEN_DECIMALS /
+      7,
+    oneDay:
+      (parseInt(data.now.totalFeesGeneratedInUSD) -
+        parseInt(data.yesterday.totalFeesGeneratedInUSD)) /
+      EIGHTEEN_DECIMALS,
   };
 }

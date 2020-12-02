@@ -6,9 +6,9 @@ export async function getBalancerData(): Promise<FeeData> {
   const yesterdayBlock = getBlockDaysAgo(1);
   const weekAgoBlock = getBlockDaysAgo(7);
 
-  const request = await fetch("https://api.thegraph.com/subgraphs/name/bonustrack/balancer", {
+  const request = await fetch('https://api.thegraph.com/subgraphs/name/bonustrack/balancer', {
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
       query: `{
@@ -24,7 +24,7 @@ export async function getBalancerData(): Promise<FeeData> {
       }`,
       variables: null,
     }),
-    method: "POST",
+    method: 'POST',
   });
 
   const { data } = await request.json();

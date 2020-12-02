@@ -1,12 +1,12 @@
-import { FeeData} from './feeData';
+import { FeeData } from './feeData';
 import { getBlockDaysAgo } from './time-lib';
 
 export async function getRenData(): Promise<FeeData> {
   const request = await fetch('https://api.thegraph.com/subgraphs/name/renproject/renvm', {
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
-    "body": JSON.stringify({
+    body: JSON.stringify({
       query: `query feesOverPeriod($today: Int!, $yesterday: Int!, $weekAgo: Int!){
         today: renVM(id:1) {
           fees {
@@ -38,22 +38,30 @@ export async function getRenData(): Promise<FeeData> {
         yesterday: getBlockDaysAgo(1),
         weekAgo: getBlockDaysAgo(7),
       },
-      operationName: "feesOverPeriod"
+      operationName: 'feesOverPeriod',
     }),
-    method: "POST",
+    method: 'POST',
   });
 
   const { data } = await request.json();
 
-  const assets: { [id: string]: { today?: number; yesterday?: number; weekAgo?: number } } = {};
+  const assets: {
+    [id: string]: { today?: number; yesterday?: number; weekAgo?: number };
+  } = {};
   for (const asset of data.today.fees) {
     assets[asset.symbol] = { today: parseFloat(asset.amountInUsd) };
   }
   for (const asset of data.yesterday.fees) {
-    assets[asset.symbol] = { ...assets[asset.symbol], yesterday: parseFloat(asset.amountInUsd) };
+    assets[asset.symbol] = {
+      ...assets[asset.symbol],
+      yesterday: parseFloat(asset.amountInUsd),
+    };
   }
   for (const asset of data.weekAgo.fees) {
-    assets[asset.symbol] = { ...assets[asset.symbol], weekAgo: parseFloat(asset.amountInUsd) };
+    assets[asset.symbol] = {
+      ...assets[asset.symbol],
+      weekAgo: parseFloat(asset.amountInUsd),
+    };
   }
 
   let oneDay = 0;

@@ -44,26 +44,30 @@ const priceCache: { [symbol: string]: number } = { usd: 1 };
 
 const getPrice = async (name: string): Promise<number> => {
   if (!priceCache[name]) {
-    const request = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${name}&vs_currencies=usd`);
+    const request = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${name}&vs_currencies=usd`
+    );
     const response = await request.json();
     priceCache[name] = response[name].usd;
   }
 
   return priceCache[name];
-}
+};
 
 export async function getCurveData(): Promise<FeeData> {
   const todayBlock = getBlockDaysAgo(0);
   const yesterdayBlock = getBlockDaysAgo(1);
   const weekAgoBlock = getBlockDaysAgo(7);
 
-  const request = await fetch("https://api.thegraph.com/subgraphs/name/blocklytics/curve", {
+  const request = await fetch('https://api.thegraph.com/subgraphs/name/blocklytics/curve', {
     headers: {
-      "content-type": "application/json",
+      'content-type': 'application/json',
     },
     body: JSON.stringify({
       query: `{
-        ${pools.map((pool: Pool) => `
+        ${pools
+          .map(
+            (pool: Pool) => `
           ${pool.name}_current: exchange(id: "${pool.address}", block: {number: ${todayBlock}}) {
             totalUnderlyingVolumeDecimal
           }
@@ -73,11 +77,13 @@ export async function getCurveData(): Promise<FeeData> {
           ${pool.name}_week_ago: exchange(id: "${pool.address}", block: {number: ${weekAgoBlock}}) {
             totalUnderlyingVolumeDecimal
           }
-        `).join('')}
+        `
+          )
+          .join('')}
       }`,
       variables: null,
     }),
-    method: "POST",
+    method: 'POST',
   });
 
   const { data } = await request.json();

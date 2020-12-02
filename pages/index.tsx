@@ -1,26 +1,26 @@
-import React, { useEffect } from 'react'
-import Head from 'next/head'
-import { NextPage, GetStaticProps } from 'next'
+import React, { useEffect } from 'react';
+import Head from 'next/head';
+import { NextPage, GetStaticProps } from 'next';
 import {
   FeeData,
   getFeeData,
   getUniswapV1Data,
   getUniswapV2Data,
   getSushiswapData,
-} from 'data/feeData'
-import { getBalancerData } from 'data/balancer'
-import { getCurveData } from 'data/curve'
-import { getOmenData } from 'data/omen'
-import { get0xData } from 'data/zerox'
-import { getRenData } from 'data/ren'
-import { getSynthetixData } from 'data/synthetix'
-import { getPolymarketData } from 'data/polymarket'
-import { getPolkadotData, getKusamaData } from 'data/polkadot'
-import List from 'components/List'
-import ReactGA from 'react-ga'
+} from 'data/feeData';
+import { getBalancerData } from 'data/balancer';
+import { getCurveData } from 'data/curve';
+import { getOmenData } from 'data/omen';
+import { get0xData } from 'data/zerox';
+import { getRenData } from 'data/ren';
+import { getSynthetixData } from 'data/synthetix';
+import { getPolymarketData } from 'data/polymarket';
+import { getPolkadotData, getKusamaData } from 'data/polkadot';
+import List from 'components/List';
+import ReactGA from 'react-ga';
 
 interface HomeProps {
-  data: FeeData[]
+  data: FeeData[];
 }
 
 const ASSETS = [
@@ -36,15 +36,15 @@ const ASSETS = [
   'xmr',
   'xlm',
   'bnb_mainnet',
-]
+];
 
-ReactGA.initialize('UA-150445352-3')
+ReactGA.initialize('UA-150445352-3');
 
 export const Home: NextPage<HomeProps> = ({ data }) => {
   useEffect(() => {
-    ReactGA.set({ page: window.location.pathname })
-    ReactGA.pageview(window.location.pathname)
-  }, [])
+    ReactGA.set({ page: window.location.pathname });
+    ReactGA.pageview(window.location.pathname);
+  }, []);
 
   return (
     <div className="container">
@@ -57,10 +57,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         />
 
         <meta property="og:title" content="Crypto Fees" />
-        <meta
-          property="og:image"
-          content="https://cryptofees.info/api/screenshot"
-        />
+        <meta property="og:image" content="https://cryptofees.info/api/screenshot" />
         <meta
           property="og:description"
           content="There's tons of crypto projects. Which ones are people actually paying to use?"
@@ -103,9 +100,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
       <footer>
         <div>Data updates at midnight, UTC</div>
-        <div>
-          Network data from CoinMetrics, application data from The Graph
-        </div>
+        <div>Network data from CoinMetrics, application data from The Graph</div>
         <div>Application data does not include Ethereum transaction fees</div>
         <div>
           Created by{' '}
@@ -203,14 +198,14 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         }
       `}</style>
     </div>
-  )
-}
+  );
+};
 
 export const getStaticProps: GetStaticProps = async () => {
   const handleFailure = (e: any) => {
-    console.warn(e)
-    return null
-  }
+    console.warn(e);
+    return null;
+  };
 
   const [assetData, ...appData] = await Promise.all([
     Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
@@ -226,11 +221,11 @@ export const getStaticProps: GetStaticProps = async () => {
     getRenData().catch(handleFailure),
     getSushiswapData().catch(handleFailure),
     getSynthetixData().catch(handleFailure),
-  ])
+  ]);
 
-  const data = [...assetData, ...appData].filter((val: any) => !!val)
+  const data = [...assetData, ...appData].filter((val: any) => !!val);
 
-  return { props: { data }, revalidate: 60 }
-}
+  return { props: { data }, revalidate: 60 };
+};
 
-export default Home
+export default Home;

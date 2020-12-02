@@ -1,8 +1,9 @@
 import { FeeData } from './feeData';
 
 export async function get0xData(): Promise<FeeData> {
-
-  const request = await fetch("https://api.0xtracker.com/metrics/network?period=month&granularity=day");
+  const request = await fetch(
+    'https://api.0xtracker.com/metrics/network?period=month&granularity=day'
+  );
 
   const data = await request.json();
 
