@@ -48,7 +48,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         <h1 className="title">Crypto Fees</h1>
 
         <p className="description">
-          There's tons of crypto projects.<br />
+          There&apos;s tons of crypto projects.<br />
           Which ones are people actually paying to use?
         </p>
 
