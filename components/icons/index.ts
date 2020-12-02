@@ -9,6 +9,7 @@ import doge from './doge.svg';
 import eth from './eth.svg';
 import ltc from './ltc.svg';
 import omen from './omen.png';
+import polkadot from './polkadot.svg';
 import polymarket from './polymarket.svg';
 import ren from './ren.svg';
 import synthetix from './synthetix.svg';
@@ -34,6 +35,7 @@ const icons: { [id: string]: string } = {
   ren,
   ltc,
   omen,
+  polkadot,
   polymarket,
   sushiswap,
   synthetix,

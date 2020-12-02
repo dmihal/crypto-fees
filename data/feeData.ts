@@ -4,7 +4,7 @@ type Category = 'l1' | 'app' | 'l2';
 
 export interface FeeData {
   id: string;
-  // name: string;
+  name?: string;
   category: Category;
   sevenDayMA: number;
   oneDay: number;

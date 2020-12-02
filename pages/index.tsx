@@ -9,6 +9,7 @@ import { get0xData } from 'data/zerox';
 import { getRenData } from 'data/ren';
 import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
+import { getPolkadotData } from 'data/polkadot';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -167,8 +168,9 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     getBalancerData().catch(handleFailure),
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
-    getPolymarketData().catch(handleFailure),
     getOmenData().catch(handleFailure),
+    getPolymarketData().catch(handleFailure),
+    getPolkadotData().catch(handleFailure),
     getRenData().catch(handleFailure),
     getSynthetixData().catch(handleFailure),
   ]);

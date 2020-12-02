@@ -34,7 +34,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           key={protocol.id}
           style={{ backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined }}
         >
-          <div className="name">{protocolNames[protocol.id]}</div>
+          <div className="name">{protocol.name || protocolNames[protocol.id]}</div>
           <div className="amount">{protocol.oneDay.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
           <div className="amount">{protocol.sevenDayMA.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}</div>
         </div>
