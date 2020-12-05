@@ -10,20 +10,14 @@ export async function getPolymarketData(): Promise<FeeData> {
       },
       body: JSON.stringify({
         query: `query lpFeesOverPeriod($today: Int!, $yesterday: Int!, $weekAgo: Int!){
-        today: fixedProductMarketMakers(block: {number: $today}){
-          feeVolume
-          scaledFeeVolume
-          id
+        today: global(id: "", block: {number: $today}){
+          scaledCollateralFees
         }
-        yesterday: fixedProductMarketMakers(block: {number: $yesterday}){
-          feeVolume
-          scaledFeeVolume
-          id
+        yesterday: global(id: "", block: {number: $yesterday}){
+          scaledCollateralFees
         }
-        weekAgo: fixedProductMarketMakers(block: {number: $weekAgo}){
-          feeVolume
-          scaledFeeVolume
-          id
+        weekAgo: global(id: "", block: {number: $weekAgo}){
+          scaledCollateralFees
         }
       }`,
         variables: {
@@ -39,37 +33,14 @@ export async function getPolymarketData(): Promise<FeeData> {
 
   const { data } = await request.json();
 
-  const markets: {
-    [id: string]: { today?: number; yesterday?: number; weekAgo?: number };
-  } = {};
-  for (const market of data.today) {
-    markets[market.id] = { today: parseFloat(market.scaledFeeVolume) };
-  }
-  for (const market of data.yesterday) {
-    markets[market.id] = {
-      ...markets[market.id],
-      yesterday: parseFloat(market.scaledFeeVolume),
-    };
-  }
-  for (const market of data.weekAgo) {
-    markets[market.id] = {
-      ...markets[market.id],
-      weekAgo: parseFloat(market.scaledFeeVolume),
-    };
-  }
-
-  let oneDay = 0;
-  let sevenDayMA = 0;
-
-  for (const id in markets) {
-    if (markets[id].yesterday) {
-      oneDay += markets[id].today - markets[id].yesterday;
-    }
-    if (markets[id].weekAgo) {
-      sevenDayMA += markets[id].today - markets[id].weekAgo;
-    }
-  }
-  sevenDayMA /= 7;
-
-  return { id: 'polymarket', category: 'app', sevenDayMA, oneDay };
+  return {
+    id: 'polymarket',
+    category: 'app',
+    oneDay:
+      parseFloat(data.today.scaledCollateralFees) - parseFloat(data.yesterday.scaledCollateralFees),
+    sevenDayMA:
+      (parseFloat(data.today.scaledCollateralFees) -
+        parseFloat(data.weekAgo.scaledCollateralFees)) /
+      7,
+  };
 }
