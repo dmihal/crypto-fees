@@ -14,7 +14,7 @@ import polkadot from './polkadot.svg';
 import polymarket from './polymarket.svg';
 import ren from './ren.svg';
 import synthetix from './synthetix.svg';
-import sushiswap from './sushiswap.png';
+import sushiswap from './sushiswap.svg';
 import uniV1 from './uni_v1.png';
 import uniV2 from './uni_v2.png';
 import xlm from './xlm.svg';
@@ -27,7 +27,7 @@ const icons: { [id: string]: string } = {
   ada,
   balancer,
   bch,
-  'bnb_mainnet': bnb,
+  bnb_mainnet: bnb,
   bsv,
   btc,
   curve,
