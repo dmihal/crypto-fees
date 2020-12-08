@@ -96,7 +96,7 @@ export async function getCurveData(): Promise<FeeData> {
     const yesterday = parseFloat(data[`${pool.name}_yesterday`].totalUnderlyingVolumeDecimal);
     const weekAgo = parseFloat(data[`${pool.name}_week_ago`].totalUnderlyingVolumeDecimal);
     oneDay += (current - yesterday) * 0.0004 * price;
-    sevenDayMA += (current - weekAgo) * 0.0004 * price;
+    sevenDayMA += ((current - weekAgo) * 0.0004 * price) / 7;
   }
 
   return { id: 'curve', category: 'app', sevenDayMA, oneDay };
