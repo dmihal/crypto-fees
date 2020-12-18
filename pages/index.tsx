@@ -119,6 +119,13 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
             @heyheeyheeey
           </a>
         </div>
+        <div>
+          <b>money-movers.info</b>
+          {' | '}
+          <a href="https://ethereumnodes.com">ethereumnodes.com</a>
+          {' | '}
+          <a href="https://money-movers.info">money-movers.info</a>
+        </div>
       </footer>
 
       <style jsx>{`
