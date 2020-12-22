@@ -22,6 +22,7 @@ import xmr from './xmr.svg';
 import xrp from './xrp.svg';
 import xtz from './xtz.svg';
 import zerox from './zrx.svg';
+import mstable from './mstable.svg';
 
 const icons: { [id: string]: string } = {
   ada,
@@ -48,6 +49,7 @@ const icons: { [id: string]: string } = {
   xrp,
   xtz,
   zerox,
+  mstable
 };
 
 export default icons;
