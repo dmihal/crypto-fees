@@ -13,8 +13,9 @@ import omen from './omen.png';
 import polkadot from './polkadot.svg';
 import polymarket from './polymarket.svg';
 import ren from './ren.svg';
-import synthetix from './synthetix.svg';
 import sushiswap from './sushiswap.svg';
+import synthetix from './synthetix.svg';
+import tornado from './tornado.svg';
 import uniV1 from './uni_v1.png';
 import uniV2 from './uni_v2.png';
 import xlm from './xlm.svg';
@@ -41,6 +42,7 @@ const icons: { [id: string]: string } = {
   polymarket,
   sushiswap,
   synthetix,
+  tornado,
   'uniswap-v1': uniV1,
   'uniswap-v2': uniV2,
   xlm,
