@@ -5,6 +5,7 @@ import bnb from './bnb.svg';
 import bsv from './bsv.svg';
 import btc from './btc.svg';
 import curve from './curve.png';
+import hegic from './hegic.png';
 import doge from './doge.svg';
 import eth from './eth.svg';
 import kusama from './kusama.svg';
@@ -32,6 +33,7 @@ const icons: { [id: string]: string } = {
   bsv,
   btc,
   curve,
+  hegic,
   doge,
   eth,
   ren,

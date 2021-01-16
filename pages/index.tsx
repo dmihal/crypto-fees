@@ -10,6 +10,7 @@ import {
 } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
 import { getCurveData } from 'data/curve';
+import { getHegicData } from 'data/hegic';
 import { getOmenData } from 'data/omen';
 import { get0xData } from 'data/zerox';
 import { getRenData } from 'data/ren';
@@ -17,7 +18,6 @@ import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
 import { getPolkadotData, getKusamaData } from 'data/polkadot';
 import { getTornadoData } from 'data/tornado';
-import { getHegicData } from 'data/hegic';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
