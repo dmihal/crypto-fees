@@ -17,6 +17,7 @@ import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
 import { getPolkadotData, getKusamaData } from 'data/polkadot';
 import { getTornadoData } from 'data/tornado';
+import { getHegicData } from 'data/hegic';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -227,6 +228,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getBalancerData().catch(handleFailure),
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
+    getHegicData().catch(handleFailure),
     getKusamaData().catch(handleFailure),
     getOmenData().catch(handleFailure),
     getPolymarketData().catch(handleFailure),

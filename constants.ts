@@ -1,6 +1,7 @@
 export const protocolNames: { [id: string]: string } = {
   balancer: 'Balancer',
   curve: 'Curve',
+  hegic: 'Hegic',
   omen: 'Omen',
   polymarket: 'Polymarket',
   ren: 'Ren Protocol',
