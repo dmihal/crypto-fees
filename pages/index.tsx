@@ -17,6 +17,7 @@ import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
 import { getPolkadotData, getKusamaData } from 'data/polkadot';
 import { getMstableData } from 'data/mStable';
+import { getTornadoData } from 'data/tornado';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -121,7 +122,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
           </a>
         </div>
         <div>
-          <b>money-movers.info</b>
+          <b>cryptofees.info</b>
           {' | '}
           <a href="https://ethereumnodes.com">ethereumnodes.com</a>
           {' | '}
@@ -235,6 +236,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getSushiswapData().catch(handleFailure),
     getSynthetixData().catch(handleFailure),
     getMstableData().catch(handleFailure),
+    getTornadoData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);
