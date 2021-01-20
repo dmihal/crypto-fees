@@ -40,6 +40,8 @@ const pools: Pool[] = [
   },
 ];
 
+// get ETH and BTC prices from CoinGecko
+// TODO: try to get historical prices to better match past fees in USD
 const priceCache: { [symbol: string]: number } = { usd: 1 };
 
 const getPrice = async (name: string): Promise<number> => {

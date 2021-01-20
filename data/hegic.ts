@@ -1,9 +1,9 @@
 import { FeeData } from './feeData';
+import { getYesterdayTimestamps, getWeekAgoTimestamps } from './time-lib';
 
 export async function getHegicData(): Promise<FeeData> {
-  let d = new Date();
-  const yesterdayTimestamp = Math.round(d.setDate(d.getDate() - 1)/1000);
-  const sevenDaysTimestamp = Math.round(d.setDate(d.getDate() - 6)/1000); // 6 because the line before already sets it back for 1 day
+  const yesterdayTimestamp = getYesterdayTimestamps();
+  const sevenDaysTimestamp = getWeekAgoTimestamps();
 
   const request = await fetch('https://api.thegraph.com/subgraphs/name/ppunky/hegic-v888', {
     headers: {
@@ -11,14 +11,29 @@ export async function getHegicData(): Promise<FeeData> {
     },
     body: JSON.stringify({
       query: `{
-        yesterday: options(first: 1000, where: {timestamp_gt: ${yesterdayTimestamp}}) {
-          settlementFee
-          symbol
-        }
-        weekAgo: options(first: 1000, where: {timestamp_gt: ${sevenDaysTimestamp}}) {
-          settlementFee
-          symbol
-        }
+        yesterday: 
+          options(
+            first: 1000, 
+            where: {
+              timestamp_gte: ${yesterdayTimestamp.beginning},
+              timestamp_lte: ${yesterdayTimestamp.end}
+            }
+          ) 
+          {
+            settlementFee
+            symbol
+          }
+        weekAgo: 
+          options(
+            first: 1000, 
+            where: {
+              timestamp_gte: ${sevenDaysTimestamp.beginning},
+              timestamp_lte: ${sevenDaysTimestamp.end}
+            }
+          ) {
+            settlementFee
+            symbol
+          }
       }`,
       variables: null,
     }),
@@ -52,6 +67,7 @@ export async function getHegicData(): Promise<FeeData> {
   }
 
   // get ETH and BTC prices from CoinGecko
+  // TODO: try to get historical prices to better match past fees in USD
   const priceCache: { [symbol: string]: number } = { usd: 1 };
 
   const getPrice = async (name: string): Promise<number> => {
