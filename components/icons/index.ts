@@ -1,3 +1,4 @@
+import aave from './aave.svg';
 import ada from './ada.svg';
 import balancer from './balancer.png';
 import bch from './bch.svg';
@@ -28,6 +29,7 @@ import zerox from './zrx.svg';
 import mstable from './mstable.svg';
 
 const icons: { [id: string]: string } = {
+  aave,
   ada,
   balancer,
   bch,
