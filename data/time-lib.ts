@@ -35,3 +35,29 @@ export function getBlockDaysAgo(numDaysAgo: number, chain: CHAIN = CHAIN.MAINNET
   const todayBlock = nov3FirstBlock + (dayOfYear() - NOV_3_DAY) * blocksPerDay;
   return todayBlock - blocksPerDay * numDaysAgo;
 }
+
+export function getYesterdayTimestamps() {
+  let yesterday = new Date();
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  yesterday.setUTCHours(0, 0, 0);
+  let beginning = Math.round(yesterday.getTime()/1000);
+
+  yesterday.setUTCHours(23, 59, 59);
+  let end = Math.round(yesterday.getTime()/1000);
+
+  return {beginning, end}
+}
+
+export function getWeekAgoTimestamps() {
+  let weekAgo = new Date();
+  weekAgo.setUTCDate(weekAgo.getUTCDate() - 7);
+  weekAgo.setUTCHours(0, 0, 0);
+  let beginning = Math.round(weekAgo.getTime()/1000);
+
+  let yesterday = new Date();
+  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
+  yesterday.setUTCHours(23, 59, 59);
+  let end = Math.round(yesterday.getTime()/1000);
+
+  return {beginning, end}
+}

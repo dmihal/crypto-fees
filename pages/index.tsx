@@ -10,6 +10,7 @@ import {
 } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
 import { getCurveData } from 'data/curve';
+import { getHegicData } from 'data/hegic';
 import { getOmenData } from 'data/omen';
 import { get0xData } from 'data/zerox';
 import { getRenData } from 'data/ren';
@@ -229,6 +230,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getBalancerData().catch(handleFailure),
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
+    getHegicData().catch(handleFailure),
     getKusamaData().catch(handleFailure),
     getOmenData().catch(handleFailure),
     getPolymarketData().catch(handleFailure),
