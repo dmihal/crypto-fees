@@ -1,5 +1,6 @@
 import { FeeData } from './feeData';
 import { getYesterdayTimestamps, getWeekAgoTimestamps } from './time-lib';
+import { getHistoricalPrice } from './pricedata';
 
 export async function getHegicData(): Promise<FeeData> {
   const yesterdayTimestamp = getYesterdayTimestamps();
@@ -66,24 +67,8 @@ export async function getHegicData(): Promise<FeeData> {
     }
   }
 
-  // get ETH and BTC prices from CoinGecko
-  // TODO: try to get historical prices to better match past fees in USD
-  const priceCache: { [symbol: string]: number } = { usd: 1 };
-
-  const getPrice = async (name: string): Promise<number> => {
-    if (!priceCache[name]) {
-      const request = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${name}&vs_currencies=usd`
-      );
-      const response = await request.json();
-      priceCache[name] = response[name].usd;
-    }
-
-    return priceCache[name];
-  };
-
-  const ethPrice = await getPrice("ethereum");
-  const wbtcPrice = await getPrice("wrapped-bitcoin");
+  const ethPrice = await getHistoricalPrice("ethereum", 1);
+  const wbtcPrice = await getHistoricalPrice("wrapped-bitcoin", 1);
 
   // calculate total fees in USD over the past 24h hours
   const totalFeesYesterday = (ethFeesYesterday * ethPrice) + (wbtcFeesYesterday * wbtcPrice);
