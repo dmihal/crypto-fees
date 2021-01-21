@@ -1,6 +1,6 @@
 import { FeeData } from './feeData';
 import { getBlockDaysAgo } from './time-lib';
-import { getPrice } from './pricedata';
+import { getHistoricalAvgDailyPrice } from './pricedata';
 
 interface Pool {
   name: string;
@@ -78,12 +78,13 @@ export async function getCurveData(): Promise<FeeData> {
   let oneDay = 0;
   let sevenDayMA = 0;
   for (const pool of pools) {
-    const price = await getPrice(pool.price);
+    const priceYesterday = await getHistoricalAvgDailyPrice(pool.price, 1);
+    const priceLastWeek = await getHistoricalAvgDailyPrice(pool.price, 7);
     const current = parseFloat(data[`${pool.name}_current`].totalUnderlyingVolumeDecimal);
     const yesterday = parseFloat(data[`${pool.name}_yesterday`].totalUnderlyingVolumeDecimal);
     const weekAgo = parseFloat(data[`${pool.name}_week_ago`].totalUnderlyingVolumeDecimal);
-    oneDay += (current - yesterday) * 0.0004 * price;
-    sevenDayMA += ((current - weekAgo) * 0.0004 * price) / 7;
+    oneDay += (current - yesterday) * 0.0004 * priceYesterday;
+    sevenDayMA += ((current - weekAgo) * 0.0004 * priceLastWeek) / 7;
   }
 
   return { id: 'curve', category: 'app', sevenDayMA, oneDay };
