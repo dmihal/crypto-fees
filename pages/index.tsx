@@ -17,6 +17,7 @@ import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
 import { getPolkadotData, getKusamaData } from 'data/polkadot';
 import { getMstableData } from 'data/mStable';
+import { getTBTCData } from 'data/tbtc';
 import { getTornadoData } from 'data/tornado';
 import List from 'components/List';
 import ReactGA from 'react-ga';
@@ -237,6 +238,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getSynthetixData().catch(handleFailure),
     getMstableData().catch(handleFailure),
     getTornadoData().catch(handleFailure),
+    getTBTCData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);

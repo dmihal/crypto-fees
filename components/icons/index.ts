@@ -15,6 +15,7 @@ import polymarket from './polymarket.svg';
 import ren from './ren.svg';
 import sushiswap from './sushiswap.svg';
 import synthetix from './synthetix.svg';
+import tbtc from './tbtc.svg';
 import tornado from './tornado.svg';
 import uniV1 from './uni_v1.png';
 import uniV2 from './uni_v2.png';
@@ -43,6 +44,7 @@ const icons: { [id: string]: string } = {
   polymarket,
   sushiswap,
   synthetix,
+  tbtc,
   tornado,
   'uniswap-v1': uniV1,
   'uniswap-v2': uniV2,
