@@ -16,6 +16,7 @@ import polymarket from './polymarket.svg';
 import ren from './ren.svg';
 import sushiswap from './sushiswap.svg';
 import synthetix from './synthetix.svg';
+import tbtc from './tbtc.svg';
 import tornado from './tornado.svg';
 import uniV1 from './uni_v1.png';
 import uniV2 from './uni_v2.png';
@@ -24,6 +25,7 @@ import xmr from './xmr.svg';
 import xrp from './xrp.svg';
 import xtz from './xtz.svg';
 import zerox from './zrx.svg';
+import mstable from './mstable.svg';
 
 const icons: { [id: string]: string } = {
   ada,
@@ -44,6 +46,7 @@ const icons: { [id: string]: string } = {
   polymarket,
   sushiswap,
   synthetix,
+  tbtc,
   tornado,
   'uniswap-v1': uniV1,
   'uniswap-v2': uniV2,
@@ -52,6 +55,7 @@ const icons: { [id: string]: string } = {
   xrp,
   xtz,
   zerox,
+  mstable
 };
 
 export default icons;
