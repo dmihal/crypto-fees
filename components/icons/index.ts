@@ -5,6 +5,7 @@ import bch from './bch.svg';
 import bnb from './bnb.svg';
 import bsv from './bsv.svg';
 import btc from './btc.svg';
+import compound from './compound.svg';
 import curve from './curve.png';
 import hegic from './hegic.png';
 import doge from './doge.svg';
@@ -36,6 +37,7 @@ const icons: { [id: string]: string } = {
   bnb_mainnet: bnb,
   bsv,
   btc,
+  compound,
   curve,
   hegic,
   doge,

@@ -9,6 +9,7 @@ import {
   getSushiswapData,
 } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
+import { getCompoundData } from 'data/compound';
 import { getCurveData } from 'data/curve';
 import { getHegicData } from 'data/hegic';
 import { getOmenData } from 'data/omen';
@@ -243,6 +244,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getTornadoData().catch(handleFailure),
     getTBTCData().catch(handleFailure),
     getAaveData().catch(handleFailure),
+    getCompoundData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);
