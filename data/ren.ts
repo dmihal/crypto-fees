@@ -8,7 +8,7 @@ export async function getRenData(): Promise<FeeData> {
     },
     body: JSON.stringify({
       query: `query feesOverPeriod($today: Int!, $yesterday: Int!, $weekAgo: Int!){
-        today: renVM(id:1) {
+        today: renVM(id:1, block: {number: $today}) {
           fees {
             symbol
             amount
