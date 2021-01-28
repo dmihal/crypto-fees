@@ -6,7 +6,7 @@ const fetcher = async (input: RequestInfo, init?: RequestInit) => {
 };
 
 export async function getAaveData(): Promise<FeeData> {
-  const response = await fetcher('http://localhost:3000/data/fees');
+  const response = await fetcher('https://aave-api-v2.aave.com/data/fees');
   return {
     id: 'aave',
     category: 'app',
