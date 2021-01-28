@@ -20,6 +20,7 @@ import { getPolkadotData, getKusamaData } from 'data/polkadot';
 import { getMstableData } from 'data/mStable';
 import { getTBTCData } from 'data/tbtc';
 import { getTornadoData } from 'data/tornado';
+import { getAaveData } from 'data/aave';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
@@ -241,6 +242,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getMstableData().catch(handleFailure),
     getTornadoData().catch(handleFailure),
     getTBTCData().catch(handleFailure),
+    getAaveData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);
