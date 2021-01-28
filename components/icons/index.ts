@@ -34,7 +34,7 @@ const icons: { [id: string]: string } = {
   ada,
   balancer,
   bch,
-  bnb_mainnet: bnb,
+  bnb_mainnet: bnb, // eslint-disable-line @typescript-eslint/camelcase
   bsv,
   btc,
   compound,

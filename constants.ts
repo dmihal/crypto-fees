@@ -22,7 +22,7 @@ export const protocolNames: { [id: string]: string } = {
   doge: 'Dogecoin',
   xmr: 'Monero',
   xlm: 'Stellar',
-  bnb_mainnet: 'Binance Chain',
+  bnb_mainnet: 'Binance Chain', // eslint-disable-line @typescript-eslint/camelcase
   zerox: '0x',
   mstable: 'mStable',
 };

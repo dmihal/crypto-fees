@@ -46,7 +46,7 @@ export async function getHegicData(): Promise<FeeData> {
   let ethFeesYesterday = 0;
   let wbtcFeesYesterday = 0;
 
-  for (let option of data.yesterday) {
+  for (const option of data.yesterday) {
     if (option.symbol === "ETH") {
       ethFeesYesterday += parseFloat(option.settlementFee);
     } else if (option.symbol === "WBTC") {
@@ -58,7 +58,7 @@ export async function getHegicData(): Promise<FeeData> {
   let ethFeesWeek = 0;
   let wbtcFeesWeek = 0;
 
-  for (let option of data.weekAgo) {
+  for (const option of data.weekAgo) {
     if (option.symbol === "ETH") {
       ethFeesWeek += parseFloat(option.settlementFee);
     } else if (option.symbol === "WBTC") {
