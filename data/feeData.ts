@@ -1,5 +1,3 @@
-import 'isomorphic-fetch';
-
 type Category = 'l1' | 'app' | 'l2';
 
 export interface FeeData {
