@@ -39,7 +39,9 @@ export async function getCompoundData(): Promise<FeeData> {
     return [oneDay, sevenDayMA];
   }));
 
-  const [oneDay, sevenDayMA] = interestByAsset.reduce(arraySum, [0, 0])
+  const [oneDay, sevenDayMA] = interestByAsset
+    .filter(([a, b]: number[]) => a && b)
+    .reduce(arraySum, [0, 0])
 
   return {
     id: 'compound',
