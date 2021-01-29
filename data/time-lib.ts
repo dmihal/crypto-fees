@@ -15,6 +15,9 @@ const BLOCKS_PER_DAY = {
   [CHAIN.MATIC]: 41891,
 };
 
+export const last7Days = () =>
+  [...new Array(7)].map((_, num) => Math.floor(Date.now() / 1000 / 86400 - num - 1) * 86400);
+
 function dayOfYear(): number {
   const now = new Date();
   const start = new Date(now.getUTCFullYear(), 0, 0);

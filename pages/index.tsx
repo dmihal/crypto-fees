@@ -1,13 +1,7 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage, GetStaticProps } from 'next';
-import {
-  FeeData,
-  getFeeData,
-  getUniswapV1Data,
-  getUniswapV2Data,
-  getSushiswapData,
-} from 'data/feeData';
+import { FeeData, getFeeData } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
 import { getCompoundData } from 'data/compound';
 import { getCurveData } from 'data/curve';
@@ -15,6 +9,7 @@ import { getHegicData } from 'data/hegic';
 import { getOmenData } from 'data/omen';
 import { get0xData } from 'data/zerox';
 import { getRenData } from 'data/ren';
+import { getSushiswapData } from 'data/sushi';
 import { getSynthetixData } from 'data/synthetix';
 import { getPolymarketData } from 'data/polymarket';
 import { getPolkadotData, getKusamaData } from 'data/polkadot';
@@ -22,6 +17,7 @@ import { getMstableData } from 'data/mStable';
 import { getTBTCData } from 'data/tbtc';
 import { getTornadoData } from 'data/tornado';
 import { getAaveData } from 'data/aave';
+import { getUniswapV1Data, getUniswapV2Data } from 'data/uniswap';
 import List from 'components/List';
 import ReactGA from 'react-ga';
 
