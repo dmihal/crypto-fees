@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FeeData } from 'data/feeData';
-import { protocolNames } from '../constants';
-import icons from './icons';
+import Row from './Row';
 
 interface ListProps {
   data: FeeData[];
@@ -27,29 +26,7 @@ const List: React.FC<ListProps> = ({ data }) => {
         </div>
       </div>
 
-      {sortedData.map((protocol: FeeData) => (
-        <div
-          className={`item ${protocol.category}`}
-          key={protocol.id}
-          style={{
-            backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
-          }}
-        >
-          <div className="name">{protocol.name || protocolNames[protocol.id]}</div>
-          <div className="amount">
-            {protocol.oneDay.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </div>
-          <div className="amount">
-            {protocol.sevenDayMA.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </div>
-        </div>
-      ))}
+      {sortedData.map((protocol: FeeData) => <Row protocol={protocol} key={protocol.id} />)}
 
       <style jsx>{`
         .list {
