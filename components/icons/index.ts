@@ -28,6 +28,7 @@ import xrp from './xrp.svg';
 import xtz from './xtz.svg';
 import zerox from './zrx.svg';
 import mstable from './mstable.svg';
+import livepeer from './livepeer.svg';
 
 const icons: { [id: string]: string } = {
   aave,
@@ -59,7 +60,8 @@ const icons: { [id: string]: string } = {
   xrp,
   xtz,
   zerox,
-  mstable
+  mstable,
+  livepeer,
 };
 
 export default icons;

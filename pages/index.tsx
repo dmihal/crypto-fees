@@ -7,6 +7,7 @@ import {
   getUniswapV1Data,
   getUniswapV2Data,
   getSushiswapData,
+  getLivepeerData,
 } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
 import { getCompoundData } from 'data/compound';
@@ -245,6 +246,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getTBTCData().catch(handleFailure),
     getAaveData().catch(handleFailure),
     getCompoundData().catch(handleFailure),
+    getLivepeerData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);

@@ -10,6 +10,7 @@ export const protocolNames: { [id: string]: string } = {
   'uniswap-v1': 'Uniswap V1',
   sushiswap: 'SushiSwap',
   synthetix: 'Synthetix Exchange',
+  livepeer: 'Livepeer',
 
   eth: 'Ethereum',
   btc: 'Bitcoin',

@@ -142,3 +142,32 @@ export async function getUniswapV1Data(): Promise<FeeData> {
       parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeInUSD) * 0.003,
   };
 }
+
+export async function getLivepeerData(): Promise<FeeData> {
+  const request = await fetch('https://api.thegraph.com/subgraphs/name/livepeer/livepeer', {
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `{
+        days(where:{date_in: ${JSON.stringify(last7Days())}}) {
+          date
+          volumeUSD
+        }
+      }`,
+    }),
+    method: 'POST',
+  });
+  const { data } = await request.json();
+
+  const sevenDayMA =
+    data.days.reduce((total: number, { volumeUSD }: any) => total + parseFloat(volumeUSD), 0) /
+    data.days.length;
+
+  return {
+    id: 'livepeer',
+    category: 'app',
+    sevenDayMA,
+    oneDay: parseFloat(data.days[data.days.length - 1].volumeUSD),
+  };
+}
