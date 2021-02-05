@@ -26,7 +26,9 @@ const List: React.FC<ListProps> = ({ data }) => {
         </div>
       </div>
 
-      {sortedData.map((protocol: FeeData) => <Row protocol={protocol} key={protocol.id} />)}
+      {sortedData.map((protocol: FeeData) => (
+        <Row protocol={protocol} key={protocol.id} />
+      ))}
 
       <style jsx>{`
         .list {
@@ -34,6 +36,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           border-radius: 0px;
           overflow: hidden;
           margin: 4px;
+          max-width: 700px;
         }
 
         .header {

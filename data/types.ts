@@ -6,8 +6,9 @@ export interface FeeData {
   category: Category;
   sevenDayMA: number;
   oneDay: number;
-  description?: string
-  feeDescription?: string
-  blockchain?: string
-  source?: string
+  description?: string;
+  feeDescription?: string;
+  website?: string;
+  blockchain?: string;
+  source?: string;
 }

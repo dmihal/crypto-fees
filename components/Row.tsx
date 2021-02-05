@@ -2,9 +2,10 @@ import React, { Fragment, useState } from 'react';
 import { FeeData } from 'data/feeData';
 import icons from './icons';
 import { CSSTransition } from 'react-transition-group';
+import DetailsCard from './DetailsCard';
 
 interface RowProps {
-  protocol: FeeData
+  protocol: FeeData;
 }
 
 const toggle = (isOpen: boolean) => !isOpen;
@@ -36,13 +37,10 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         </div>
       </div>
 
-      <CSSTransition
-        in={open}
-        transitionName="example"
-        timeout={500}
-        unmountOnExit
-      >
-        <div className="details-container">Test</div>
+      <CSSTransition in={open} transitionName="example" timeout={500} unmountOnExit>
+        <div className="details-container">
+          <DetailsCard protocol={protocol} />
+        </div>
       </CSSTransition>
       <style jsx>{`
         .item {
@@ -85,13 +83,13 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           }
 
           to {
-            height: 100px;
+            height: 200px;
           }
         }
 
         @keyframes slideout {
           from {
-            height: 100px;
+            height: 200px;
           }
 
           to {
@@ -100,12 +98,13 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         }
 
         .details-container {
-          height: 100px;
+          height: 200px;
           animation: 0.5s 1 slidein;
           overflow: hidden;
         }
 
         .details-container.exit {
+          height: 0;
           animation: 0.5s 1 slideout;
         }
 
@@ -129,7 +128,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         }
       `}</style>
     </Fragment>
-  )
-}
+  );
+};
 
-export default Row
+export default Row;

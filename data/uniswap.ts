@@ -8,7 +8,7 @@ export async function getUniswapV2Data(): Promise<FeeData> {
       date
       dailyVolumeUSD
     }
-  }`
+  }`;
 
   const data = await query('uniswap/uniswap-v2', graphQuery, {}, 'fees');
 
@@ -18,7 +18,8 @@ export async function getUniswapV2Data(): Promise<FeeData> {
   );
   const sevenDayMA = (sevenDayTotal * 0.003) / data.uniswapDayDatas.length;
 
-  const oneDay = parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeUSD) * 0.003
+  const oneDay =
+    parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeUSD) * 0.003;
 
   return {
     id: 'uniswap-v2',
@@ -28,6 +29,7 @@ export async function getUniswapV2Data(): Promise<FeeData> {
     oneDay,
     description: 'Uniswap is a permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    website: 'https://uniswap.com',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'uniswap',
@@ -40,7 +42,7 @@ export async function getUniswapV1Data(): Promise<FeeData> {
       date
       dailyVolumeInUSD
     }
-  }`
+  }`;
 
   const data = await query('graphprotocol/uniswap', graphQuery, {}, 'fees');
 
@@ -50,7 +52,8 @@ export async function getUniswapV1Data(): Promise<FeeData> {
   );
   const sevenDayMA = (sevenDayTotal * 0.003) / data.uniswapDayDatas.length;
 
-  const oneDay = parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeInUSD) * 0.003
+  const oneDay =
+    parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeInUSD) * 0.003;
 
   return {
     id: 'uniswap-v1',
@@ -60,6 +63,7 @@ export async function getUniswapV1Data(): Promise<FeeData> {
     oneDay,
     description: 'Uniswap is a permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    website: 'https://uniswap.com',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'uniswap',
