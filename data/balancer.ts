@@ -31,8 +31,14 @@ export async function getBalancerData(): Promise<FeeData> {
 
   return {
     id: 'balancer',
+    name: 'Balancer',
     category: 'app',
     sevenDayMA: (parseFloat(data.now.totalSwapFee) - parseFloat(data.weekAgo.totalSwapFee)) / 7,
     oneDay: parseFloat(data.now.totalSwapFee) - parseFloat(data.yesterday.totalSwapFee),
+    description: 'Balancer is a decentralized exchange & asset pool balancer.',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'balancer',
   };
 }

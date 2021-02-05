@@ -77,5 +77,16 @@ export async function getRenData(): Promise<FeeData> {
   }
   sevenDayMA /= 7;
 
-  return { id: 'ren', category: 'app', sevenDayMA, oneDay };
+  return {
+    id: 'ren',
+    name: 'Ren Protocol',
+    category: 'app',
+    sevenDayMA,
+    oneDay,
+    description: 'Ren Protocol is a protocol for cross-chain asset transfers.',
+    feeDescription: 'Transfer fees are paid by users to node operators (Darknodes).',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'ren',
+  };
 }

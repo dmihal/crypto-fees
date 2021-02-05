@@ -26,6 +26,11 @@ export async function getUniswapV2Data(): Promise<FeeData> {
     category: 'app',
     sevenDayMA,
     oneDay,
+    description: 'Uniswap is a permissionless, decentralized exchange',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'uniswap',
   };
 }
 
@@ -53,5 +58,10 @@ export async function getUniswapV1Data(): Promise<FeeData> {
     category: 'app',
     sevenDayMA,
     oneDay,
+    description: 'Uniswap is a permissionless, decentralized exchange',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'uniswap',
   };
 }

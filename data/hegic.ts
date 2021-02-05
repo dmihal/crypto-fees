@@ -91,8 +91,14 @@ export async function getHegicData(): Promise<FeeData> {
 
   return {
     id: 'hegic',
+    name: 'Hegic',
     category: 'app',
     sevenDayMA: totalFeesWeek / 7,
     oneDay: totalFeesYesterday,
+    description: 'Hegic is a decentralized options trading platform',
+    // feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'hegic',
   };
 }

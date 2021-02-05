@@ -36,6 +36,7 @@ export async function getSynthetixData(): Promise<FeeData> {
 
   return {
     id: 'synthetix',
+    name: 'Synthetix',
     category: 'app',
     sevenDayMA:
       (parseInt(data.now.totalFeesGeneratedInUSD) -
@@ -46,5 +47,10 @@ export async function getSynthetixData(): Promise<FeeData> {
       (parseInt(data.now.totalFeesGeneratedInUSD) -
         parseInt(data.yesterday.totalFeesGeneratedInUSD)) /
       EIGHTEEN_DECIMALS,
+    description: 'The Synthetix Exchange is a decentralized exchange for trading synthetic assets',
+    feeDescription: 'Trading fees are paid by users to SNX stakers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'synthetix',
   };
 }

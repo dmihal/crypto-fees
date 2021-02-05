@@ -86,5 +86,16 @@ export async function getCurveData(): Promise<FeeData> {
     sevenDayMA += ((current - weekAgo) * 0.0004 * price) / 7;
   }
 
-  return { id: 'curve', category: 'app', sevenDayMA, oneDay };
+  return {
+    id: 'curve',
+    name: 'Curve',
+    category: 'app',
+    sevenDayMA,
+    oneDay,
+    description: 'Curve is a decentralized exchange for stable-value assets.',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers.',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'curve',
+  };
 }

@@ -49,5 +49,10 @@ export async function getCompoundData(): Promise<FeeData> {
     category: 'app',
     sevenDayMA,
     oneDay,
+    description: 'Compound is an open borrowing & lending protocol.',
+    feeDescription: 'Interest fees are paid from borrowers to lenders.',
+    blockchain: 'Ethereum',
+    source: 'Compound API',
+    adapter: 'compound',
   };
 }

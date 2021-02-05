@@ -31,5 +31,10 @@ export async function getTornadoData(): Promise<FeeData> {
     category: 'app',
     sevenDayMA: (parseFloat(data.now.totalFeesUSD) - parseFloat(data.weekAgo.totalFeesUSD)) / 7,
     oneDay: parseFloat(data.now.totalFeesUSD) - parseFloat(data.yesterday.totalFeesUSD),
+    description: 'Tornado Cash is a privacy tool for trustless asset mixing.',
+    feeDescription: 'Relay fees are paid by withdrawers to relayers.',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'tornado',
   };
 }

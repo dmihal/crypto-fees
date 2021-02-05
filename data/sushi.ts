@@ -26,5 +26,10 @@ export async function getSushiswapData(): Promise<FeeData> {
     category: 'app',
     sevenDayMA,
     oneDay,
+    description: 'SushiSwap is a community-owned permissionless, decentralized exchange',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'sushi',
   };
 }

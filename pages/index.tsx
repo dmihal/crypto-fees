@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { NextPage, GetStaticProps } from 'next';
-import { FeeData, getFeeData } from 'data/feeData';
+import { FeeData } from 'data/types';
+import { getL1FeeData } from 'data/coinmetrics';
 import { getBalancerData } from 'data/balancer';
 import { getCompoundData } from 'data/compound';
 import { getCurveData } from 'data/curve';
@@ -24,21 +25,6 @@ import ReactGA from 'react-ga';
 interface HomeProps {
   data: FeeData[];
 }
-
-const ASSETS = [
-  'eth',
-  'btc',
-  'ltc',
-  'ada',
-  'xtz',
-  'bsv',
-  'bch',
-  'xrp',
-  'doge',
-  'xmr',
-  'xlm',
-  'bnb_mainnet',
-];
 
 ReactGA.initialize('UA-150445352-3');
 
@@ -221,8 +207,8 @@ export const getStaticProps: GetStaticProps = async () => {
     return null;
   };
 
-  const [assetData, ...appData] = await Promise.all([
-    Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
+  const [l1Data, ...appData] = await Promise.all([
+    getL1FeeData().catch(handleFailure),
     getUniswapV1Data().catch(handleFailure),
     getUniswapV2Data().catch(handleFailure),
     getBalancerData().catch(handleFailure),
@@ -243,7 +229,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getCompoundData().catch(handleFailure),
   ]);
 
-  const data = [...assetData, ...appData].filter((val: any) => !!val);
+  const data = [...l1Data, ...appData].filter((val: any) => !!val);
 
   return { props: { data }, revalidate: 60 };
 };
