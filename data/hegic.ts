@@ -47,9 +47,9 @@ export async function getHegicData(): Promise<FeeData> {
   let wbtcFeesYesterday = 0;
 
   for (const option of data.yesterday) {
-    if (option.symbol === "ETH") {
+    if (option.symbol === 'ETH') {
       ethFeesYesterday += parseFloat(option.settlementFee);
-    } else if (option.symbol === "WBTC") {
+    } else if (option.symbol === 'WBTC') {
       wbtcFeesYesterday += parseFloat(option.settlementFee);
     }
   }
@@ -59,9 +59,9 @@ export async function getHegicData(): Promise<FeeData> {
   let wbtcFeesWeek = 0;
 
   for (const option of data.weekAgo) {
-    if (option.symbol === "ETH") {
+    if (option.symbol === 'ETH') {
       ethFeesWeek += parseFloat(option.settlementFee);
-    } else if (option.symbol === "WBTC") {
+    } else if (option.symbol === 'WBTC') {
       wbtcFeesWeek += parseFloat(option.settlementFee);
     }
   }
@@ -82,12 +82,12 @@ export async function getHegicData(): Promise<FeeData> {
     return priceCache[name];
   };
 
-  const ethPrice = await getPrice("ethereum");
-  const wbtcPrice = await getPrice("wrapped-bitcoin");
+  const ethPrice = await getPrice('ethereum');
+  const wbtcPrice = await getPrice('wrapped-bitcoin');
 
   // calculate total fees in USD over the past 24h hours
-  const totalFeesYesterday = (ethFeesYesterday * ethPrice) + (wbtcFeesYesterday * wbtcPrice);
-  const totalFeesWeek = (ethFeesWeek * ethPrice) + (wbtcFeesWeek * wbtcPrice);
+  const totalFeesYesterday = ethFeesYesterday * ethPrice + wbtcFeesYesterday * wbtcPrice;
+  const totalFeesWeek = ethFeesWeek * ethPrice + wbtcFeesWeek * wbtcPrice;
 
   return {
     id: 'hegic',

@@ -34,14 +34,16 @@ export async function getTBTCData(): Promise<FeeData> {
   const oneDayTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.yesterday.tbtcFees)) / 1e18;
   const oneDayTBTCFeesInUSD = oneDayTBTCFees * btcPrice;
 
-  const oneDayBeaconFees = (parseInt(data.now.randomBeaconFees) - parseInt(data.yesterday.randomBeaconFees)) / 1e18;
+  const oneDayBeaconFees =
+    (parseInt(data.now.randomBeaconFees) - parseInt(data.yesterday.randomBeaconFees)) / 1e18;
   const oneDayBeaconFeesInUSD = oneDayBeaconFees * ethPrice;
 
   const oneWeekTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.weekAgo.tbtcFees)) / 1e18;
-  const oneWeekTBTCFeesInUSD = oneWeekTBTCFees * btcPrice / 7;
+  const oneWeekTBTCFeesInUSD = (oneWeekTBTCFees * btcPrice) / 7;
 
-  const oneWeekBeaconFees = (parseInt(data.now.randomBeaconFees) - parseInt(data.weekAgo.randomBeaconFees)) / 1e18;
-  const oneWeekBeaconFeesInUSD = oneWeekBeaconFees * ethPrice / 7;
+  const oneWeekBeaconFees =
+    (parseInt(data.now.randomBeaconFees) - parseInt(data.weekAgo.randomBeaconFees)) / 1e18;
+  const oneWeekBeaconFeesInUSD = (oneWeekBeaconFees * ethPrice) / 7;
 
   return {
     id: 'tbtc',
