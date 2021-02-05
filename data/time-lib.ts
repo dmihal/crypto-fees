@@ -43,24 +43,24 @@ export function getYesterdayTimestamps() {
   const yesterday = new Date();
   yesterday.setUTCDate(yesterday.getUTCDate() - 1);
   yesterday.setUTCHours(0, 0, 0);
-  const beginning = Math.round(yesterday.getTime()/1000);
+  const beginning = Math.round(yesterday.getTime() / 1000);
 
   yesterday.setUTCHours(23, 59, 59);
-  const end = Math.round(yesterday.getTime()/1000);
+  const end = Math.round(yesterday.getTime() / 1000);
 
-  return {beginning, end}
+  return { beginning, end };
 }
 
 export function getWeekAgoTimestamps() {
   const weekAgo = new Date();
   weekAgo.setUTCDate(weekAgo.getUTCDate() - 7);
   weekAgo.setUTCHours(0, 0, 0);
-  const beginning = Math.round(weekAgo.getTime()/1000);
+  const beginning = Math.round(weekAgo.getTime() / 1000);
 
   const yesterday = new Date();
   yesterday.setUTCDate(yesterday.getUTCDate() - 1);
   yesterday.setUTCHours(23, 59, 59);
-  const end = Math.round(yesterday.getTime()/1000);
+  const end = Math.round(yesterday.getTime() / 1000);
 
-  return {beginning, end}
+  return { beginning, end };
 }

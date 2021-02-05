@@ -12,10 +12,13 @@ const assets = [
   '0xf5dce57282a584d2746faf1593d3121fcac444dc',
   '0x35a18000230da775cac24873d00ff85bccded550',
   '0x70e36f6bf80a52b3b46b3af8e106cc0ed743e8e4',
-]
+];
 
 const sum = (a: number, b: number) => a + b;
-const arraySum = (current: number[], total: number[]) => [current[0] + total[0], current[1] + total[1]];
+const arraySum = (current: number[], total: number[]) => [
+  current[0] + total[0],
+  current[1] + total[1],
+];
 
 export async function getCompoundData(): Promise<FeeData> {
   const today = new Date();
@@ -23,25 +26,29 @@ export async function getCompoundData(): Promise<FeeData> {
 
   const endTimestamp = today.getTime() / 1000;
 
-  const weekAgo = new Date(today.getTime() - (7 * 24 * 60 * 60 * 1000));
+  const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
   const startTimestamp = weekAgo.getTime() / 1000;
-  const interestByAsset = await Promise.all(assets.map(async (asset: string) => {
-    const url = `https://api.compound.finance/api/v2/market_history/graph?asset=${asset}&min_block_timestamp=${startTimestamp}&max_block_timestamp=${endTimestamp}&num_buckets=7`;
-    const req = await fetch(url);
-    const json = await req.json();
+  const interestByAsset = await Promise.all(
+    assets.map(async (asset: string) => {
+      const url = `https://api.compound.finance/api/v2/market_history/graph?asset=${asset}&min_block_timestamp=${startTimestamp}&max_block_timestamp=${endTimestamp}&num_buckets=7`;
+      const req = await fetch(url);
+      const json = await req.json();
 
-    const dailyInterest = json.total_borrows_history.map((borrow: any, i: number) =>
-      borrow.total.value * json.prices_usd[i].price.value * json.borrow_rates[i].rate / 365)
+      const dailyInterest = json.total_borrows_history.map(
+        (borrow: any, i: number) =>
+          (borrow.total.value * json.prices_usd[i].price.value * json.borrow_rates[i].rate) / 365
+      );
 
-    const sevenDayMA = dailyInterest.reduce(sum, 0) / 7;
-    const oneDay = dailyInterest[6];
+      const sevenDayMA = dailyInterest.reduce(sum, 0) / 7;
+      const oneDay = dailyInterest[6];
 
-    return [oneDay, sevenDayMA];
-  }));
+      return [oneDay, sevenDayMA];
+    })
+  );
 
   const [oneDay, sevenDayMA] = interestByAsset
     .filter(([a, b]: number[]) => a && b)
-    .reduce(arraySum, [0, 0])
+    .reduce(arraySum, [0, 0]);
 
   return {
     id: 'compound',

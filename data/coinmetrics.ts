@@ -70,14 +70,16 @@ const l1s = [
     name: 'Binance Chain',
     description: 'Binance Chain is a blockchain for trading and exchanging assets.',
     feeDescription: 'Transaction fees and trading fees are paid by users to validators.',
-  }
-]
+  },
+];
 
 export function getL1FeeData(): Promise<FeeData[]> {
-  return Promise.all(l1s.map(async (protocol: any) => ({
-    ...protocol,
-    ...(await getFeeData(protocol.id)),
-  })));
+  return Promise.all(
+    l1s.map(async (protocol: any) => ({
+      ...protocol,
+      ...(await getFeeData(protocol.id)),
+    }))
+  );
 }
 
 async function getFeeData(id: string): Promise<FeeData> {

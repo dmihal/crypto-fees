@@ -8,7 +8,7 @@ export async function getSushiswapData(): Promise<FeeData> {
       date
       dailyVolumeUSD
     }
-  }`
+  }`;
 
   const data = await query('zippoxer/sushiswap-subgraph-fork', graphQuery, {}, 'fees');
 
@@ -18,7 +18,8 @@ export async function getSushiswapData(): Promise<FeeData> {
   );
   const sevenDayMA = (sevenDayTotal * 0.003) / data.uniswapDayDatas.length;
 
-  const oneDay = parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeUSD) * 0.003
+  const oneDay =
+    parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeUSD) * 0.003;
 
   return {
     id: 'sushiswap',
