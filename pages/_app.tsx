@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 
@@ -61,6 +62,13 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
             @heyheeyheeey
           </a>
         </div>
+
+        <div>
+          <Link href="/submit-project">
+            <a>Want to add a project to CryptoFees.info?</a>
+          </Link>
+        </div>
+
         <div>
           <b>cryptofees.info</b>
           {' | '}
@@ -102,7 +110,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         }
 
         a {
-          color: inherit;
+          color: #666666;
           text-decoration: none;
         }
         a:hover {
