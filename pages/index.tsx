@@ -4,6 +4,7 @@ import { NextPage, GetStaticProps } from 'next';
 import {
   FeeData,
   getFeeData,
+  getLinkswapData,
   getUniswapV1Data,
   getUniswapV2Data,
   getSushiswapData,
@@ -224,6 +225,7 @@ export const getStaticProps: GetStaticProps = async () => {
     Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
     getUniswapV1Data().catch(handleFailure),
     getUniswapV2Data().catch(handleFailure),
+    getLinkswapData().catch(handleFailure),
     getBalancerData().catch(handleFailure),
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),

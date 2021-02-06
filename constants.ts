@@ -6,6 +6,7 @@ export const protocolNames: { [id: string]: string } = {
   ren: 'Ren Protocol',
   'uniswap-v2': 'Uniswap V2',
   'uniswap-v1': 'Uniswap V1',
+  linkswap: 'LINKSWAP',
   sushiswap: 'SushiSwap',
   synthetix: 'Synthetix Exchange',
 
