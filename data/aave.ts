@@ -6,11 +6,11 @@ const fetcher = async (input: RequestInfo, init?: RequestInit) => {
 };
 
 export async function getAaveData(): Promise<FeeData> {
-  const response = await fetcher('https://aave-api-v2.aave.com/data/fees');
+  const response = await fetcher('https://aave-api-v2.aave.com/data/fees-utc');
   return {
     id: 'aave',
     category: 'app',
-    sevenDayMA: parseFloat(response.last7DaysAvg),
-    oneDay: parseFloat(response.last24hFees),
+    sevenDayMA: parseFloat(response.last7DaysUTCAvg),
+    oneDay: parseFloat(response.lastDayUTCFees),
   };
 }
