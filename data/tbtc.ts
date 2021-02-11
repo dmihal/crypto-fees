@@ -1,7 +1,7 @@
 import { FeeData } from './feeData';
 import { getBlockDaysAgo } from './time-lib';
 import { query } from './graph';
-import { getPrice } from './pricedata';
+import { getHistoricalAvgDailyPrice } from './pricedata';
 
 export async function getTBTCData(): Promise<FeeData> {
   const graphQuery = `query fees($today: Int!, $yesterday: Int!, $weekAgo: Int!){
@@ -29,21 +29,23 @@ export async function getTBTCData(): Promise<FeeData> {
     'fees'
   );
 
-  const [btcPrice, ethPrice] = await Promise.all(['bitcoin', 'ethereum'].map(getPrice));
+  const ethPriceYesterday = await getHistoricalAvgDailyPrice("ethereum", 1);
+  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice("wrapped-bitcoin", 1);
+
+  const ethPriceLastWeek = await getHistoricalAvgDailyPrice("ethereum", 7);
+  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice("wrapped-bitcoin", 7);
 
   const oneDayTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.yesterday.tbtcFees)) / 1e18;
-  const oneDayTBTCFeesInUSD = oneDayTBTCFees * btcPrice;
+  const oneDayTBTCFeesInUSD = oneDayTBTCFees * wbtcPriceYesterday;
 
-  const oneDayBeaconFees =
-    (parseInt(data.now.randomBeaconFees) - parseInt(data.yesterday.randomBeaconFees)) / 1e18;
-  const oneDayBeaconFeesInUSD = oneDayBeaconFees * ethPrice;
+  const oneDayBeaconFees = (parseInt(data.now.randomBeaconFees) - parseInt(data.yesterday.randomBeaconFees)) / 1e18;
+  const oneDayBeaconFeesInUSD = oneDayBeaconFees * ethPriceYesterday;
 
   const oneWeekTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.weekAgo.tbtcFees)) / 1e18;
-  const oneWeekTBTCFeesInUSD = (oneWeekTBTCFees * btcPrice) / 7;
+  const oneWeekTBTCFeesInUSD = oneWeekTBTCFees * wbtcPriceLastWeek / 7;
 
-  const oneWeekBeaconFees =
-    (parseInt(data.now.randomBeaconFees) - parseInt(data.weekAgo.randomBeaconFees)) / 1e18;
-  const oneWeekBeaconFeesInUSD = (oneWeekBeaconFees * ethPrice) / 7;
+  const oneWeekBeaconFees = (parseInt(data.now.randomBeaconFees) - parseInt(data.weekAgo.randomBeaconFees)) / 1e18;
+  const oneWeekBeaconFeesInUSD = oneWeekBeaconFees * ethPriceLastWeek / 7;
 
   return {
     id: 'tbtc',
