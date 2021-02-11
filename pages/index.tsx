@@ -8,6 +8,7 @@ import {
   getSushiswapData,
 } from 'data/feeData';
 import { getBalancerData } from 'data/balancer';
+import { getBancorData } from 'data/bancor';
 import { getCompoundData } from 'data/compound';
 import { getCurveData } from 'data/curve';
 import { getHegicData } from 'data/hegic';
@@ -140,6 +141,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getUniswapV1Data().catch(handleFailure),
     getUniswapV2Data().catch(handleFailure),
     getBalancerData().catch(handleFailure),
+    getBancorData().catch(handleFailure),
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
     getHegicData().catch(handleFailure),

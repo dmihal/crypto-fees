@@ -1,6 +1,7 @@
 import aave from './aave.svg';
 import ada from './ada.svg';
 import balancer from './balancer.png';
+import bancor from './bancor.png';
 import bch from './bch.svg';
 import bnb from './bnb.svg';
 import bsv from './bsv.svg';
@@ -33,6 +34,7 @@ const icons: { [id: string]: string } = {
   aave,
   ada,
   balancer,
+  bancor,
   bch,
   bnb_mainnet: bnb, // eslint-disable-line @typescript-eslint/camelcase
   bsv,
@@ -59,7 +61,7 @@ const icons: { [id: string]: string } = {
   xrp,
   xtz,
   zerox,
-  mstable
+  mstable,
 };
 
 export default icons;
