@@ -47,10 +47,10 @@ export async function getHegicData(): Promise<FeeData> {
   let ethFeesYesterday = 0;
   let wbtcFeesYesterday = 0;
 
-  for (let option of data.yesterday) {
-    if (option.symbol === "ETH") {
+  for (const option of data.yesterday) {
+    if (option.symbol === 'ETH') {
       ethFeesYesterday += parseFloat(option.settlementFee);
-    } else if (option.symbol === "WBTC") {
+    } else if (option.symbol === 'WBTC') {
       wbtcFeesYesterday += parseFloat(option.settlementFee);
     }
   }
@@ -59,10 +59,10 @@ export async function getHegicData(): Promise<FeeData> {
   let ethFeesWeek = 0;
   let wbtcFeesWeek = 0;
 
-  for (let option of data.weekAgo) {
-    if (option.symbol === "ETH") {
+  for (const option of data.weekAgo) {
+    if (option.symbol === 'ETH') {
       ethFeesWeek += parseFloat(option.settlementFee);
-    } else if (option.symbol === "WBTC") {
+    } else if (option.symbol === 'WBTC') {
       wbtcFeesWeek += parseFloat(option.settlementFee);
     }
   }
@@ -76,6 +76,7 @@ export async function getHegicData(): Promise<FeeData> {
   // calculate total fees in USD over the past 24h hours
   const totalFeesYesterday = (ethFeesYesterday * ethPriceYesterday) + (wbtcFeesYesterday * wbtcPriceYesterday);
   const totalFeesWeek = (ethFeesWeek * ethPriceLastWeek) + (wbtcFeesWeek * wbtcPriceLastWeek);
+
 
   return {
     id: 'hegic',

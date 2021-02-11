@@ -1,9 +1,11 @@
+import aave from './aave.svg';
 import ada from './ada.svg';
 import balancer from './balancer.png';
 import bch from './bch.svg';
 import bnb from './bnb.svg';
 import bsv from './bsv.svg';
 import btc from './btc.svg';
+import compound from './compound.svg';
 import curve from './curve.png';
 import hegic from './hegic.png';
 import doge from './doge.svg';
@@ -28,12 +30,14 @@ import zerox from './zrx.svg';
 import mstable from './mstable.svg';
 
 const icons: { [id: string]: string } = {
+  aave,
   ada,
   balancer,
   bch,
-  bnb_mainnet: bnb,
+  bnb_mainnet: bnb, // eslint-disable-line @typescript-eslint/camelcase
   bsv,
   btc,
+  compound,
   curve,
   hegic,
   doge,

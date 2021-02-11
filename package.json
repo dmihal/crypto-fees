@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "date-fns": "^2.16.1",
-    "isomorphic-fetch": "^2.2.1",
     "next": "latest",
     "next-images": "^1.4.1",
     "react": "^16.13.1",
