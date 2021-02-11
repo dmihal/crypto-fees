@@ -1,6 +1,7 @@
 export const protocolNames: { [id: string]: string } = {
   aave: 'Aave',
   balancer: 'Balancer',
+  bancor: 'Bancor Network',
   curve: 'Curve',
   hegic: 'Hegic',
   omen: 'Omen',
