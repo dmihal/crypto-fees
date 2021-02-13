@@ -22,7 +22,7 @@ import xlm from './xlm.svg';
 import xmr from './xmr.svg';
 import xrp from './xrp.svg';
 import xtz from './xtz.svg';
-import yfl from './yfl.svg';
+import linkswap from './linkswap.svg';
 import zerox from './zrx.svg';
 
 const icons: { [id: string]: string } = {
@@ -50,7 +50,7 @@ const icons: { [id: string]: string } = {
   xmr,
   xrp,
   xtz,
-  yfl,
+  linkswap,
   zerox,
 };
 
