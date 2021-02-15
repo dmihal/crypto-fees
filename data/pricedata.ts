@@ -12,9 +12,12 @@ export const getCurrentPrice = async (name: string): Promise<number> => {
   return priceCache[name];
 };
 
-export const getHistoricalAvgDailyPrice = async (name: string, daysAgo: number): Promise<number> => {
+export const getHistoricalAvgDailyPrice = async (
+  name: string,
+  daysAgo: number
+): Promise<number> => {
   let cacheName = name;
-  if (daysAgo > 1 && name != "usd") {
+  if (daysAgo > 1 && name != 'usd') {
     cacheName += daysAgo;
   }
 
@@ -23,11 +26,11 @@ export const getHistoricalAvgDailyPrice = async (name: string, daysAgo: number):
       `https://api.coingecko.com/api/v3/coins/${name}/market_chart?vs_currency=usd&days=${daysAgo}&interval=daily`
     );
     const response = await request.json();
-    let prices = response.prices;
+    const prices = response.prices;
     prices.pop(); // remove last element, which is today's price
 
     let cumulativePrice = 0;
-    for (let price of prices) {
+    for (const price of prices) {
       cumulativePrice += price[1];
     }
 

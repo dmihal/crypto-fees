@@ -7,10 +7,15 @@ const fetcher = async (input: RequestInfo, init?: RequestInit) => {
 
 export async function getAaveData(): Promise<FeeData> {
   const response = await fetcher('https://aave-api-v2.aave.com/data/fees-utc');
+
+  const { last7DaysUTCAvg, lastDayUTCFees } = response;
+  if (!last7DaysUTCAvg || !lastDayUTCFees || isNaN(lastDayUTCFees) || isNaN(last7DaysUTCAvg)) {
+    throw new Error('Error in the Aave fees response. Please contact with the Aave team!');
+  }
   return {
     id: 'aave',
     category: 'app',
-    sevenDayMA: parseFloat(response.last7DaysUTCAvg),
-    oneDay: parseFloat(response.lastDayUTCFees),
+    sevenDayMA: parseFloat(last7DaysUTCAvg.toString()),
+    oneDay: parseFloat(lastDayUTCFees.toString()),
   };
 }
