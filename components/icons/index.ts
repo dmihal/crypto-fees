@@ -27,6 +27,7 @@ import xlm from './xlm.svg';
 import xmr from './xmr.svg';
 import xrp from './xrp.svg';
 import xtz from './xtz.svg';
+import linkswap from './linkswap.svg';
 import zerox from './zrx.svg';
 import mstable from './mstable.svg';
 
@@ -60,6 +61,7 @@ const icons: { [id: string]: string } = {
   xmr,
   xrp,
   xtz,
+  linkswap,
   zerox,
   mstable,
 };
