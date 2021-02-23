@@ -1,7 +1,21 @@
 import { FeeData } from './feeData';
 import { getBlockDaysAgo } from './time-lib';
+import { getHistoricalAvgDailyPrice } from './pricedata';
 
-const EIGHTEEN_DECIMALS = 10 ** 18;
+interface MassetData {
+  token: {
+    symbol: string;
+  };
+  cumulativeFeesPaid: {
+    simple: string;
+  };
+}
+
+interface FeesData {
+  now: MassetData[];
+  yesterday: MassetData[];
+  weekAgo: MassetData[];
+}
 
 export async function getMstableData(): Promise<FeeData> {
   const todayBlock = getBlockDaysAgo(0);
@@ -14,19 +28,28 @@ export async function getMstableData(): Promise<FeeData> {
     },
     body: JSON.stringify({
       query: `{
-        now: masset(id: "0xe2f2a5c287993345a840db3b0845fbc70f5935a5", block: {number: ${todayBlock}}) {
+        now: massets(block: {number: ${todayBlock}}) {
+          token {
+            symbol
+          }
           cumulativeFeesPaid {
-            exact
+            simple
           }
         }
-        yesterday: masset(id: "0xe2f2a5c287993345a840db3b0845fbc70f5935a5", block: {number: ${yesterdayBlock}}) {
+        yesterday: massets(block: {number: ${yesterdayBlock}}) {
+          token {
+            symbol
+          }
           cumulativeFeesPaid {
-            exact
+            simple
           }
         }
-        weekAgo: masset(id: "0xe2f2a5c287993345a840db3b0845fbc70f5935a5", block: {number: ${weekAgoBlock}}) {
+        weekAgo: massets(block: {number: ${weekAgoBlock}}) {
+          token {
+            symbol
+          }
           cumulativeFeesPaid {
-            exact
+            simple
           }
         }
       }`,
@@ -35,18 +58,33 @@ export async function getMstableData(): Promise<FeeData> {
     method: 'POST',
   });
 
-  const { data } = await request.json();
+  const { data } = (await request.json()) as {
+    data: FeesData;
+  };
+
+  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 1);
+  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 7);
+
+  const collectFees = (btcPrice: number) => (
+    accumulator: number,
+    { token: { symbol }, cumulativeFeesPaid: { simple } }: MassetData
+  ) => {
+    const fees = parseFloat(simple);
+    const price = symbol === 'mBTC' ? btcPrice : 1;
+    return accumulator + fees * price;
+  };
+
+  const now = data.now.reduce(collectFees(wbtcPriceYesterday), 0);
+  const yesterday = data.yesterday.reduce(collectFees(wbtcPriceYesterday), 0);
+  const weekAgo = data.weekAgo.reduce(collectFees(wbtcPriceLastWeek), 0);
+
+  const sevenDayMA = (now - weekAgo) / 7;
+  const oneDay = now - yesterday;
+
   return {
     id: 'mstable',
     category: 'app',
-    sevenDayMA:
-      (parseInt(data.now.cumulativeFeesPaid.exact) -
-        parseInt(data.weekAgo.cumulativeFeesPaid.exact)) /
-      EIGHTEEN_DECIMALS /
-      7,
-    oneDay:
-      (parseInt(data.now.cumulativeFeesPaid.exact) -
-        parseInt(data.yesterday.cumulativeFeesPaid.exact)) /
-      EIGHTEEN_DECIMALS,
+    sevenDayMA,
+    oneDay,
   };
 }
