@@ -37,7 +37,11 @@ export function getBlockDaysAgo(numDaysAgo: number, chain: CHAIN = CHAIN.MAINNET
   return todayBlock - blocksPerDay * numDaysAgo;
 }
 
-export function dateToBlockNumber(date: string, dayOffset = 0, chain: CHAIN = CHAIN.MAINNET): number {
+export function dateToBlockNumber(
+  date: string,
+  dayOffset = 0,
+  chain: CHAIN = CHAIN.MAINNET
+): number {
   const nov3FirstBlock = NOV_3_FIRST_BLOCK[chain];
   const blocksPerDay = BLOCKS_PER_DAY[chain];
 
@@ -72,8 +76,15 @@ export function getWeekAgoTimestamps() {
   return { beginning, end };
 }
 
+function formatDate(date: Date) {
+  const pad = (num: number) => num.toString().padStart(2, '0');
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
+}
+
 export function getYesterdayDate() {
   const date = subDays(new Date(), 1);
-  const pad = (num: number) => num.toString().padStart(2, '0');
-  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDay())}`;
+  return formatDate(date);
 }
+
+export const last7Days = () =>
+  [...new Array(7)].map((_, num: number) => formatDate(subDays(new Date(), 7 - num)));

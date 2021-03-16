@@ -1,7 +1,8 @@
-import { adapters, queryAdapter } from './adapters';
+import { adapters, queryAdapter, getIDs, getMetadata } from './adapters';
 import { FeeData } from './adapters/feeData';
 export type { FeeData } from './adapters/feeData';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
+import { last7Days } from './lib/time';
 
 async function getValue(protocol: string, attribute: string, date: string) {
   const cachedValue = await getDBValue(protocol, attribute, date);
@@ -22,9 +23,22 @@ export async function getData(): Promise<FeeData[]> {
   const runAdapter = (adapter: any) => adapter().catch(handleFailure);
   const [l1Data, ...appData] = await Promise.all(adapters.map(runAdapter));
 
-  const data = [...l1Data, ...appData].filter((val: any) => !!val);
+  const days = last7Days();
+  const v2Data = await Promise.all(
+    getIDs().map(async (id: string) => {
+      const feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+      const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
 
-  console.log(await getValue('synthetix', 'fee', '2021-03-15'));
+      return {
+        id,
+        ...getMetadata(id),
+        sevenDayMA,
+        oneDay: feeForDay[feeForDay.length - 1],
+      };
+    })
+  );
+
+  const data = [...l1Data, ...appData, ...v2Data].filter((val: any) => !!val);
 
   return data;
 }

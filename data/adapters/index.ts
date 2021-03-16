@@ -13,7 +13,6 @@ import { getHegicData } from './hegic';
 import { getOmenData } from './omen';
 import { get0xData } from './zerox';
 import { getRenData } from './ren';
-import { getSynthetixData } from './synthetix';
 import registerSynthetix from './synthetix';
 // import { getPolymarketData } from './polymarket';
 import { getPolkadotData, getKusamaData } from './polkadot';
@@ -38,7 +37,6 @@ export const adapters = [
   getPolkadotData,
   getRenData,
   getSushiswapData,
-  getSynthetixData,
   getMstableData,
   getTornadoData,
   getTBTCData,
@@ -57,9 +55,18 @@ const ids: string[] = [];
 const register = (id: string, query: any, metadata: any) => {
   ids.push(id);
   adapters2[id] = { query, metadata };
-}
+};
 
 registerSynthetix(register);
+
+export const getIDs = () => ids;
+
+export function getMetadata(id: string) {
+  if (!adapters2[id]) {
+    throw new Error(`Unknown protocol ${id}`);
+  }
+  return adapters2[id].metadata;
+}
 
 export async function queryAdapter(protocol: string, attribute: string, date: string) {
   if (!adapters2[protocol]) {
