@@ -1,6 +1,6 @@
 import { FeeData } from './feeData';
-import { getBlockDaysAgo } from './time-lib';
-import { getHistoricalAvgDailyPrice } from './pricedata';
+import { getBlockDaysAgo } from '../lib/time';
+import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
 
 interface Pool {
   name: string;

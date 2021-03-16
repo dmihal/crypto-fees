@@ -1,5 +1,5 @@
 import { FeeData } from './feeData';
-import { getBlockDaysAgo } from './time-lib';
+import { getBlockDaysAgo } from '../lib/time';
 
 const EIGHTEEN_DECIMALS = 10 ** 18;
 

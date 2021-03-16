@@ -1,48 +1,12 @@
 import React from 'react';
 import { NextPage, GetStaticProps } from 'next';
-import {
-  FeeData,
-  getFeeData,
-  getLinkswapData,
-  getUniswapV1Data,
-  getUniswapV2Data,
-  getSushiswapData,
-} from 'data/feeData';
-import { getBalancerData } from 'data/balancer';
-import { getBancorData } from 'data/bancor';
-import { getCompoundData } from 'data/compound';
-import { getCurveData } from 'data/curve';
-import { getHegicData } from 'data/hegic';
-import { getOmenData } from 'data/omen';
-import { get0xData } from 'data/zerox';
-import { getRenData } from 'data/ren';
-import { getSynthetixData } from 'data/synthetix';
-import { getPolymarketData } from 'data/polymarket';
-import { getPolkadotData, getKusamaData } from 'data/polkadot';
-import { getMstableData } from 'data/mStable';
-import { getTBTCData } from 'data/tbtc';
-import { getTornadoData } from 'data/tornado';
-import { getAaveData } from 'data/aave';
+import { FeeData } from 'data/adapters/feeData';
+import { getData } from 'data/queries';
 import List from 'components/List';
 
 interface HomeProps {
   data: FeeData[];
 }
-
-const ASSETS = [
-  'eth',
-  'btc',
-  'ltc',
-  'ada',
-  'xtz',
-  'bsv',
-  'bch',
-  'xrp',
-  'doge',
-  'xmr',
-  'xlm',
-  'bnb_mainnet',
-];
 
 export const Home: NextPage<HomeProps> = ({ data }) => {
   return (
@@ -132,38 +96,10 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const handleFailure = (e: any) => {
-    console.warn(e);
-    return null;
-  };
+  const data = await getData();
+  const filteredData = data.filter((val: any) => !!val);
 
-  const [assetData, ...appData] = await Promise.all([
-    Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
-    getUniswapV1Data().catch(handleFailure),
-    getUniswapV2Data().catch(handleFailure),
-    getLinkswapData().catch(handleFailure),
-    getBalancerData().catch(handleFailure),
-    getBancorData().catch(handleFailure),
-    get0xData().catch(handleFailure),
-    getCurveData().catch(handleFailure),
-    getHegicData().catch(handleFailure),
-    getKusamaData().catch(handleFailure),
-    getOmenData().catch(handleFailure),
-    getPolymarketData().catch(handleFailure),
-    getPolkadotData().catch(handleFailure),
-    getRenData().catch(handleFailure),
-    getSushiswapData().catch(handleFailure),
-    getSynthetixData().catch(handleFailure),
-    getMstableData().catch(handleFailure),
-    getTornadoData().catch(handleFailure),
-    getTBTCData().catch(handleFailure),
-    getAaveData().catch(handleFailure),
-    getCompoundData().catch(handleFailure),
-  ]);
-
-  const data = [...assetData, ...appData].filter((val: any) => !!val);
-
-  return { props: { data }, revalidate: 60 };
+  return { props: { data: filteredData }, revalidate: 60 };
 };
 
 export default Home;

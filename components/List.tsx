@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FeeData } from 'data/feeData';
+import { FeeData } from 'data/adapters/feeData';
 import { protocolNames } from '../constants';
 import icons from './icons';
 

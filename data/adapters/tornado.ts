@@ -1,5 +1,5 @@
 import { FeeData } from './feeData';
-import { getBlockDaysAgo } from './time-lib';
+import { getBlockDaysAgo } from '../lib/time';
 import { query } from './graph';
 
 export async function getTornadoData(): Promise<FeeData> {

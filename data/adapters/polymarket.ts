@@ -1,5 +1,5 @@
 import { FeeData } from './feeData';
-import { getBlockDaysAgo, CHAIN } from './time-lib';
+import { getBlockDaysAgo, CHAIN } from '../lib/time';
 
 export async function getPolymarketData(): Promise<FeeData> {
   const request = await fetch(

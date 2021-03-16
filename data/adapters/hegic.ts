@@ -1,6 +1,6 @@
 import { FeeData } from './feeData';
-import { getYesterdayTimestamps, getWeekAgoTimestamps } from './time-lib';
-import { getHistoricalAvgDailyPrice } from './pricedata';
+import { getYesterdayTimestamps, getWeekAgoTimestamps } from '../lib/time';
+import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
 
 export async function getHegicData(): Promise<FeeData> {
   const yesterdayTimestamp = getYesterdayTimestamps();
@@ -67,16 +67,16 @@ export async function getHegicData(): Promise<FeeData> {
     }
   }
 
-  const ethPriceYesterday = await getHistoricalAvgDailyPrice("ethereum", 1);
-  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice("wrapped-bitcoin", 1);
+  const ethPriceYesterday = await getHistoricalAvgDailyPrice('ethereum', 1);
+  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 1);
 
-  const ethPriceLastWeek = await getHistoricalAvgDailyPrice("ethereum", 7);
-  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice("wrapped-bitcoin", 7);
+  const ethPriceLastWeek = await getHistoricalAvgDailyPrice('ethereum', 7);
+  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 7);
 
   // calculate total fees in USD over the past 24h hours
-  const totalFeesYesterday = (ethFeesYesterday * ethPriceYesterday) + (wbtcFeesYesterday * wbtcPriceYesterday);
-  const totalFeesWeek = (ethFeesWeek * ethPriceLastWeek) + (wbtcFeesWeek * wbtcPriceLastWeek);
-
+  const totalFeesYesterday =
+    ethFeesYesterday * ethPriceYesterday + wbtcFeesYesterday * wbtcPriceYesterday;
+  const totalFeesWeek = ethFeesWeek * ethPriceLastWeek + wbtcFeesWeek * wbtcPriceLastWeek;
 
   return {
     id: 'hegic',

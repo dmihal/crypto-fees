@@ -1,5 +1,5 @@
 import { FeeData } from './feeData';
-import { getBlockDaysAgo } from './time-lib';
+import { getBlockDaysAgo } from '../lib/time';
 
 export async function getRenData(): Promise<FeeData> {
   const request = await fetch('https://api.thegraph.com/subgraphs/name/renproject/renvm', {

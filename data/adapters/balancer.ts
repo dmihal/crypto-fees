@@ -1,5 +1,5 @@
 import { FeeData } from './feeData';
-import { getBlockDaysAgo } from './time-lib';
+import { getBlockDaysAgo } from '../lib/time';
 
 export async function getBalancerData(): Promise<FeeData> {
   const todayBlock = getBlockDaysAgo(0);
