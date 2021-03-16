@@ -1,4 +1,7 @@
+import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
+import startOfDay from 'date-fns/startOfDay';
+import { date2block } from 'date2block';
 
 const NOV_3_DAY = 308;
 
@@ -29,25 +32,25 @@ function dayOfYear(now: Date): number {
   return dayWithYearOffset;
 }
 
-export function getBlockDaysAgo(numDaysAgo: number, chain: CHAIN = CHAIN.MAINNET): number {
-  const nov3FirstBlock = NOV_3_FIRST_BLOCK[chain];
-  const blocksPerDay = BLOCKS_PER_DAY[chain];
+export function getMaticBlockDaysAgo(numDaysAgo: number): number {
+  const nov3FirstBlock = NOV_3_FIRST_BLOCK[CHAIN.MATIC];
+  const blocksPerDay = BLOCKS_PER_DAY[CHAIN.MATIC];
 
   const todayBlock = nov3FirstBlock + (dayOfYear(new Date()) - NOV_3_DAY) * blocksPerDay;
   return todayBlock - blocksPerDay * numDaysAgo;
 }
 
-export function dateToBlockNumber(
-  date: string,
-  dayOffset = 0,
-  chain: CHAIN = CHAIN.MAINNET
-): number {
-  const nov3FirstBlock = NOV_3_FIRST_BLOCK[chain];
-  const blocksPerDay = BLOCKS_PER_DAY[chain];
+export function getBlockDaysAgo(numDaysAgo: number): number {
+  const date = startOfDay(new Date());
+  date.setUTCHours(0);
 
-  const day = dayOfYear(new Date(date)) + dayOffset;
-  const blockNum = nov3FirstBlock + (day - NOV_3_DAY) * blocksPerDay;
-  return blockNum;
+  return date2block(subDays(date, numDaysAgo));
+}
+
+export function dateToBlockNumber(dateStr: string, dayOffset = 0): number {
+  const date = new Date(dateStr);
+  date.setUTCHours(0);
+  return date2block(addDays(date, dayOffset));
 }
 
 export function getYesterdayTimestamps() {

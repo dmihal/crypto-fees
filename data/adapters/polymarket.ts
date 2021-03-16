@@ -1,5 +1,5 @@
 import { FeeData } from './feeData';
-import { getBlockDaysAgo, CHAIN } from '../lib/time';
+import { getMaticBlockDaysAgo } from '../lib/time';
 
 export async function getPolymarketData(): Promise<FeeData> {
   const request = await fetch(
@@ -21,9 +21,9 @@ export async function getPolymarketData(): Promise<FeeData> {
         }
       }`,
         variables: {
-          today: getBlockDaysAgo(0, CHAIN.MATIC),
-          yesterday: getBlockDaysAgo(1, CHAIN.MATIC),
-          weekAgo: getBlockDaysAgo(7, CHAIN.MATIC),
+          today: getMaticBlockDaysAgo(0),
+          yesterday: getMaticBlockDaysAgo(1),
+          weekAgo: getMaticBlockDaysAgo(7),
         },
         operationName: 'lpFeesOverPeriod',
       }),

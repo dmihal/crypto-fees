@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "date-fns": "^2.16.1",
+    "date2block": "^0.1.1",
     "knex": "^0.95.2",
     "next": "latest",
     "next-images": "^1.4.1",
