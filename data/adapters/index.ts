@@ -15,7 +15,7 @@ import { get0xData } from './zerox';
 import { getRenData } from './ren';
 import { getSynthetixData } from './synthetix';
 import registerSynthetix from './synthetix';
-import { getPolymarketData } from './polymarket';
+// import { getPolymarketData } from './polymarket';
 import { getPolkadotData, getKusamaData } from './polkadot';
 import { getMstableData } from './mStable';
 import { getTBTCData } from './tbtc';
@@ -34,7 +34,7 @@ export const adapters = [
   getHegicData,
   getKusamaData,
   getOmenData,
-  getPolymarketData,
+  // getPolymarketData,
   getPolkadotData,
   getRenData,
   getSushiswapData,
