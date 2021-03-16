@@ -1,3 +1,5 @@
+import subDays from 'date-fns/subDays';
+
 const NOV_3_DAY = 308;
 
 export enum CHAIN {
@@ -15,8 +17,7 @@ const BLOCKS_PER_DAY = {
   [CHAIN.MATIC]: 41891,
 };
 
-function dayOfYear(): number {
-  const now = new Date();
+function dayOfYear(now: Date): number {
   const start = new Date(now.getUTCFullYear(), 0, 0);
   // @ts-ignore
   const diff = now - start + (start.getTimezoneOffset() - now.getTimezoneOffset()) * 60 * 1000;
@@ -32,8 +33,17 @@ export function getBlockDaysAgo(numDaysAgo: number, chain: CHAIN = CHAIN.MAINNET
   const nov3FirstBlock = NOV_3_FIRST_BLOCK[chain];
   const blocksPerDay = BLOCKS_PER_DAY[chain];
 
-  const todayBlock = nov3FirstBlock + (dayOfYear() - NOV_3_DAY) * blocksPerDay;
+  const todayBlock = nov3FirstBlock + (dayOfYear(new Date()) - NOV_3_DAY) * blocksPerDay;
   return todayBlock - blocksPerDay * numDaysAgo;
+}
+
+export function dateToBlockNumber(date: string, dayOffset = 0, chain: CHAIN = CHAIN.MAINNET): number {
+  const nov3FirstBlock = NOV_3_FIRST_BLOCK[chain];
+  const blocksPerDay = BLOCKS_PER_DAY[chain];
+
+  const day = dayOfYear(new Date(date)) + dayOffset;
+  const blockNum = nov3FirstBlock + (day - NOV_3_DAY) * blocksPerDay;
+  return blockNum;
 }
 
 export function getYesterdayTimestamps() {
@@ -60,4 +70,10 @@ export function getWeekAgoTimestamps() {
   const end = Math.round(yesterday.getTime() / 1000);
 
   return { beginning, end };
+}
+
+export function getYesterdayDate() {
+  const date = subDays(new Date(), 1);
+  const pad = (num: number) => num.toString().padStart(2, '0');
+  return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDay())}`;
 }

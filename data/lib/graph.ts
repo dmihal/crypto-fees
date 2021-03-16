@@ -12,6 +12,11 @@ export async function query(
     method: 'POST',
   });
 
-  const { data } = await request.json();
-  return data;
+  const response = await request.json();
+
+  if (response.errors) {
+    throw new Error(response.errors[0].message);
+  }
+
+  return response.data;
 }

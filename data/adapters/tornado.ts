@@ -1,6 +1,6 @@
 import { FeeData } from './feeData';
 import { getBlockDaysAgo } from '../lib/time';
-import { query } from './graph';
+import { query } from '../lib/graph';
 
 export async function getTornadoData(): Promise<FeeData> {
   const graphQuery = `query fees($today: Int!, $yesterday: Int!, $weekAgo: Int!){

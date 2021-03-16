@@ -14,6 +14,7 @@ import { getOmenData } from './omen';
 import { get0xData } from './zerox';
 import { getRenData } from './ren';
 import { getSynthetixData } from './synthetix';
+import registerSynthetix from './synthetix';
 import { getPolymarketData } from './polymarket';
 import { getPolkadotData, getKusamaData } from './polkadot';
 import { getMstableData } from './mStable';
@@ -44,3 +45,27 @@ export const adapters = [
   getAaveData,
   getCompoundData,
 ];
+
+interface Adapter {
+  query: any;
+  metadata: any;
+}
+
+const adapters2: { [id: string]: Adapter } = {};
+const ids: string[] = [];
+
+const register = (id: string, query: any, metadata: any) => {
+  ids.push(id);
+  adapters2[id] = { query, metadata };
+}
+
+registerSynthetix(register);
+
+export async function queryAdapter(protocol: string, attribute: string, date: string) {
+  if (!adapters2[protocol]) {
+    throw new Error(`Unknown protocol ${protocol}`);
+  }
+
+  const value = adapters2[protocol].query(attribute, date);
+  return value;
+}

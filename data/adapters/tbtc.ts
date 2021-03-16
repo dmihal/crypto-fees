@@ -1,6 +1,6 @@
 import { FeeData } from './feeData';
 import { getBlockDaysAgo } from '../lib/time';
-import { query } from './graph';
+import { query } from '../lib/graph';
 import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
 
 export async function getTBTCData(): Promise<FeeData> {
