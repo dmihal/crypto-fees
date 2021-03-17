@@ -8,49 +8,6 @@ export interface FeeData {
   oneDay: number;
 }
 
-const ASSETS = [
-  'eth',
-  'btc',
-  'ltc',
-  'ada',
-  'xtz',
-  'bsv',
-  'bch',
-  'xrp',
-  'doge',
-  'xmr',
-  'xlm',
-  'bnb_mainnet',
-];
-
-export async function getFeeData(id: string): Promise<FeeData> {
-  const startDate = new Date(Date.now() - 86400 * 1000 * 7);
-  const startDateString = `${startDate.getFullYear()}-${(startDate.getMonth() + 1)
-    .toString()
-    .padStart(2, '0')}-${startDate.getDate().toString().padStart(2, '0')}`;
-  const request = await fetch(
-    `https://community-api.coinmetrics.io/v2/assets/${id}/metricdata?metrics=FeeTotUSD&start=${startDateString}`
-  );
-  const { metricData } = await request.json();
-  const sevenDayMA =
-    metricData.series.reduce(
-      (total: number, value: any) => total + parseFloat(value.values[0]),
-      0
-    ) / metricData.series.length;
-
-  return {
-    id,
-    // name
-    category: 'l1',
-    sevenDayMA,
-    oneDay: parseFloat(metricData.series[metricData.series.length - 1].values[0]),
-  };
-}
-
-export function getL1FeeData(): Promise<FeeData[]> {
-  return Promise.all(ASSETS.map(getFeeData));
-}
-
 const last7Days = () =>
   [...new Array(7)].map((_, num) => Math.floor(Date.now() / 1000 / 86400 - num - 1) * 86400);
 

@@ -6,7 +6,7 @@ import { last7Days } from './lib/time';
 
 async function getValue(protocol: string, attribute: string, date: string) {
   const cachedValue = await getDBValue(protocol, attribute, date);
-  if (cachedValue) {
+  if (cachedValue !== null) {
     return cachedValue;
   }
 
@@ -21,7 +21,7 @@ export async function getData(): Promise<FeeData[]> {
     return null;
   };
   const runAdapter = (adapter: any) => adapter().catch(handleFailure);
-  const [l1Data, ...appData] = await Promise.all(adapters.map(runAdapter));
+  const [...appData] = await Promise.all(adapters.map(runAdapter));
 
   const days = last7Days();
   const v2Data = await Promise.all(
@@ -38,7 +38,7 @@ export async function getData(): Promise<FeeData[]> {
     })
   );
 
-  const data = [...l1Data, ...appData, ...v2Data].filter((val: any) => !!val);
+  const data = [...appData, ...v2Data].filter((val: any) => !!val);
 
   return data;
 }
