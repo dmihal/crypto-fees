@@ -1,15 +1,21 @@
 import React from 'react';
 import { NextPage, GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { FeeData } from 'data/adapters/feeData';
 import { getHistoricalData } from 'data/queries';
+import { formatDate } from 'data/lib/time';
 import List from 'components/List';
+import Toolbar from 'components/Toolbar';
 
 interface HistoricalDataPageProps {
   data: FeeData[];
   invalid?: boolean;
+  date: string;
 }
 
-export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, invalid }) => {
+export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, date, invalid }) => {
+  const router = useRouter();
+
   if (invalid) {
     return (
       <div>
@@ -27,6 +33,11 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
         <br />
         Which ones are people actually paying to use?
       </p>
+
+      <Toolbar
+        date={new Date(date)}
+        onDateChange={(newDate: Date) => router.push(`/history/${formatDate(newDate)}`)}
+      />
 
       <List data={data} />
 
@@ -88,7 +99,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const data = await getHistoricalData(params.date.toString());
   const filteredData = data.filter((val: any) => !!val);
 
-  return { props: { data: filteredData } };
+  return { props: { data: filteredData, date: params.date.toString() } };
 };
 
 export default HistoricalDataPage;

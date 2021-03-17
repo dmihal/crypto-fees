@@ -24,6 +24,10 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap"
           rel="stylesheet"
         />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/3.6.0/react-datepicker.min.css"
+        />
 
         <meta property="og:title" content="Crypto Fees" />
         <meta property="og:image" content="https://cryptofees.info/api/screenshot" />

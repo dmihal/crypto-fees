@@ -78,7 +78,7 @@ export function getWeekAgoTimestamps() {
   return { beginning, end };
 }
 
-function formatDate(date: Date) {
+export function formatDate(date: Date) {
   const pad = (num: number) => num.toString().padStart(2, '0');
   return `${date.getUTCFullYear()}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`;
 }

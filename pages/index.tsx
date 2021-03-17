@@ -1,14 +1,18 @@
 import React from 'react';
 import { NextPage, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
 import { FeeData } from 'data/adapters/feeData';
 import { getData } from 'data/queries';
+import { formatDate } from 'data/lib/time';
 import List from 'components/List';
+import Toolbar from 'components/Toolbar';
 
 interface HomeProps {
   data: FeeData[];
 }
 
 export const Home: NextPage<HomeProps> = ({ data }) => {
+  const router = useRouter();
   return (
     <main>
       <h1 className="title">Crypto Fees</h1>
@@ -34,6 +38,8 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         </a>
         <script async src="https://platform.twitter.com/widgets.js"></script>
       </div>
+
+      <Toolbar onDateChange={(newDate: Date) => router.push(`/history/${formatDate(newDate)}`)} />
 
       <List data={data} />
 
