@@ -1,4 +1,4 @@
-import { getLinkswapData, getUniswapV1Data, getUniswapV2Data, getSushiswapData } from './feeData';
+import { getLinkswapData } from './feeData';
 import { getBalancerData } from './balancer';
 import { getBancorData } from './bancor';
 import registerCoinMetrics from './coinmetrics';
@@ -8,12 +8,14 @@ import { getHegicData } from './hegic';
 import { getOmenData } from './omen';
 import { get0xData } from './zerox';
 import { getRenData } from './ren';
+import { getSushiswapData } from './sushi';
 import registerSynthetix from './synthetix';
 // import { getPolymarketData } from './polymarket';
 import { getPolkadotData, getKusamaData } from './polkadot';
 import { getMstableData } from './mStable';
 import { getTBTCData } from './tbtc';
 import { getTornadoData } from './tornado';
+import { getUniswapV1Data, getUniswapV2Data } from './uniswap';
 import { getAaveData } from './aave';
 
 export const adapters = [

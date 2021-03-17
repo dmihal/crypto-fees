@@ -76,5 +76,16 @@ export async function getOmenData(): Promise<FeeData> {
   }
   sevenDayMA /= 7;
 
-  return { id: 'omen', category: 'app', sevenDayMA, oneDay };
+  return {
+    id: 'omen',
+    name: 'Omen',
+    category: 'app',
+    sevenDayMA,
+    oneDay,
+    description: 'Omen is a prediction market.',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers.',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'omen',
+  };
 }

@@ -55,5 +55,10 @@ export async function getTBTCData(): Promise<FeeData> {
     category: 'app',
     sevenDayMA: oneWeekTBTCFeesInUSD + oneWeekBeaconFeesInUSD,
     oneDay: oneDayTBTCFeesInUSD + oneDayBeaconFeesInUSD,
+    description: 'tBTC is a protocol for cross-chain asset transfers',
+    feeDescription: 'Transfer fees are paid by users to node operators.',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'tbtc',
   };
 }

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { FeeData } from 'data/adapters/feeData';
-import { protocolNames } from '../constants';
-import icons from './icons';
+import Row from './Row';
 
 interface ListProps {
   data: FeeData[];
@@ -28,27 +27,7 @@ const List: React.FC<ListProps> = ({ data }) => {
       </div>
 
       {sortedData.map((protocol: FeeData) => (
-        <div
-          className={`item ${protocol.category}`}
-          key={protocol.id}
-          style={{
-            backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
-          }}
-        >
-          <div className="name">{protocol.name || protocolNames[protocol.id]}</div>
-          <div className="amount">
-            {protocol.oneDay.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </div>
-          <div className="amount">
-            {protocol.sevenDayMA.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </div>
-        </div>
+        <Row protocol={protocol} key={protocol.id} />
       ))}
 
       <style jsx>{`
@@ -57,6 +36,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           border-radius: 0px;
           overflow: hidden;
           margin: 4px;
+          max-width: 700px;
         }
 
         .header {

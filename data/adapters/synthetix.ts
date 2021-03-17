@@ -34,5 +34,10 @@ export default function registerSynthetix(register: any) {
   register('synthetix', synthetixQuery, {
     category: 'app',
     name: 'Synthetix',
+    description: 'The Synthetix Exchange is a decentralized exchange for trading synthetic assets',
+    feeDescription: 'Trading fees are paid by users to SNX stakers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'synthetix',
   });
 }

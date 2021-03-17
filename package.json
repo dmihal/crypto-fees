@@ -26,6 +26,7 @@
     ]
   },
   "dependencies": {
+    "@types/react-transition-group": "^4.4.0",
     "date-fns": "^2.16.1",
     "date2block": "^0.1.1",
     "knex": "^0.95.2",
@@ -34,7 +35,8 @@
     "pg": "^8.5.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-ga": "^3.1.2"
+    "react-ga": "^3.1.2",
+    "react-transition-group": "^4.4.1"
   },
   "devDependencies": {
     "@testing-library/react": "^10.0.1",

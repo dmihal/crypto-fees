@@ -35,6 +35,7 @@ export async function getPolymarketData(): Promise<FeeData> {
 
   return {
     id: 'polymarket',
+    name: 'Polymarket',
     category: 'app',
     oneDay:
       parseFloat(data.today.scaledCollateralFees) - parseFloat(data.yesterday.scaledCollateralFees),
@@ -42,5 +43,10 @@ export async function getPolymarketData(): Promise<FeeData> {
       (parseFloat(data.today.scaledCollateralFees) -
         parseFloat(data.weekAgo.scaledCollateralFees)) /
       7,
+    description: 'Polymarket is a prediction market.',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    blockchain: 'Matic',
+    source: 'The Graph Protocol',
+    adapter: 'polymarket',
   };
 }

@@ -38,6 +38,7 @@ export async function getMstableData(): Promise<FeeData> {
   const { data } = await request.json();
   return {
     id: 'mstable',
+    name: 'mStable',
     category: 'app',
     sevenDayMA:
       (parseInt(data.now.cumulativeFeesPaid.exact) -
@@ -48,5 +49,10 @@ export async function getMstableData(): Promise<FeeData> {
       (parseInt(data.now.cumulativeFeesPaid.exact) -
         parseInt(data.yesterday.cumulativeFeesPaid.exact)) /
       EIGHTEEN_DECIMALS,
+    description: 'mStable is a stablecoin asset manager.',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'mStable',
   };
 }
