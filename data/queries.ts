@@ -75,3 +75,31 @@ export async function getHistoricalData(date: string): Promise<FeeData[]> {
 
   return data;
 }
+
+export async function getLastWeek(): Promise<any[]> {
+  const days = last7Days().reverse();
+  const v2Data = await Promise.all(
+    getIDs().map(async (id: string) => {
+      try {
+        const fees = await Promise.all(
+          days.map(async (day: string) => ({
+            date: day,
+            fee: await getValue(id, 'fee', day),
+          }))
+        );
+
+        return {
+          id,
+          ...getMetadata(id),
+          fees,
+        };
+      } catch (e) {
+        console.warn(e);
+        return null;
+      }
+    })
+  );
+
+  const data = v2Data.filter((val: any) => !!val);
+  return data;
+}
