@@ -26,7 +26,13 @@ export async function getData(): Promise<FeeData[]> {
   const days = last7Days();
   const v2Data = await Promise.all(
     getIDs().map(async (id: string) => {
-      const feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+      let feeForDay;
+      try {
+        feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+      } catch (e) {
+        console.warn(e);
+        return null;
+      }
       const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
 
       return {
@@ -39,6 +45,33 @@ export async function getData(): Promise<FeeData[]> {
   );
 
   const data = [...appData, ...v2Data].filter((val: any) => !!val);
+
+  return data;
+}
+
+export async function getHistoricalData(date: string): Promise<FeeData[]> {
+  const days = last7Days(new Date(date));
+  const v2Data = await Promise.all(
+    getIDs().map(async (id: string) => {
+      let feeForDay;
+      try {
+        feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+      } catch (e) {
+        console.warn(e);
+        return null;
+      }
+      const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
+
+      return {
+        id,
+        ...getMetadata(id),
+        sevenDayMA,
+        oneDay: feeForDay[feeForDay.length - 1],
+      };
+    })
+  );
+
+  const data = v2Data.filter((val: any) => !!val);
 
   return data;
 }

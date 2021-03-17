@@ -1,14 +1,23 @@
 import React from 'react';
-import { NextPage, GetStaticProps } from 'next';
+import { NextPage, GetServerSideProps } from 'next';
 import { FeeData } from 'data/adapters/feeData';
-import { getData } from 'data/queries';
+import { getHistoricalData } from 'data/queries';
 import List from 'components/List';
 
-interface HomeProps {
+interface HistoricalDataPageProps {
   data: FeeData[];
+  invalid?: boolean;
 }
 
-export const Home: NextPage<HomeProps> = ({ data }) => {
+export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, invalid }) => {
+  if (invalid) {
+    return (
+      <div>
+        <p>Invalid date</p>
+      </div>
+    );
+  }
+
   return (
     <main>
       <h1 className="title">Crypto Fees</h1>
@@ -18,22 +27,6 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         <br />
         Which ones are people actually paying to use?
       </p>
-
-      <p>
-        Like this site?{' '}
-        <a href="https://gitcoin.co/grants/1624/cryptofees-info">Support it on Gitcoin Grants</a>
-      </p>
-
-      <div>
-        <a
-          href="https://twitter.com/share?ref_src=twsrc%5Etfw"
-          className="twitter-share-button"
-          data-show-count="true"
-        >
-          Tweet
-        </a>
-        <script async src="https://platform.twitter.com/widgets.js"></script>
-      </div>
 
       <List data={data} />
 
@@ -87,11 +80,15 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  const data = await getData();
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  if (!/20\d{2}-\d{2}-\d{2}/.test(params.date.toString())) {
+    return { props: { data: [], invalid: true } };
+  }
+
+  const data = await getHistoricalData(params.date.toString());
   const filteredData = data.filter((val: any) => !!val);
 
-  return { props: { data: filteredData }, revalidate: 60 };
+  return { props: { data: filteredData } };
 };
 
-export default Home;
+export default HistoricalDataPage;

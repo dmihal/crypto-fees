@@ -88,5 +88,5 @@ export function getYesterdayDate() {
   return formatDate(date);
 }
 
-export const last7Days = () =>
-  [...new Array(7)].map((_, num: number) => formatDate(subDays(new Date(), 7 - num)));
+export const last7Days = (date?: Date) =>
+  [...new Array(7)].map((_, num: number) => formatDate(subDays(date || new Date(), 7 - num)));
