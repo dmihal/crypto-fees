@@ -20,10 +20,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       <Head>
         <title key="title">Crypto Fees</title>
         <link rel="icon" href="/favicon.png" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
+        <link href="https://use.typekit.net/jrq0bbf.css" rel="stylesheet" />
         <link
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/3.6.0/react-datepicker.min.css"
@@ -48,12 +45,21 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
+      <header>
+        <ul className="header-links">
+          <li className="header-link">
+            <div>cryptofees.info</div>
+          </li>
+          <li className="header-link">
+            <a href="https://money-movers.info/">money-movers.info</a>
+          </li>
+        </ul>
+      </header>
+
       <Component {...pageProps} />
 
       <footer>
         <div>Data updates at midnight, UTC</div>
-        <div>Network data from CoinMetrics, application data from The Graph</div>
-        <div>Application data does not include Ethereum transaction fees</div>
         <div>
           Created by{' '}
           <a href="https://twitter.com/dmihal" target="twitter">
@@ -92,6 +98,29 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           align-items: center;
         }
 
+        .header-links {
+          display: flex;
+          margin: 0;
+          padding: 0;
+        }
+
+        .header-link {
+          list-style: none;
+        }
+
+        .header-link > * {
+          padding: 8px;
+          display: block;
+          border: solid 1px transparent;
+          margin: 0 4px;
+        }
+
+        .header-link > a:hover {
+          border-radius: 3px;
+          border: solid 1px #d0d1d9;
+          text-decoration: none;
+        }
+
         footer {
           width: 100%;
           height: auto;
@@ -105,8 +134,8 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         body {
           padding: 0;
           margin: 0;
-          font-family: 'Noto Sans TC', sans-serif;
-          background: #eeeeee;
+          font-family: 'sofia-pro', sans-serif;
+          background: #f9fafc;
         }
 
         * {
