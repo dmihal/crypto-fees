@@ -14,19 +14,32 @@ const DateButton = forwardRef<HTMLButtonElement, { onClick?: any; value?: string
 interface ToolbarProps {
   date?: Date;
   onDateChange?: (date: Date) => void;
+  onFilterToggle?: () => void;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ date, onDateChange }) => {
+const Toolbar: React.FC<ToolbarProps> = ({ date, onDateChange, onFilterToggle }) => {
   return (
-    <div>
+    <div className="toolbar">
+      <Button onClick={onFilterToggle}>Filters</Button>
+
       {onDateChange && (
         <DatePicker
           selected={date}
           customInput={<DateButton />}
           onChange={onDateChange}
           maxDate={subDays(new Date(), 1)}
+          popperPlacement="bottom-end"
         />
       )}
+
+      <style jsx>{`
+        .toolbar {
+          display: flex;
+          justify-content: flex-end;
+          align-self: stretch;
+          margin: 0 4px;
+        }
+      `}</style>
     </div>
   );
 };

@@ -50,7 +50,7 @@ export default function registerCompound(register: any) {
 
   register('compound', compoundQuery, {
     name: 'Compound',
-    category: 'app',
+    category: 'lending',
     description: 'Compound is an open borrowing & lending protocol.',
     feeDescription: 'Interest fees are paid from borrowers to lenders.',
     blockchain: 'Ethereum',

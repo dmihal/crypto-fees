@@ -1,53 +1,42 @@
-import { FeeData } from './feeData';
-import { getBlockDaysAgo } from '../lib/time';
+import { query } from '../lib/graph';
+import { dateToBlockNumber } from '../lib/time';
 
-export async function getRenData(): Promise<FeeData> {
-  const request = await fetch('https://api.thegraph.com/subgraphs/name/renproject/renvm', {
-    headers: {
-      'content-type': 'application/json',
+export async function getRenData(date: string): Promise<number> {
+  const todayBlock = dateToBlockNumber(date, 1);
+  const yesterdayBlock = dateToBlockNumber(date);
+
+  const data = await query(
+    'renproject/renvm',
+    `
+    query feesOverPeriod($today: Int!, $yesterday: Int!){
+      today: renVM(id:1, block: {number: $today}) {
+        fees {
+          symbol
+          amount
+          amountInEth
+          amountInUsd
+        }
+      }
+      yesterday: renVM(id:1, block: {number: $yesterday}){
+        fees {
+          symbol
+          amount
+          amountInEth
+          amountInUsd
+        }
+      }
+    }`,
+    {
+      today: todayBlock,
+      yesterday: yesterdayBlock,
     },
-    body: JSON.stringify({
-      query: `query feesOverPeriod($today: Int!, $yesterday: Int!, $weekAgo: Int!){
-        today: renVM(id:1, block: {number: $today}) {
-          fees {
-            symbol
-            amount
-            amountInEth
-            amountInUsd
-          }
-        }
-        yesterday: renVM(id:1, block: {number: $yesterday}){
-          fees {
-            symbol
-            amount
-            amountInEth
-            amountInUsd
-          }
-        }
-        weekAgo: renVM(id:1, block: { number: $weekAgo }) {
-          fees {
-            symbol
-            amount
-            amountInEth
-            amountInUsd
-          }
-        }
-      }`,
-      variables: {
-        today: getBlockDaysAgo(0),
-        yesterday: getBlockDaysAgo(1),
-        weekAgo: getBlockDaysAgo(7),
-      },
-      operationName: 'feesOverPeriod',
-    }),
-    method: 'POST',
-  });
-
-  const { data } = await request.json();
+    'feesOverPeriod'
+  );
 
   const assets: {
-    [id: string]: { today?: number; yesterday?: number; weekAgo?: number };
+    [id: string]: { today?: number; yesterday?: number };
   } = {};
+
   for (const asset of data.today.fees) {
     assets[asset.symbol] = { today: parseFloat(asset.amountInUsd) };
   }
@@ -57,36 +46,34 @@ export async function getRenData(): Promise<FeeData> {
       yesterday: parseFloat(asset.amountInUsd),
     };
   }
-  for (const asset of data.weekAgo.fees) {
-    assets[asset.symbol] = {
-      ...assets[asset.symbol],
-      weekAgo: parseFloat(asset.amountInUsd),
-    };
-  }
 
   let oneDay = 0;
-  let sevenDayMA = 0;
 
   for (const id in assets) {
     if (assets[id].yesterday) {
       oneDay += assets[id].today - assets[id].yesterday;
     }
-    if (assets[id].weekAgo) {
-      sevenDayMA += assets[id].today - assets[id].weekAgo;
-    }
   }
-  sevenDayMA /= 7;
 
-  return {
-    id: 'ren',
+  return oneDay;
+}
+
+export default function registerRen(register: any) {
+  const renQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Uniswap doesn't support ${attribute}`);
+    }
+    return getRenData(date);
+  };
+
+  register('ren', renQuery, {
     name: 'Ren Protocol',
-    category: 'app',
-    sevenDayMA,
-    oneDay,
+    category: 'xchain',
     description: 'Ren Protocol is a protocol for cross-chain asset transfers.',
     feeDescription: 'Transfer fees are paid by users to node operators (Darknodes).',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'ren',
-  };
+    website: 'https://renproject.io',
+  });
 }

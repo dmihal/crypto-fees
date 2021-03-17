@@ -39,7 +39,7 @@ export async function getMstableData(): Promise<FeeData> {
   return {
     id: 'mstable',
     name: 'mStable',
-    category: 'app',
+    category: 'dex',
     sevenDayMA:
       (parseInt(data.now.cumulativeFeesPaid.exact) -
         parseInt(data.weekAgo.cumulativeFeesPaid.exact)) /

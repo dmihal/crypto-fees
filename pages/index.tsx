@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
 import { FeeData } from 'data/adapters/feeData';
 import { getData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
+import FilterCard, { Filters } from 'components/FilterCard';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 
@@ -11,8 +12,18 @@ interface HomeProps {
   data: FeeData[];
 }
 
+const toggle = (_val: boolean) => !_val;
+
 export const Home: NextPage<HomeProps> = ({ data }) => {
   const router = useRouter();
+  const [filterCardOpen, setFilterCardOpen] = useState(false);
+  const [filters, setFilters] = useState<Filters>({});
+
+  let _data = data;
+  if (filters.categories) {
+    _data = _data.filter((item: FeeData) => filters.categories.indexOf(item.category) !== -1);
+  }
+
   return (
     <main>
       <h1 className="title">Crypto Fees</h1>
@@ -39,9 +50,19 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         <script async src="https://platform.twitter.com/widgets.js"></script>
       </div>
 
-      <Toolbar onDateChange={(newDate: Date) => router.push(`/history/${formatDate(newDate)}`)} />
+      <Toolbar
+        onDateChange={(newDate: Date) => router.push(`/history/${formatDate(newDate)}`)}
+        onFilterToggle={() => setFilterCardOpen(toggle)}
+      />
 
-      <List data={data} />
+      <FilterCard
+        open={filterCardOpen}
+        onClose={() => setFilterCardOpen(false)}
+        filters={filters}
+        onFilterChange={(_filters: Filters) => setFilters(_filters)}
+      />
+
+      <List data={_data} />
 
       <style jsx>{`
         main {

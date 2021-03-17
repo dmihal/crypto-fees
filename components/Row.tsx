@@ -17,7 +17,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
     <Fragment>
       <div
         onClick={() => setOpen(toggle)}
-        className={`item ${protocol.category}`}
+        className={`item ${protocol.category !== 'l1' ? 'app' : ''}`}
         style={{
           backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
         }}

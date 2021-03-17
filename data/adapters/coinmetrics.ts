@@ -91,6 +91,9 @@ export default function registerCoinMetrics(register: any) {
       return getCoinMetricsData(id, date);
     };
 
-    register(id, query, metadata);
+    register(id, query, {
+      ...metadata,
+      category: 'l1',
+    });
   });
 }

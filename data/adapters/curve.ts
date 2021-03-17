@@ -83,7 +83,7 @@ export default function registerCurve(register: any) {
 
   register('curve', curveQuery, {
     name: 'Curve',
-    category: 'app',
+    category: 'dex',
     description: 'Curve is a decentralized exchange for stable-value assets.',
     feeDescription: 'Trading fees are paid by traders to liquidity providers.',
     blockchain: 'Ethereum',

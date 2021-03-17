@@ -79,7 +79,7 @@ export async function getOmenData(): Promise<FeeData> {
   return {
     id: 'omen',
     name: 'Omen',
-    category: 'app',
+    category: 'dex',
     sevenDayMA,
     oneDay,
     description: 'Omen is a prediction market.',

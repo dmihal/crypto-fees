@@ -10,7 +10,7 @@ export async function getAaveData(): Promise<FeeData> {
   return {
     id: 'aave',
     name: 'Aave',
-    category: 'app',
+    category: 'lending',
     sevenDayMA: parseFloat(response.last7DaysUTCAvg),
     oneDay: parseFloat(response.lastDayUTCFees),
     description: 'Aave is an open borrowing & lending protocol.',

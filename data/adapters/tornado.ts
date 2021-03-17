@@ -33,7 +33,7 @@ export default function registerSushiswap(register: any) {
 
   register('tornado', tornadoQuery, {
     name: 'Tornado Cash',
-    category: 'app',
+    category: 'other',
     description: 'Tornado Cash is a privacy tool for trustless asset mixing.',
     feeDescription: 'Relay fees are paid by withdrawers to relayers.',
     blockchain: 'Ethereum',

@@ -1,4 +1,4 @@
-type Category = 'l1' | 'app' | 'l2';
+type Category = 'l1' | 'app' | 'l2' | 'dex' | 'lending' | 'xchain' | 'other';
 
 export interface FeeData {
   id: string;

@@ -1,5 +1,5 @@
 import { getLinkswapData } from './feeData';
-import { getBalancerData } from './balancer';
+import registerBalancer from './balancer';
 import { getBancorData } from './bancor';
 import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
@@ -7,7 +7,7 @@ import registerCurve from './curve';
 import { getHegicData } from './hegic';
 import { getOmenData } from './omen';
 import register0x from './zerox';
-import { getRenData } from './ren';
+import registerRen from './ren';
 import registerSushiswap from './sushi';
 import registerSynthetix from './synthetix';
 // import { getPolymarketData } from './polymarket';
@@ -20,14 +20,12 @@ import { getAaveData } from './aave';
 
 export const adapters = [
   getLinkswapData,
-  getBalancerData,
   getBancorData,
   getHegicData,
   getKusamaData,
   getOmenData,
   // getPolymarketData,
   getPolkadotData,
-  getRenData,
   getMstableData,
   getAaveData,
 ];
@@ -46,9 +44,11 @@ const register = (id: string, query: any, metadata: any) => {
 };
 
 register0x(register);
+registerBalancer(register);
 registerCoinMetrics(register);
 registerCompound(register);
 registerCurve(register);
+registerRen(register);
 registerSushiswap(register);
 registerSynthetix(register);
 registerTBTC(register);

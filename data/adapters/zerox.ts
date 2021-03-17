@@ -27,7 +27,7 @@ export default function register0x(register: any) {
   register('zerox', zeroxQuery, {
     id: 'zerox',
     name: '0x',
-    category: 'app',
+    category: 'dex',
     description: '0x is a decentralized exchange protocol.',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     blockchain: 'Ethereum',

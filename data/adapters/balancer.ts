@@ -1,44 +1,41 @@
-import { FeeData } from './feeData';
-import { getBlockDaysAgo } from '../lib/time';
+import { query } from '../lib/graph';
+import { dateToBlockNumber } from '../lib/time';
 
-export async function getBalancerData(): Promise<FeeData> {
-  const todayBlock = getBlockDaysAgo(0);
-  const yesterdayBlock = getBlockDaysAgo(1);
-  const weekAgoBlock = getBlockDaysAgo(7);
+async function getBalancerData(date: string): Promise<number> {
+  const todayBlock = dateToBlockNumber(date, 1);
+  const yesterdayBlock = dateToBlockNumber(date);
 
-  const request = await fetch('https://api.thegraph.com/subgraphs/name/bonustrack/balancer', {
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `{
-        now: balancer(id: "1", block: {number: ${todayBlock}}) {
-          totalSwapFee
-        }
-        yesterday: balancer(id: "1", block: {number: ${yesterdayBlock}}) {
-          totalSwapFee
-        }
-        weekAgo: balancer(id: "1", block: {number: ${weekAgoBlock}}) {
-          totalSwapFee
-        }
-      }`,
-      variables: null,
-    }),
-    method: 'POST',
-  });
+  const data = await query(
+    'bonustrack/balancer',
+    `{
+      now: balancer(id: "1", block: {number: ${todayBlock}}) {
+        totalSwapFee
+      }
+      yesterday: balancer(id: "1", block: {number: ${yesterdayBlock}}) {
+        totalSwapFee
+      }
+    }`
+  );
 
-  const { data } = await request.json();
+  return parseFloat(data.now.totalSwapFee) - parseFloat(data.yesterday.totalSwapFee);
+}
 
-  return {
-    id: 'balancer',
+export default function registerBalancer(register: any) {
+  const balancerQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Balancer doesn't support ${attribute}`);
+    }
+    return getBalancerData(date);
+  };
+
+  register('balancer', balancerQuery, {
     name: 'Balancer',
-    category: 'app',
-    sevenDayMA: (parseFloat(data.now.totalSwapFee) - parseFloat(data.weekAgo.totalSwapFee)) / 7,
-    oneDay: parseFloat(data.now.totalSwapFee) - parseFloat(data.yesterday.totalSwapFee),
+    category: 'dex',
     description: 'Balancer is a decentralized exchange & asset pool balancer.',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'balancer',
-  };
+    website: 'https://balancer.finance',
+  });
 }

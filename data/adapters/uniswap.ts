@@ -49,7 +49,7 @@ export default function registerUniswap(register: any) {
 
   register('uniswap-v1', v1Query, {
     name: 'Uniswap V1',
-    category: 'app',
+    category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     website: 'https://uniswap.com',
@@ -60,7 +60,7 @@ export default function registerUniswap(register: any) {
 
   register('uniswap-v2', v2Query, {
     name: 'Uniswap V2',
-    category: 'app',
+    category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     website: 'https://uniswap.com',

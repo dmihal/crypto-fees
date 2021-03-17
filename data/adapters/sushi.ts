@@ -26,7 +26,7 @@ export default function registerSushiswap(register: any) {
 
   register('sushiswap', sushiQuery, {
     name: 'SushiSwap',
-    category: 'app',
+    category: 'dex',
     description: 'SushiSwap is a community-owned permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     blockchain: 'Ethereum',

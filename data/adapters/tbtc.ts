@@ -46,7 +46,7 @@ export default function registerTBTC(register: any) {
 
   register('tbtc', tbtcQuery, {
     name: 'tBTC',
-    category: 'app',
+    category: 'xchain',
     description: 'tBTC is a protocol for cross-chain asset transfers',
     feeDescription: 'Transfer fees are paid by users to node operators.',
     blockchain: 'Ethereum',

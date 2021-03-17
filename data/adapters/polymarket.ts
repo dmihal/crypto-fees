@@ -36,7 +36,7 @@ export async function getPolymarketData(): Promise<FeeData> {
   return {
     id: 'polymarket',
     name: 'Polymarket',
-    category: 'app',
+    category: 'dex',
     oneDay:
       parseFloat(data.today.scaledCollateralFees) - parseFloat(data.yesterday.scaledCollateralFees),
     sevenDayMA:

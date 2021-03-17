@@ -81,7 +81,7 @@ export async function getHegicData(): Promise<FeeData> {
   return {
     id: 'hegic',
     name: 'Hegic',
-    category: 'app',
+    category: 'other',
     sevenDayMA: totalFeesWeek / 7,
     oneDay: totalFeesYesterday,
     description: 'Hegic is a decentralized options trading platform',
