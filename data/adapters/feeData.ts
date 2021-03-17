@@ -6,6 +6,12 @@ export interface FeeData {
   category: Category;
   sevenDayMA: number;
   oneDay: number;
+  description?: string;
+  feeDescription?: string;
+  blockchain?: string;
+  source?: string;
+  adapter?: string;
+  website?: string;
 }
 
 const last7Days = () =>

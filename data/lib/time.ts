@@ -54,15 +54,14 @@ export function dateToBlockNumber(dateStr: string, dayOffset = 0): number {
 }
 
 export function getYesterdayTimestamps() {
-  const yesterday = new Date();
-  yesterday.setUTCDate(yesterday.getUTCDate() - 1);
-  yesterday.setUTCHours(0, 0, 0);
-  const beginning = Math.round(yesterday.getTime() / 1000);
-
-  yesterday.setUTCHours(23, 59, 59);
-  const end = Math.round(yesterday.getTime() / 1000);
-
+  const beginning = Math.floor(Date.now() / 1000 / 86400 - 1) * 86400;
+  const end = Math.floor(Date.now() / 1000 / 86400) * 86400 - 1;
   return { beginning, end };
+}
+
+export function dateToTimestamp(date: string | Date) {
+  const _date = (date as string).length ? new Date(date) : (date as Date);
+  return Math.floor(_date.getTime() / 1000 / 86400) * 86400;
 }
 
 export function getWeekAgoTimestamps() {

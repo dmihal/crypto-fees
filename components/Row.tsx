@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { FeeData } from 'data/feeData';
+import { FeeData } from 'data/adapters/feeData';
 import icons from './icons';
 import { CSSTransition } from 'react-transition-group';
 import DetailsCard from './DetailsCard';

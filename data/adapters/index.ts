@@ -2,25 +2,23 @@ import { getLinkswapData } from './feeData';
 import { getBalancerData } from './balancer';
 import { getBancorData } from './bancor';
 import registerCoinMetrics from './coinmetrics';
-import { getCompoundData } from './compound';
+import registerCompound from './compound';
 import { getCurveData } from './curve';
 import { getHegicData } from './hegic';
 import { getOmenData } from './omen';
 import { get0xData } from './zerox';
 import { getRenData } from './ren';
-import { getSushiswapData } from './sushi';
+import registerSushiswap from './sushi';
 import registerSynthetix from './synthetix';
 // import { getPolymarketData } from './polymarket';
 import { getPolkadotData, getKusamaData } from './polkadot';
 import { getMstableData } from './mStable';
 import { getTBTCData } from './tbtc';
 import { getTornadoData } from './tornado';
-import { getUniswapV1Data, getUniswapV2Data } from './uniswap';
+import registerUniswap from './uniswap';
 import { getAaveData } from './aave';
 
 export const adapters = [
-  getUniswapV1Data,
-  getUniswapV2Data,
   getLinkswapData,
   getBalancerData,
   getBancorData,
@@ -32,12 +30,10 @@ export const adapters = [
   // getPolymarketData,
   getPolkadotData,
   getRenData,
-  getSushiswapData,
   getMstableData,
   getTornadoData,
   getTBTCData,
   getAaveData,
-  getCompoundData,
 ];
 
 interface Adapter {
@@ -53,8 +49,11 @@ const register = (id: string, query: any, metadata: any) => {
   adapters2[id] = { query, metadata };
 };
 
-registerSynthetix(register);
 registerCoinMetrics(register);
+registerCompound(register);
+registerSushiswap(register);
+registerSynthetix(register);
+registerUniswap(register);
 
 export const getIDs = () => ids;
 

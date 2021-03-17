@@ -1,12 +1,12 @@
 import React from 'react';
-import { FeeData } from 'data/feeData';
+import { FeeData } from 'data/adapters/feeData';
 import Attribute from './Attribute';
 
-interface RowProps {
+interface DetailsCardProps {
   protocol: FeeData;
 }
 
-const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/';
+const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
 const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
   return (

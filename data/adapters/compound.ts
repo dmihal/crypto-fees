@@ -1,4 +1,4 @@
-import { FeeData } from './feeData';
+import { dateToTimestamp } from '../lib/time';
 
 const assets = [
   '0x6c8c6b02e7b2be14d4fa6022dfd6d75921d90e4e',
@@ -15,22 +15,14 @@ const assets = [
 ];
 
 const sum = (a: number, b: number) => a + b;
-const arraySum = (current: number[], total: number[]) => [
-  current[0] + total[0],
-  current[1] + total[1],
-];
 
-export async function getCompoundData(): Promise<FeeData> {
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
+export async function getCompoundData(date: string): Promise<number> {
+  const startTimestamp = dateToTimestamp(date);
+  const endTimestamp = startTimestamp + 86400;
 
-  const endTimestamp = today.getTime() / 1000;
-
-  const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-  const startTimestamp = weekAgo.getTime() / 1000;
   const interestByAsset = await Promise.all(
     assets.map(async (asset: string) => {
-      const url = `https://api.compound.finance/api/v2/market_history/graph?asset=${asset}&min_block_timestamp=${startTimestamp}&max_block_timestamp=${endTimestamp}&num_buckets=7`;
+      const url = `https://api.compound.finance/api/v2/market_history/graph?asset=${asset}&min_block_timestamp=${startTimestamp}&max_block_timestamp=${endTimestamp}&num_buckets=1`;
       const req = await fetch(url);
       const json = await req.json();
 
@@ -39,27 +31,30 @@ export async function getCompoundData(): Promise<FeeData> {
           (borrow.total.value * json.prices_usd[i].price.value * json.borrow_rates[i].rate) / 365
       );
 
-      const sevenDayMA = dailyInterest.reduce(sum, 0) / 7;
-      const oneDay = dailyInterest[6];
-
-      return [oneDay, sevenDayMA];
+      return dailyInterest[0];
     })
   );
 
-  const [oneDay, sevenDayMA] = interestByAsset
-    .filter(([a, b]: number[]) => a && b)
-    .reduce(arraySum, [0, 0]);
+  const oneDay = interestByAsset.filter((num: number) => num).reduce(sum, 0);
 
-  return {
-    id: 'compound',
+  return oneDay;
+}
+
+export default function registerCompound(register: any) {
+  const compoundQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Uniswap doesn't support ${attribute}`);
+    }
+    return getCompoundData(date);
+  };
+
+  register('compound', compoundQuery, {
     name: 'Compound',
     category: 'app',
-    sevenDayMA,
-    oneDay,
     description: 'Compound is an open borrowing & lending protocol.',
     feeDescription: 'Interest fees are paid from borrowers to lenders.',
     blockchain: 'Ethereum',
     source: 'Compound API',
     adapter: 'compound',
-  };
+  });
 }
