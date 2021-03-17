@@ -1,6 +1,6 @@
-import { FeeData } from './feeData';
-import { getBlockDaysAgo } from '../lib/time';
-import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
+import { dateToBlockNumber } from '../lib/time';
+import { query } from '../lib/graph';
+import { getHistoricalPrice } from '../lib/pricedata';
 
 interface Pool {
   name: string;
@@ -41,62 +41,54 @@ const pools: Pool[] = [
   },
 ];
 
-export async function getCurveData(): Promise<FeeData> {
-  const todayBlock = getBlockDaysAgo(0);
-  const yesterdayBlock = getBlockDaysAgo(1);
-  const weekAgoBlock = getBlockDaysAgo(7);
+export async function getCurveData(date: string): Promise<number> {
+  const todayBlock = dateToBlockNumber(date, 1);
+  const yesterdayBlock = dateToBlockNumber(date);
 
-  const request = await fetch('https://api.thegraph.com/subgraphs/name/blocklytics/curve', {
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `{
-        ${pools
-          .map(
-            (pool: Pool) => `
-          ${pool.name}_current: exchange(id: "${pool.address}", block: {number: ${todayBlock}}) {
-            totalUnderlyingVolumeDecimal
-          }
-          ${pool.name}_yesterday: exchange(id: "${pool.address}", block: {number: ${yesterdayBlock}}) {
-            totalUnderlyingVolumeDecimal
-          }
-          ${pool.name}_week_ago: exchange(id: "${pool.address}", block: {number: ${weekAgoBlock}}) {
-            totalUnderlyingVolumeDecimal
-          }
-        `
-          )
-          .join('')}
-      }`,
-      variables: null,
-    }),
-    method: 'POST',
-  });
-
-  const { data } = await request.json();
+  const data = await query(
+    'blocklytics/curve',
+    `{
+    ${pools
+      .map(
+        (pool: Pool) => `
+      ${pool.name}_current: exchange(id: "${pool.address}", block: {number: ${todayBlock}}) {
+        totalUnderlyingVolumeDecimal
+      }
+      ${pool.name}_yesterday: exchange(id: "${pool.address}", block: {number: ${yesterdayBlock}}) {
+        totalUnderlyingVolumeDecimal
+      }`
+      )
+      .join('')}
+  }`
+  );
 
   let oneDay = 0;
-  let sevenDayMA = 0;
   for (const pool of pools) {
-    const priceYesterday = await getHistoricalAvgDailyPrice(pool.price, 1);
-    const priceLastWeek = await getHistoricalAvgDailyPrice(pool.price, 7);
+    const priceYesterday = await getHistoricalPrice(pool.price, date);
     const current = parseFloat(data[`${pool.name}_current`].totalUnderlyingVolumeDecimal);
     const yesterday = parseFloat(data[`${pool.name}_yesterday`].totalUnderlyingVolumeDecimal);
-    const weekAgo = parseFloat(data[`${pool.name}_week_ago`].totalUnderlyingVolumeDecimal);
     oneDay += (current - yesterday) * 0.0004 * priceYesterday;
-    sevenDayMA += ((current - weekAgo) * 0.0004 * priceLastWeek) / 7;
   }
 
-  return {
-    id: 'curve',
+  return oneDay;
+}
+
+export default function registerCurve(register: any) {
+  const curveQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Curve doesn't support ${attribute}`);
+    }
+    return getCurveData(date);
+  };
+
+  register('curve', curveQuery, {
     name: 'Curve',
     category: 'app',
-    sevenDayMA,
-    oneDay,
     description: 'Curve is a decentralized exchange for stable-value assets.',
     feeDescription: 'Trading fees are paid by traders to liquidity providers.',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'curve',
-  };
+    website: 'https://www.curve.fi/',
+  });
 }

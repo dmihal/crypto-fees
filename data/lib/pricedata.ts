@@ -39,3 +39,22 @@ export const getHistoricalAvgDailyPrice = async (
 
   return priceCache[cacheName];
 };
+
+export async function getHistoricalPrice(name: string, date: string) {
+  if (name == 'usd') {
+    return 1;
+  }
+
+  const cacheName = `${name}-${date}`;
+
+  if (!priceCache[cacheName]) {
+    const reversedDate = date.split('-').reverse().join('-');
+    const request = await fetch(
+      `https://api.coingecko.com/api/v3/coins/${name}/history?date=${reversedDate}`
+    );
+    const response = await request.json();
+    priceCache[cacheName] = response.market_data.current_price.usd;
+  }
+
+  return priceCache[cacheName];
+}

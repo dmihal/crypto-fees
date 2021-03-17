@@ -1,10 +1,9 @@
-import { FeeData } from './feeData';
-import { getBlockDaysAgo } from '../lib/time';
+import { dateToBlockNumber } from '../lib/time';
 import { query } from '../lib/graph';
-import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
+import { getHistoricalPrice } from '../lib/pricedata';
 
-export async function getTBTCData(): Promise<FeeData> {
-  const graphQuery = `query fees($today: Int!, $yesterday: Int!, $weekAgo: Int!){
+export async function getTBTCData(date: string): Promise<number> {
+  const graphQuery = `query fees($today: Int!, $yesterday: Int!){
     now: statsRecord(id: "current", block: {number: $today}) {
       tbtcFees
       randomBeaconFees
@@ -13,27 +12,19 @@ export async function getTBTCData(): Promise<FeeData> {
       tbtcFees
       randomBeaconFees
     }
-    weekAgo: statsRecord(id: "current", block: {number: $weekAgo}) {
-      tbtcFees
-      randomBeaconFees
-    }
   }`;
   const data = await query(
     'miracle2k/all-the-keeps',
     graphQuery,
     {
-      today: getBlockDaysAgo(0),
-      yesterday: getBlockDaysAgo(1),
-      weekAgo: getBlockDaysAgo(7),
+      today: dateToBlockNumber(date, 1),
+      yesterday: dateToBlockNumber(date),
     },
     'fees'
   );
 
-  const ethPriceYesterday = await getHistoricalAvgDailyPrice('ethereum', 1);
-  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 1);
-
-  const ethPriceLastWeek = await getHistoricalAvgDailyPrice('ethereum', 7);
-  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 7);
+  const ethPriceYesterday = await getHistoricalPrice('ethereum', date);
+  const wbtcPriceYesterday = await getHistoricalPrice('wrapped-bitcoin', date);
 
   const oneDayTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.yesterday.tbtcFees)) / 1e18;
   const oneDayTBTCFeesInUSD = oneDayTBTCFees * wbtcPriceYesterday;
@@ -42,23 +33,24 @@ export async function getTBTCData(): Promise<FeeData> {
     (parseInt(data.now.randomBeaconFees) - parseInt(data.yesterday.randomBeaconFees)) / 1e18;
   const oneDayBeaconFeesInUSD = oneDayBeaconFees * ethPriceYesterday;
 
-  const oneWeekTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.weekAgo.tbtcFees)) / 1e18;
-  const oneWeekTBTCFeesInUSD = (oneWeekTBTCFees * wbtcPriceLastWeek) / 7;
+  return oneDayTBTCFeesInUSD + oneDayBeaconFeesInUSD;
+}
 
-  const oneWeekBeaconFees =
-    (parseInt(data.now.randomBeaconFees) - parseInt(data.weekAgo.randomBeaconFees)) / 1e18;
-  const oneWeekBeaconFeesInUSD = (oneWeekBeaconFees * ethPriceLastWeek) / 7;
+export default function registerTBTC(register: any) {
+  const tbtcQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Tornado Cash doesn't support ${attribute}`);
+    }
+    return getTBTCData(date);
+  };
 
-  return {
-    id: 'tbtc',
+  register('tbtc', tbtcQuery, {
     name: 'tBTC',
     category: 'app',
-    sevenDayMA: oneWeekTBTCFeesInUSD + oneWeekBeaconFeesInUSD,
-    oneDay: oneDayTBTCFeesInUSD + oneDayBeaconFeesInUSD,
     description: 'tBTC is a protocol for cross-chain asset transfers',
     feeDescription: 'Transfer fees are paid by users to node operators.',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'tbtc',
-  };
+  });
 }
