@@ -1,17 +1,3 @@
-import { FeeData } from './feeData';
-import subDays from 'date-fns/subDays';
-import format from 'date-fns/format';
-
-const startOfTodayUTC = () => new Date(new Date().setUTCHours(0, 0, 0, 0));
-
-export function getPolkadotData(): Promise<FeeData> {
-  return getSubstrateData('polkadot', 'Polkadot', 10 ** 10);
-}
-
-export function getKusamaData(): Promise<FeeData> {
-  return getSubstrateData('kusama', 'Kusama', 10 ** 12);
-}
-
 async function fetchJSON(url: string, data: any) {
   const request = await fetch(url, {
     method: 'POST',
@@ -24,35 +10,57 @@ async function fetchJSON(url: string, data: any) {
   return json;
 }
 
-async function getSubstrateData(id: string, name: string, divisor: number): Promise<FeeData> {
-  const today = startOfTodayUTC();
-  const yesterday = subDays(today, 1);
-  const weekAgo = subDays(today, 7);
-
+async function getSubstrateData(id: string, date: string, divisor: number): Promise<number> {
   const [fees, prices] = await Promise.all([
     fetchJSON(`https://${id}.subscan.io/api/scan/daily`, {
-      start: format(weekAgo, 'yyyy-MM-dd'),
-      end: format(yesterday, 'yyyy-MM-dd'),
+      start: date,
+      end: date,
       format: 'day',
       category: 'Fee',
     }),
     fetchJSON(`https://${id}.subscan.io/api/scan/price/history`, {
-      start: format(weekAgo, 'yyyy-MM-dd'),
-      end: format(today, 'yyyy-MM-dd'),
+      start: date,
+      end: date,
     }),
   ]);
 
-  const weekTotal = fees.data.list.reduce(
-    (total: number, day: any, i: number) =>
-      total + day.balance_amount_total * prices.data.list[i].price,
-    0
-  );
+  return (fees.data.list[0].balance_amount_total * prices.data.list[0].price) / divisor;
+}
 
-  return {
-    id,
-    name,
-    category: 'l1',
-    sevenDayMA: weekTotal / divisor / 7,
-    oneDay: (fees.data.list[6].balance_amount_total * prices.data.list[6].price) / divisor,
+export default function registerPolkadot(register: any) {
+  const polkadotQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Polkadot doesn't support ${attribute}`);
+    }
+    return getSubstrateData('polkadot', date, 10 ** 10);
   };
+
+  const kusamaQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Kusama doesn't support ${attribute}`);
+    }
+    return getSubstrateData('kusama', date, 10 ** 12);
+  };
+
+  register('polkadot', polkadotQuery, {
+    name: 'Polkadot',
+    category: 'l1',
+    // description: 'Curve is a decentralized exchange for stable-value assets.',
+    feeDescription: 'Transaction fees are paid from users to validators.',
+    blockchain: 'Polkadot',
+    source: 'Subscan',
+    adapter: 'polkadot',
+    website: 'https://polkadot.network',
+  });
+
+  register('kusama', kusamaQuery, {
+    name: 'Kusama',
+    category: 'l1',
+    // description: 'Curve is a decentralized exchange for stable-value assets.',
+    feeDescription: 'Transaction fees are paid from users to validators.',
+    blockchain: 'Kusama',
+    source: 'Subscan',
+    adapter: 'polkadot',
+    website: 'https://kusama.network',
+  });
 }

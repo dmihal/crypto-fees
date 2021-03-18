@@ -1,47 +1,28 @@
-import { FeeData } from './feeData';
-import { getYesterdayTimestamps, getWeekAgoTimestamps } from '../lib/time';
-import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
+import { query } from '../lib/graph';
+import { dateToTimestamp } from '../lib/time';
+import { getHistoricalPrice } from '../lib/pricedata';
 
-export async function getHegicData(): Promise<FeeData> {
-  const yesterdayTimestamp = getYesterdayTimestamps();
-  const sevenDaysTimestamp = getWeekAgoTimestamps();
+async function getHegicData(date: string): Promise<number> {
+  const start = dateToTimestamp(date);
+  const end = start + 86400;
 
-  const request = await fetch('https://api.thegraph.com/subgraphs/name/ppunky/hegic-v888', {
-    headers: {
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({
-      query: `{
-        yesterday: 
-          options(
-            first: 1000, 
-            where: {
-              timestamp_gte: ${yesterdayTimestamp.beginning},
-              timestamp_lte: ${yesterdayTimestamp.end}
-            }
-          ) 
-          {
-            settlementFee
-            symbol
-          }
-        weekAgo: 
-          options(
-            first: 1000, 
-            where: {
-              timestamp_gte: ${sevenDaysTimestamp.beginning},
-              timestamp_lte: ${sevenDaysTimestamp.end}
-            }
-          ) {
-            settlementFee
-            symbol
-          }
-      }`,
-      variables: null,
-    }),
-    method: 'POST',
-  });
-
-  const { data } = await request.json();
+  const data = await query(
+    'ppunky/hegic-v888',
+    `{
+    yesterday: 
+      options(
+        first: 1000, 
+        where: {
+          timestamp_gte: ${start},
+          timestamp_lte: ${end}
+        }
+      ) 
+      {
+        settlementFee
+        symbol
+      }
+  }`
+  );
 
   // get ETH and WBTC fees over the past 24h hours
   let ethFeesYesterday = 0;
@@ -55,39 +36,32 @@ export async function getHegicData(): Promise<FeeData> {
     }
   }
 
-  // get ETH and WBTC fees over the past 7 days
-  let ethFeesWeek = 0;
-  let wbtcFeesWeek = 0;
-
-  for (const option of data.weekAgo) {
-    if (option.symbol === 'ETH') {
-      ethFeesWeek += parseFloat(option.settlementFee);
-    } else if (option.symbol === 'WBTC') {
-      wbtcFeesWeek += parseFloat(option.settlementFee);
-    }
-  }
-
-  const ethPriceYesterday = await getHistoricalAvgDailyPrice('ethereum', 1);
-  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 1);
-
-  const ethPriceLastWeek = await getHistoricalAvgDailyPrice('ethereum', 7);
-  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 7);
+  const ethPriceYesterday = await getHistoricalPrice('ethereum', date);
+  const wbtcPriceYesterday = await getHistoricalPrice('wrapped-bitcoin', date);
 
   // calculate total fees in USD over the past 24h hours
   const totalFeesYesterday =
     ethFeesYesterday * ethPriceYesterday + wbtcFeesYesterday * wbtcPriceYesterday;
-  const totalFeesWeek = ethFeesWeek * ethPriceLastWeek + wbtcFeesWeek * wbtcPriceLastWeek;
 
-  return {
-    id: 'hegic',
+  return totalFeesYesterday;
+}
+
+export default function registerHegic(register: any) {
+  const hegicQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Hegic doesn't support ${attribute}`);
+    }
+    return getHegicData(date);
+  };
+
+  register('hegic', hegicQuery, {
     name: 'Hegic',
     category: 'other',
-    sevenDayMA: totalFeesWeek / 7,
-    oneDay: totalFeesYesterday,
     description: 'Hegic is a decentralized options trading platform',
     // feeDescription: 'Trading fees are paid by traders to liquidity providers',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'hegic',
-  };
+    website: 'https://www.hegic.co',
+  });
 }

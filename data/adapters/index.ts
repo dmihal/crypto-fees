@@ -4,14 +4,14 @@ import { getBancorData } from './bancor';
 import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
 import registerCurve from './curve';
-import { getHegicData } from './hegic';
+import registerHegic from './hegic';
 import { getOmenData } from './omen';
 import register0x from './zerox';
 import registerRen from './ren';
 import registerSushiswap from './sushi';
 import registerSynthetix from './synthetix';
 // import { getPolymarketData } from './polymarket';
-import { getPolkadotData, getKusamaData } from './polkadot';
+import registerPolkadot from './polkadot';
 import { getMstableData } from './mStable';
 import registerTBTC from './tbtc';
 import registerTornado from './tornado';
@@ -21,11 +21,8 @@ import { getAaveData } from './aave';
 export const adapters = [
   getLinkswapData,
   getBancorData,
-  getHegicData,
-  getKusamaData,
   getOmenData,
   // getPolymarketData,
-  getPolkadotData,
   getMstableData,
   getAaveData,
 ];
@@ -48,6 +45,8 @@ registerBalancer(register);
 registerCoinMetrics(register);
 registerCompound(register);
 registerCurve(register);
+registerHegic(register);
+registerPolkadot(register);
 registerRen(register);
 registerSushiswap(register);
 registerSynthetix(register);
