@@ -32,5 +32,7 @@ export default function registerSushiswap(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'sushi',
+    tokenTicker: 'SUSHI',
+    tokenCoingecko: 'sushi',
   });
 }

@@ -38,6 +38,37 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
         )}
       </div>
 
+      {protocol.tokenTicker && (
+        <div className="row">
+          <Attribute title="Token">
+            <a
+              href={`https://www.coingecko.com/en/coins/${protocol.tokenCoingecko}`}
+              target="coingecko"
+            >
+              {protocol.tokenTicker}
+            </a>
+          </Attribute>
+
+          <Attribute title="Price">
+            {protocol.price.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+          </Attribute>
+          <Attribute title="Market Cap">
+            {protocol.marketCap.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </Attribute>
+          <Attribute title="P/S Ratio" tooltip="Based on 7 day average fees, annualized">
+            {protocol.psRatio.toFixed(2)}
+          </Attribute>
+        </div>
+      )}
+
       <style jsx>{`
         .details-card {
           padding: 8px;

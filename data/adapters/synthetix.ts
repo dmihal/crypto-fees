@@ -39,5 +39,7 @@ export default function registerSynthetix(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'synthetix',
+    tokenTicker: 'SNX',
+    tokenCoingecko: 'havven',
   });
 }

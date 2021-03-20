@@ -52,5 +52,8 @@ export default function registerTBTC(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'tbtc',
+    website: 'https://tbtc.network',
+    tokenTicker: 'KEEP',
+    tokenCoingecko: 'keep-network',
   });
 }

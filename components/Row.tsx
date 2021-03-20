@@ -83,13 +83,13 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           }
 
           to {
-            height: 200px;
+            height: 210px;
           }
         }
 
         @keyframes slideout {
           from {
-            height: 200px;
+            height: 210px;
           }
 
           to {
@@ -98,7 +98,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         }
 
         .details-container {
-          height: 200px;
+          height: 210px;
           animation: 0.5s 1 slidein;
           overflow: hidden;
         }

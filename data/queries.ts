@@ -3,6 +3,7 @@ import { FeeData } from './adapters/feeData';
 export type { FeeData } from './adapters/feeData';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
 import { last7Days } from './lib/time';
+import { getHistoricalMarketData } from './lib/pricedata';
 
 async function getValue(protocol: string, attribute: string, date: string) {
   const cachedValue = await getDBValue(protocol, attribute, date);
@@ -35,11 +36,25 @@ export async function getData(): Promise<FeeData[]> {
       }
       const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
 
+      const metadata = getMetadata(id);
+
+      let price: null | number = null;
+      let marketCap: null | number = null;
+      let psRatio: null | number = null;
+      if (metadata.tokenCoingecko) {
+        ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, days[6]));
+        psRatio = marketCap / (sevenDayMA * 365);
+      }
+
       return {
         id,
-        ...getMetadata(id),
+        ...metadata,
         sevenDayMA,
         oneDay: feeForDay[feeForDay.length - 1],
+
+        price,
+        marketCap,
+        psRatio,
       };
     })
   );

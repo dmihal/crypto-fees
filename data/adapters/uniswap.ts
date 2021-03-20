@@ -67,5 +67,7 @@ export default function registerUniswap(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'uniswap',
+    tokenTicker: 'UNI',
+    tokenCoingecko: 'uniswap',
   });
 }

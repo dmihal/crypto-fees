@@ -90,5 +90,7 @@ export default function registerCurve(register: any) {
     source: 'The Graph Protocol',
     adapter: 'curve',
     website: 'https://www.curve.fi/',
+    tokenTicker: 'CRV',
+    tokenCoingecko: 'curve-dao-token',
   });
 }

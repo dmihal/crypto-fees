@@ -56,5 +56,8 @@ export default function registerCompound(register: any) {
     blockchain: 'Ethereum',
     source: 'Compound API',
     adapter: 'compound',
+    website: 'https://compound.finance',
+    tokenTicker: 'COMP',
+    tokenCoingecko: 'compound-governance-token',
   });
 }

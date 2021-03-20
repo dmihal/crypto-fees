@@ -45,22 +45,26 @@ export default function registerPolkadot(register: any) {
   register('polkadot', polkadotQuery, {
     name: 'Polkadot',
     category: 'l1',
-    // description: 'Curve is a decentralized exchange for stable-value assets.',
+    description: 'Polkadot is a protocol for securing and connecting blockchains.',
     feeDescription: 'Transaction fees are paid from users to validators.',
     blockchain: 'Polkadot',
     source: 'Subscan',
     adapter: 'polkadot',
     website: 'https://polkadot.network',
+    tokenTicker: 'DOT',
+    tokenCoingecko: 'polkadot',
   });
 
   register('kusama', kusamaQuery, {
     name: 'Kusama',
     category: 'l1',
-    // description: 'Curve is a decentralized exchange for stable-value assets.',
+    description: 'Kusama is the "canary chain for early-stage Polkadot development.',
     feeDescription: 'Transaction fees are paid from users to validators.',
     blockchain: 'Kusama',
     source: 'Subscan',
     adapter: 'polkadot',
     website: 'https://kusama.network',
+    tokenTicker: 'KSM',
+    tokenCoingecko: 'kusama',
   });
 }

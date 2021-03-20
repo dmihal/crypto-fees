@@ -1,4 +1,5 @@
 const priceCache: { [symbol: string]: number } = { usd: 1 };
+const cache: { [key: string]: { price: number; marketCap: number } } = {};
 
 export const getCurrentPrice = async (name: string): Promise<number> => {
   if (!priceCache[name]) {
@@ -40,6 +41,23 @@ export const getHistoricalAvgDailyPrice = async (
   return priceCache[cacheName];
 };
 
+async function queryCoingecko(name: string, date: string) {
+  const reversedDate = date.split('-').reverse().join('-');
+  const request = await fetch(
+    `https://api.coingecko.com/api/v3/coins/${name}/history?date=${reversedDate}`
+  );
+  const response = await request.json();
+
+  if (!response.market_data) {
+    throw new Error(`Can't get price data for ${name}`);
+  }
+
+  return {
+    price: response.market_data.current_price.usd,
+    marketCap: response.market_data.market_cap.usd,
+  };
+}
+
 export async function getHistoricalPrice(name: string, date: string) {
   if (name == 'usd') {
     return 1;
@@ -47,14 +65,19 @@ export async function getHistoricalPrice(name: string, date: string) {
 
   const cacheName = `${name}-${date}`;
 
-  if (!priceCache[cacheName]) {
-    const reversedDate = date.split('-').reverse().join('-');
-    const request = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${name}/history?date=${reversedDate}`
-    );
-    const response = await request.json();
-    priceCache[cacheName] = response.market_data.current_price.usd;
+  if (!cache[cacheName]) {
+    cache[cacheName] = await queryCoingecko(name, date);
   }
 
-  return priceCache[cacheName];
+  return cache[cacheName].price;
+}
+
+export async function getHistoricalMarketData(name: string, date: string) {
+  const cacheName = `${name}-${date}`;
+
+  if (!cache[cacheName]) {
+    cache[cacheName] = await queryCoingecko(name, date);
+  }
+
+  return cache[cacheName];
 }
