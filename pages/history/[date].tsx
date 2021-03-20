@@ -1,14 +1,14 @@
 import React from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { FeeData } from 'data/adapters/feeData';
+import { ProtocolData } from 'data/types';
 import { getHistoricalData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 
 interface HistoricalDataPageProps {
-  data: FeeData[];
+  data: ProtocolData[];
   invalid?: boolean;
   date: string;
 }

@@ -1,4 +1,4 @@
-type Category = 'l1' | 'app' | 'l2';
+export type Category = 'l1' | 'dex' | 'lending' | 'xchain' | 'other';
 
 export interface FeeData {
   id: string;
@@ -11,4 +11,26 @@ export interface FeeData {
   website?: string;
   blockchain?: string;
   source?: string;
+}
+
+export interface Metadata {
+  name?: string;
+  category: Category;
+  description?: string;
+  feeDescription?: string;
+  website?: string;
+  blockchain?: string;
+  source?: string;
+  adapter: string;
+  tokenTicker?: string;
+  tokenCoingecko?: string;
+}
+
+export interface ProtocolData extends Metadata {
+  id: string;
+  price: number | null;
+  marketCap: number | null;
+  psRatio: number | null;
+  sevenDayMA: number;
+  oneDay: number;
 }

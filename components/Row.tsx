@@ -1,11 +1,11 @@
 import React, { Fragment, useState } from 'react';
-import { FeeData } from 'data/adapters/feeData';
+import { ProtocolData } from 'data/types';
 import icons from './icons';
 import { CSSTransition } from 'react-transition-group';
 import DetailsCard from './DetailsCard';
 
 interface RowProps {
-  protocol: FeeData;
+  protocol: ProtocolData;
 }
 
 const toggle = (isOpen: boolean) => !isOpen;

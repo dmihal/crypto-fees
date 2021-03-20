@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { FeeData } from 'data/adapters/feeData';
+import { ProtocolData } from 'data/types';
 import { getData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 import FilterCard, { Filters } from 'components/FilterCard';
@@ -9,7 +9,7 @@ import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 
 interface HomeProps {
-  data: FeeData[];
+  data: ProtocolData[];
 }
 
 const toggle = (_val: boolean) => !_val;
@@ -21,7 +21,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
   let _data = data;
   if (filters.categories) {
-    _data = _data.filter((item: FeeData) => filters.categories.indexOf(item.category) !== -1);
+    _data = _data.filter((item: ProtocolData) => filters.categories.indexOf(item.category) !== -1);
   }
 
   return (

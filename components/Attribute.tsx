@@ -2,6 +2,7 @@ import React from 'react';
 
 interface AttributeProps {
   title: string;
+  tooltip?: string;
 }
 
 const Attribute: React.FC<AttributeProps> = ({ title, children, tooltip }) => {

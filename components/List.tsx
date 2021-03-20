@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { FeeData } from 'data/adapters/feeData';
+import { ProtocolData } from 'data/types';
 import Row from './Row';
 
 interface ListProps {
-  data: FeeData[];
+  data: ProtocolData[];
 }
 
-const sortByDaily = (a: FeeData, b: FeeData) => b.oneDay - a.oneDay;
-const sortByWeekly = (a: FeeData, b: FeeData) => b.sevenDayMA - a.sevenDayMA;
+const sortByDaily = (a: ProtocolData, b: ProtocolData) => b.oneDay - a.oneDay;
+const sortByWeekly = (a: ProtocolData, b: ProtocolData) => b.sevenDayMA - a.sevenDayMA;
 
 const List: React.FC<ListProps> = ({ data }) => {
   const [sort, setSort] = useState('daily');
@@ -26,7 +26,7 @@ const List: React.FC<ListProps> = ({ data }) => {
         </div>
       </div>
 
-      {sortedData.map((protocol: FeeData) => (
+      {sortedData.map((protocol: ProtocolData) => (
         <Row protocol={protocol} key={protocol.id} />
       ))}
 

@@ -1,9 +1,9 @@
 import React from 'react';
-import { FeeData } from 'data/adapters/feeData';
+import { ProtocolData } from 'data/types';
 import Attribute from './Attribute';
 
 interface DetailsCardProps {
-  protocol: FeeData;
+  protocol: ProtocolData;
 }
 
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
