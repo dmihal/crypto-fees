@@ -8,6 +8,11 @@ const fetcher = async (input: RequestInfo, init?: RequestInit) => {
 
 export async function getAaveData(): Promise<FeeData> {
   const response = await fetcher('https://aave-api-v2.aave.com/data/fees-utc');
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
   return {
     id: 'aave',
     category: 'app',
