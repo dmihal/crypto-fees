@@ -138,7 +138,7 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 
   const [assetData, ...appData] = await Promise.all([
-    Promise.all(ASSETS.map(getFeeData)).catch(handleFailure),
+    Promise.all(ASSETS.map(getFeeData)).catch(() => []),
     getUniswapV1Data().catch(handleFailure),
     getUniswapV2Data().catch(handleFailure),
     getLinkswapData().catch(handleFailure),

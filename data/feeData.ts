@@ -37,8 +37,8 @@ const last7Days = () =>
 
 export async function getLinkswapData(): Promise<FeeData> {
   const last7DaysArray = last7Days();
-  const lastDay = last7DaysArray[6]
-  const linkAddress = "0x514910771af9ca656af840dff83e8264ecf986ca";
+  const lastDay = last7DaysArray[6];
+  const linkAddress = '0x514910771af9ca656af840dff83e8264ecf986ca';
   const request = await fetch('https://api.thegraph.com/subgraphs/name/yflink/linkswap-v1', {
     headers: {
       'content-type': 'application/json',
@@ -46,7 +46,9 @@ export async function getLinkswapData(): Promise<FeeData> {
     body: JSON.stringify({
       query: `{
         notlink: 
-          pairDayDatas(where:{date_in: ${JSON.stringify(last7Days())}, token0_not_contains: "${linkAddress}", token1_not_contains: "${linkAddress}" }) {
+          pairDayDatas(where:{date_in: ${JSON.stringify(
+            last7Days()
+          )}, token0_not_contains: "${linkAddress}", token1_not_contains: "${linkAddress}" }) {
           date
           dailyVolumeUSD
         }
@@ -66,9 +68,9 @@ export async function getLinkswapData(): Promise<FeeData> {
   let sevenDayMANotLinkTotal = 0;
   let oneDayNotLinkTotal = 0;
   data['notlink'].forEach(function (element) {
-    sevenDayMANotLinkTotal += parseFloat(element.dailyVolumeUSD)
-    if(element.date === lastDay) {
-      oneDayNotLinkTotal += parseFloat(element.dailyVolumeUSD)
+    sevenDayMANotLinkTotal += parseFloat(element.dailyVolumeUSD);
+    if (element.date === lastDay) {
+      oneDayNotLinkTotal += parseFloat(element.dailyVolumeUSD);
     }
   });
   sevenDayMANotLinkTotal = sevenDayMANotLinkTotal / 7;
@@ -76,20 +78,19 @@ export async function getLinkswapData(): Promise<FeeData> {
   let sevenDayMAAllTotal = 0;
   let oneDayNotAllTotal = 0;
   data['all'].forEach(function (element) {
-    sevenDayMAAllTotal += parseFloat(element.dailyVolumeUSD)
-    if(element.date === lastDay) {
-      oneDayNotAllTotal += parseFloat(element.dailyVolumeUSD)
+    sevenDayMAAllTotal += parseFloat(element.dailyVolumeUSD);
+    if (element.date === lastDay) {
+      oneDayNotAllTotal += parseFloat(element.dailyVolumeUSD);
     }
   });
   sevenDayMAAllTotal = sevenDayMAAllTotal / 7;
 
+  const sevenDayMANotLink = sevenDayMANotLinkTotal * 0.003;
+  const sevenDayMALink = (sevenDayMAAllTotal - sevenDayMANotLinkTotal) * 0.0025;
 
-    const sevenDayMANotLink = sevenDayMANotLinkTotal * 0.003;
-    const sevenDayMALink = (sevenDayMAAllTotal - sevenDayMANotLinkTotal)  * 0.0025;
+  const sevenDayMA = sevenDayMANotLink + sevenDayMALink;
 
-    const sevenDayMA = sevenDayMANotLink + sevenDayMALink;
-
-    const oneDay = ((oneDayNotAllTotal - oneDayNotLinkTotal) * 0.0025) + oneDayNotLinkTotal * 0.003
+  const oneDay = (oneDayNotAllTotal - oneDayNotLinkTotal) * 0.0025 + oneDayNotLinkTotal * 0.003;
 
   return {
     id: 'linkswap',
@@ -148,6 +149,10 @@ export async function getUniswapV2Data(): Promise<FeeData> {
           date
           dailyVolumeUSD
         }
+        blacklist: pairDayDatas(where: {pairAddress: "0x7d7e813082ef6c143277c71786e5be626ec77b20"}) {
+          date
+          dailyVolumeUSD
+        }
       }`,
       variables: null,
     }),
@@ -155,20 +160,29 @@ export async function getUniswapV2Data(): Promise<FeeData> {
   });
   const { data } = await request.json();
 
-  const sevenDayMA =
-    (data.uniswapDayDatas.reduce(
-      (total: number, { dailyVolumeUSD }: any) => total + parseFloat(dailyVolumeUSD),
-      0
-    ) *
-      0.003) /
-    data.uniswapDayDatas.length;
+  const blacklistVolume: any = {};
+  for (const item of data.blacklist) {
+    blacklistVolume[item.date] =
+      (blacklistVolume[item.date] || 0) + parseFloat(item.dailyVolumeUSD);
+  }
+
+  const sevenDayTotalVolume = data.uniswapDayDatas.reduce(
+    (total: number, { dailyVolumeUSD, date }: any) =>
+      total + parseFloat(dailyVolumeUSD) - (blacklistVolume[date] || 0),
+    0
+  );
+  const sevenDayMA = (sevenDayTotalVolume * 0.003) / data.uniswapDayDatas.length;
+
+  const oneDayVolume =
+    parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeUSD) -
+    (blacklistVolume[data.uniswapDayDatas[data.uniswapDayDatas.length - 1].date] || 0);
+  const oneDay = oneDayVolume * 0.003;
 
   return {
     id: 'uniswap-v2',
     category: 'app',
     sevenDayMA,
-    oneDay:
-      parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeUSD) * 0.003,
+    oneDay,
   };
 }
 
