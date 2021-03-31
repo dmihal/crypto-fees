@@ -138,23 +138,39 @@ export async function getSushiswapData(): Promise<FeeData> {
   };
 }
 
+const blacklistAddresses = [
+  '0x7d7e813082ef6c143277c71786e5be626ec77b20',
+  '0xe5ffe183ae47f1a0e4194618d34c5b05b98953a8',
+  '0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92',
+  '0x23fe4ee3bd9bfd1152993a7954298bb4d426698f',
+];
+
 export async function getUniswapV2Data(): Promise<FeeData> {
   const request = await fetch('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2', {
     headers: {
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      query: `{
-        uniswapDayDatas(where:{date_in: ${JSON.stringify(last7Days())}}) {
+      query: `query feeData($dates: [Int!]!, $blacklistAddresses: [Bytes!]!, $blacklistLength: Int!){
+        uniswapDayDatas(where:{date_in: $dates}) {
           date
           dailyVolumeUSD
         }
-        blacklist: pairDayDatas(where: {pairAddress: "0x7d7e813082ef6c143277c71786e5be626ec77b20"}) {
+        blacklist: pairDayDatas(
+          where: {pairAddress_in: $blacklistAddresses},
+          orderBy: date,
+          orderDirection: desc
+          first: $blacklistLength
+        ) {
           date
           dailyVolumeUSD
         }
       }`,
-      variables: null,
+      variables: {
+        dates: last7Days(),
+        blacklistAddresses,
+        blacklistLength: 7 * blacklistAddresses.length,
+      },
     }),
     method: 'POST',
   });
