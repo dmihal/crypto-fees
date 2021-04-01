@@ -143,6 +143,7 @@ const blacklistAddresses = [
   '0xe5ffe183ae47f1a0e4194618d34c5b05b98953a8',
   '0xf9c1fa7d41bf44ade1dd08d37cc68f67ae75bf92',
   '0x23fe4ee3bd9bfd1152993a7954298bb4d426698f',
+  '0x382a9a8927f97f7489af3f0c202b23ed1eb772b5',
 ];
 
 export async function getUniswapV2Data(): Promise<FeeData> {
