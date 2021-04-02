@@ -75,6 +75,10 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           <a href="https://ethereumnodes.com">ethereumnodes.com</a>
           {' | '}
           <a href="https://money-movers.info">money-movers.info</a>
+          {' | '}
+          <a href="https://stakers.info">stakers.info</a>
+          {' | '}
+          <a href="https://open-orgs.info">open-orgs.info</a>
         </div>
       </footer>
 
