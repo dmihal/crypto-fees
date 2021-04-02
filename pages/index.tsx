@@ -55,11 +55,6 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         Which ones are people actually paying to use?
       </p>
 
-      <p>
-        Like this site?{' '}
-        <a href="https://gitcoin.co/grants/1624/cryptofees-info">Support it on Gitcoin Grants</a>
-      </p>
-
       <div>
         <a
           href="https://twitter.com/share?ref_src=twsrc%5Etfw"
