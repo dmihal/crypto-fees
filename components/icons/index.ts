@@ -13,6 +13,7 @@ import doge from './doge.svg';
 import eth from './eth.svg';
 import kusama from './kusama.svg';
 import ltc from './ltc.svg';
+import mstable from './mstable.svg';
 import omen from './omen.png';
 import polkadot from './polkadot.svg';
 import polymarket from './polymarket.svg';
@@ -29,7 +30,7 @@ import xrp from './xrp.svg';
 import xtz from './xtz.svg';
 import linkswap from './linkswap.svg';
 import zerox from './zrx.svg';
-import mstable from './mstable.svg';
+import zilliqa from './zilliqa.svg';
 
 const icons: { [id: string]: string } = {
   aave,
@@ -48,6 +49,7 @@ const icons: { [id: string]: string } = {
   ren,
   kusama,
   ltc,
+  mstable,
   omen,
   polkadot,
   polymarket,
@@ -63,7 +65,7 @@ const icons: { [id: string]: string } = {
   xtz,
   linkswap,
   zerox,
-  mstable,
+  zilliqa,
 };
 
 export default icons;

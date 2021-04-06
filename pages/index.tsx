@@ -23,6 +23,7 @@ import { getMstableData } from 'data/mStable';
 import { getTBTCData } from 'data/tbtc';
 import { getTornadoData } from 'data/tornado';
 import { getAaveData } from 'data/aave';
+import { getZilliqaData } from 'data/zilliqa';
 import List from 'components/List';
 
 interface HomeProps {
@@ -134,6 +135,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const [assetData, ...appData] = await Promise.all([
     Promise.all(ASSETS.map(getFeeData)).catch(() => []),
+    getAaveData().catch(handleFailure),
     getUniswapV1Data().catch(handleFailure),
     getUniswapV2Data().catch(handleFailure),
     getLinkswapData().catch(handleFailure),
@@ -152,8 +154,8 @@ export const getStaticProps: GetStaticProps = async () => {
     getMstableData().catch(handleFailure),
     getTornadoData().catch(handleFailure),
     getTBTCData().catch(handleFailure),
-    getAaveData().catch(handleFailure),
     getCompoundData().catch(handleFailure),
+    getZilliqaData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);
