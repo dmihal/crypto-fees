@@ -2,6 +2,7 @@ import registerAave from './aave';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import registerBancor from './bancor';
+import { getBSCData } from './bsc';
 import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
 import registerCurve from './curve';
@@ -26,7 +27,11 @@ import registerTornado from './tornado';
 import registerUniswap from './uniswap';
 import registerZilliqa from './zilliqa';
 
-export const adapters = [getFutureswapData, getOmenData];
+export const adapters = [
+  getBSCData,
+  getFutureswapData,
+  getOmenData,
+];
 
 interface Adapter {
   query: any;
