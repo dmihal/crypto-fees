@@ -21,6 +21,7 @@ import { getPolymarketData } from 'data/polymarket';
 import { getPolkadotData, getKusamaData } from 'data/polkadot';
 import { getMstableData } from 'data/mStable';
 import { getTBTCData } from 'data/tbtc';
+import { getTerraData } from 'data/terra';
 import { getTornadoData } from 'data/tornado';
 import { getAaveData } from 'data/aave';
 import { getZilliqaData } from 'data/zilliqa';
@@ -154,6 +155,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getMstableData().catch(handleFailure),
     getTornadoData().catch(handleFailure),
     getTBTCData().catch(handleFailure),
+    getTerraData().catch(handleFailure),
     getCompoundData().catch(handleFailure),
     getZilliqaData().catch(handleFailure),
   ]);

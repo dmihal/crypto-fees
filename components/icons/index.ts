@@ -21,6 +21,7 @@ import ren from './ren.svg';
 import sushiswap from './sushiswap.svg';
 import synthetix from './synthetix.svg';
 import tbtc from './tbtc.svg';
+import terra from './terra.svg';
 import tornado from './tornado.svg';
 import uniV1 from './uni_v1.png';
 import uniV2 from './uni_v2.png';
@@ -56,6 +57,7 @@ const icons: { [id: string]: string } = {
   sushiswap,
   synthetix,
   tbtc,
+  terra,
   tornado,
   'uniswap-v1': uniV1,
   'uniswap-v2': uniV2,
