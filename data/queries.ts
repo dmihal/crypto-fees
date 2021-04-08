@@ -91,8 +91,12 @@ export async function getHistoricalData(date: string): Promise<FeeData[]> {
       let marketCap: null | number = null;
       let psRatio: null | number = null;
       if (metadata.tokenCoingecko) {
-        ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
-        psRatio = marketCap / (sevenDayMA * 365);
+        try {
+          ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
+          psRatio = marketCap / (sevenDayMA * 365);
+        } catch (e) {
+          console.error(e);
+        }
       }
 
       return {

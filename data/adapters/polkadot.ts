@@ -24,6 +24,10 @@ async function getSubstrateData(id: string, date: string, divisor: number): Prom
     }),
   ]);
 
+  if (fees.data.list.length === 0 || prices.data.list.length === 0) {
+    throw new Error(`No substrate data found for ${id} on ${date}`);
+  }
+
   return (fees.data.list[0].balance_amount_total * prices.data.list[0].price) / divisor;
 }
 
