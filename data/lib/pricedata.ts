@@ -15,7 +15,8 @@ export const getCurrentPrice = async (name: string): Promise<number> => {
 
 export const getHistoricalAvgDailyPrice = async (
   name: string,
-  daysAgo: number
+  daysAgo: number,
+  currency = 'usd'
 ): Promise<number> => {
   let cacheName = name;
   if (daysAgo > 1 && name != 'usd') {
@@ -24,9 +25,12 @@ export const getHistoricalAvgDailyPrice = async (
 
   if (!priceCache[cacheName]) {
     const request = await fetch(
-      `https://api.coingecko.com/api/v3/coins/${name}/market_chart?vs_currency=usd&days=${daysAgo}&interval=daily`
+      `https://api.coingecko.com/api/v3/coins/${name}/market_chart?vs_currency=${currency}&days=${daysAgo}&interval=daily`
     );
     const response = await request.json();
+    if (response.error) {
+      throw new Error(`[CoinGecko:${name}] "${response.error}"`);
+    }
     const prices = response.prices;
     prices.pop(); // remove last element, which is today's price
 

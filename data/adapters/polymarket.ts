@@ -3,7 +3,7 @@ import { getMaticBlockDaysAgo } from '../lib/time';
 
 export async function getPolymarketData(): Promise<FeeData> {
   const request = await fetch(
-    'https://subgraph-matic.poly.market/subgraphs/name/TokenUnion/polymarket',
+    'https://api.thegraph.com/subgraphs/name/tokenunion/polymarket-matic',
     {
       headers: {
         'content-type': 'application/json',

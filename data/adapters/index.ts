@@ -14,9 +14,11 @@ import registerSynthetix from './synthetix';
 import registerPolkadot from './polkadot';
 import { getMstableData } from './mStable';
 import registerTBTC from './tbtc';
+import { getTerraData } from './terra';
 import registerTornado from './tornado';
 import registerUniswap from './uniswap';
 import { getAaveData } from './aave';
+import { getZilliqaData } from './zilliqa';
 
 export const adapters = [
   getLinkswapData,
@@ -25,6 +27,8 @@ export const adapters = [
   // getPolymarketData,
   getMstableData,
   getAaveData,
+  getTerraData,
+  getZilliqaData,
 ];
 
 interface Adapter {
