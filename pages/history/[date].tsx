@@ -36,7 +36,9 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, da
 
       <Toolbar
         date={new Date(date)}
-        onDateChange={(newDate: Date) => router.push(`/history/${formatDate(newDate)}`)}
+        onDateChange={(newDate: Date) =>
+          router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })
+        }
       />
 
       <List data={data} />

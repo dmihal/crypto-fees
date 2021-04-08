@@ -46,7 +46,9 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
       </div>
 
       <Toolbar
-        onDateChange={(newDate: Date) => router.push(`/history/${formatDate(newDate)}`)}
+        onDateChange={(newDate: Date) =>
+          router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })
+        }
         onFilterToggle={() => setFilterCardOpen(toggle)}
       />
 
