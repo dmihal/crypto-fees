@@ -10,7 +10,7 @@ const blacklistAddresses = [
 ];
 
 export async function getUniswapV2Data(date: string): Promise<number> {
-  const graphQuery = `query fees($date: Int!, $blacklistAddresses: [Bytes!]!, $blacklistLength: Int!) {
+  const graphQuery = `query fees($date: Int!, $blacklistAddresses: [Bytes!]!) {
     uniswapDayDatas(where: {date: $date}) {
       date
       dailyVolumeUSD
@@ -27,13 +27,12 @@ export async function getUniswapV2Data(date: string): Promise<number> {
     {
       date: dateToTimestamp(date),
       blacklistAddresses,
-      blacklistLength: 7 * blacklistAddresses.length,
     },
     'fees'
   );
 
   const blacklistVolume = data.blacklist.reduce(
-    (total: number, day: any) => total + day.dailyVolumeUSD,
+    (total: number, day: any) => total + parseFloat(day.dailyVolumeUSD),
     0
   );
 
