@@ -24,13 +24,13 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
       >
         <div className="name">{protocol.name}</div>
         <div className="amount">
-          {protocol.oneDay.toLocaleString('en-US', {
+          {protocol.oneDay?.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}
         </div>
         <div className="amount">
-          {protocol.sevenDayMA.toLocaleString('en-US', {
+          {protocol.sevenDayMA?.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}
