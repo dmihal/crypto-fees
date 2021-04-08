@@ -62,12 +62,15 @@ export async function getCurveData(date: string): Promise<number> {
   }`
   );
 
+  const bitcoinPrice = await getHistoricalPrice('bitcoin', date);
+
   let oneDay = 0;
   for (const pool of pools) {
-    const priceYesterday = await getHistoricalPrice(pool.price, date);
     const current = parseFloat(data[`${pool.name}_current`].totalUnderlyingVolumeDecimal);
     const yesterday = parseFloat(data[`${pool.name}_yesterday`].totalUnderlyingVolumeDecimal);
-    oneDay += (current - yesterday) * 0.0004 * priceYesterday;
+
+    const price = pool.price === 'bitcoin' ? bitcoinPrice : 1;
+    oneDay += (current - yesterday) * 0.0004 * price;
   }
 
   return oneDay;
