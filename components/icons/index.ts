@@ -1,6 +1,6 @@
 import aave from './aave.svg';
 import ada from './ada.svg';
-import balancer from './balancer.png';
+import balancer from './balancer.svg';
 import bancor from './bancor.png';
 import bch from './bch.svg';
 import bnb from './bnb.svg';
@@ -24,7 +24,7 @@ import tbtc from './tbtc.svg';
 import terra from './terra.svg';
 import tornado from './tornado.svg';
 import uniV1 from './uni_v1.png';
-import uniV2 from './uni_v2.png';
+import uniV2 from './uni_v2.svg';
 import xlm from './xlm.svg';
 import xmr from './xmr.svg';
 import xrp from './xrp.svg';
