@@ -1,4 +1,4 @@
-import { db } from './connection';
+import * as postgres from './postgres';
 import * as redis from './redis';
 
 export const getValue = async (protocol: string, attribute: string, date: string) => {
@@ -9,7 +9,7 @@ export const getValue = async (protocol: string, attribute: string, date: string
     return parseFloat(redisVal);
   }
 
-  const response = await db.from('fee_cache').select('value').where({ protocol, attribute, date });
+  const response = await postgres.get({ protocol, attribute, date });
 
   if (response.length > 0) {
     const value = parseFloat(response[0].value);
@@ -28,8 +28,5 @@ export const setValue = async (
 ) => {
   const key = `${protocol}-${attribute}-${date}`;
 
-  await Promise.all([
-    db('fee_cache').insert({ protocol, attribute, date, value }),
-    redis.set(key, value),
-  ]);
+  await Promise.all([postgres.set({ protocol, attribute, date, value }), redis.set(key, value)]);
 };
