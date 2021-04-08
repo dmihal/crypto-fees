@@ -1,3 +1,5 @@
+import { getValue as getDBValue, setValue as setDBValue } from '../db';
+
 const priceCache: { [symbol: string]: number } = { usd: 1 };
 const cache: { [key: string]: { price: number; marketCap: number } } = {};
 
@@ -67,20 +69,32 @@ export async function getHistoricalPrice(name: string, date: string) {
     return 1;
   }
 
-  const cacheName = `${name}-${date}`;
-
-  if (!cache[cacheName]) {
-    cache[cacheName] = await queryCoingecko(name, date);
-  }
-
-  return cache[cacheName].price;
+  const marketData = await getHistoricalMarketData(name, date);
+  return marketData.price;
 }
 
 export async function getHistoricalMarketData(name: string, date: string) {
   const cacheName = `${name}-${date}`;
 
   if (!cache[cacheName]) {
-    cache[cacheName] = await queryCoingecko(name, date);
+    let price = await getDBValue(name, 'price', date);
+    let marketCap = await getDBValue(name, 'market-cap', date);
+
+    if (!price || !marketCap) {
+      const storedPrice = price;
+      const storedMarketCap = marketCap;
+
+      ({ price, marketCap } = await queryCoingecko(name, date));
+      if (!storedPrice) {
+        await setDBValue(name, 'price', date, price);
+      }
+
+      if (!storedMarketCap) {
+        await setDBValue(name, 'market-cap', date, marketCap);
+      }
+    }
+
+    cache[cacheName] = { price, marketCap };
   }
 
   return cache[cacheName];
