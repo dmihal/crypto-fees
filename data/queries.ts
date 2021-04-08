@@ -78,11 +78,25 @@ export async function getHistoricalData(date: string): Promise<FeeData[]> {
       }
       const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
 
+      const metadata = getMetadata(id);
+
+      let price: null | number = null;
+      let marketCap: null | number = null;
+      let psRatio: null | number = null;
+      if (metadata.tokenCoingecko) {
+        ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
+        psRatio = marketCap / (sevenDayMA * 365);
+      }
+
       return {
         id,
         ...getMetadata(id),
         sevenDayMA,
         oneDay: feeForDay[feeForDay.length - 1],
+
+        price,
+        marketCap,
+        psRatio,
       };
     })
   );

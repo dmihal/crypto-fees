@@ -50,13 +50,13 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
           </Attribute>
 
           <Attribute title="Price">
-            {protocol.price.toLocaleString('en-US', {
+            {protocol.price?.toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
             })}
           </Attribute>
           <Attribute title="Market Cap">
-            {protocol.marketCap.toLocaleString('en-US', {
+            {protocol.marketCap?.toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
               minimumFractionDigits: 0,
@@ -64,7 +64,7 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
             })}
           </Attribute>
           <Attribute title="P/S Ratio" tooltip="Based on 7 day average fees, annualized">
-            {protocol.psRatio.toFixed(2)}
+            {protocol.psRatio?.toFixed(2)}
           </Attribute>
         </div>
       )}
