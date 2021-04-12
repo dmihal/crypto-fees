@@ -14,6 +14,7 @@ import eth from './eth.svg';
 import honeyswap from './honeyswap.png';
 import kusama from './kusama.svg';
 import ltc from './ltc.svg';
+import maker from './maker.svg';
 import mstable from './mstable.svg';
 import omen from './omen.png';
 import polkadot from './polkadot.svg';
@@ -53,6 +54,7 @@ const icons: { [id: string]: string } = {
   ren,
   kusama,
   ltc,
+  maker,
   mstable,
   omen,
   polkadot,
