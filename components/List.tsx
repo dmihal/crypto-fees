@@ -37,6 +37,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           overflow: hidden;
           margin: 4px;
           max-width: 700px;
+          width: 100%;
         }
 
         .header {

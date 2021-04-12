@@ -15,6 +15,13 @@ const allCategories: Item[] = [
   { name: 'Other', id: 'other' },
 ];
 
+const allChains: Item[] = [
+  { name: 'Ethereum', id: 'Ethereum' },
+  { name: 'xDai', id: 'xDai' },
+  { name: 'Polygon', id: 'Polygon' },
+  { name: 'Other', id: 'other' },
+];
+
 export interface Filters {
   categories?: string[];
   chains?: string[];
@@ -22,26 +29,33 @@ export interface Filters {
 
 interface FilterCardProps {
   open: boolean;
-  onClose: () => void;
+  // onClose: () => void;
   filters: Filters;
   onFilterChange: (filters: Filters) => void;
 }
 
-const FilterCard: React.FC<FilterCardProps> = ({ open, onClose, filters, onFilterChange }) => {
+const FilterCard: React.FC<FilterCardProps> = ({ open, /*onClose,*/ filters, onFilterChange }) => {
   return (
     <Fragment>
       <CSSTransition in={open} transitionName="example" timeout={500} unmountOnExit>
         <div className="filers-card">
-          <button onClick={onClose}>Close</button>
-
-          <div>
-            <div>Categories</div>
+          <div className="column">
+            <div className="title">Categories</div>
             <ToggleList
               items={allCategories}
               selected={filters.categories}
               onSelectedChanged={(categories: string[]) =>
                 onFilterChange({ ...filters, categories })
               }
+            />
+          </div>
+
+          <div className="column">
+            <div className="title">Blockchain</div>
+            <ToggleList
+              items={allChains}
+              selected={filters.chains}
+              onSelectedChanged={(chains: string[]) => onFilterChange({ ...filters, chains })}
             />
           </div>
         </div>
@@ -68,10 +82,23 @@ const FilterCard: React.FC<FilterCardProps> = ({ open, onClose, filters, onFilte
           }
         }
 
+        .title {
+          font-size: 12px;
+          font-weight: 700;
+          padding: 4px;
+        }
+
+        .column {
+          flex: 1;
+          padding: 8px;
+        }
+
         .filers-card {
           height: 200px;
           animation: 0.5s 1 filter-slidein;
           overflow: hidden;
+          display: flex;
+          width: 100%;
         }
 
         .filers-card.exit {

@@ -45,7 +45,7 @@ export async function getPolymarketData(): Promise<FeeData> {
       7,
     description: 'Polymarket is a prediction market.',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    blockchain: 'Matic',
+    blockchain: 'Polygon',
     source: 'The Graph Protocol',
     adapter: 'polymarket',
   };

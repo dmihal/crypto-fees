@@ -7,6 +7,7 @@ const l1s = [
     tokenTicker: 'ETH',
     tokenCoingecko: 'ethereum',
     website: 'https://ethereum.org',
+    blockchain: 'Ethereum',
     source: 'CoinMetrics',
     adapter: 'coinmetrics',
   },

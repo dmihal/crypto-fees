@@ -101,6 +101,9 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           height: 210px;
           animation: 0.5s 1 slidein;
           overflow: hidden;
+
+          border-top: solid 1px #e3e3e3;
+          border-bottom: solid 1px #e3e3e3;
         }
 
         .details-container.exit {

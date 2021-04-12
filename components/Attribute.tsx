@@ -24,6 +24,9 @@ const Attribute: React.FC<AttributeProps> = ({ title, children, tooltip }) => {
         .title {
           color: #999999;
           font-size: 12px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         .content {
         }
@@ -46,6 +49,7 @@ const Attribute: React.FC<AttributeProps> = ({ title, children, tooltip }) => {
           text-align: center;
           padding: 5px 0;
           border-radius: 6px;
+          white-space: normal;
 
           position: absolute;
           z-index: 1;

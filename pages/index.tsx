@@ -20,8 +20,18 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
   const [filters, setFilters] = useState<Filters>({});
 
   let _data = data;
+  let numFilters = 0;
   if (filters.categories) {
+    numFilters += 1;
     _data = _data.filter((item: ProtocolData) => filters.categories.indexOf(item.category) !== -1);
+  }
+  if (filters.chains) {
+    numFilters += 1;
+    _data = _data.filter((item: ProtocolData) =>
+      item.blockchain
+        ? filters.chains.indexOf(item.blockchain) !== -1
+        : filters.chains.indexOf('other') !== -1
+    );
   }
 
   return (
@@ -50,11 +60,11 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
           router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })
         }
         onFilterToggle={() => setFilterCardOpen(toggle)}
+        numFilters={numFilters}
       />
 
       <FilterCard
         open={filterCardOpen}
-        onClose={() => setFilterCardOpen(false)}
         filters={filters}
         onFilterChange={(_filters: Filters) => setFilters(_filters)}
       />

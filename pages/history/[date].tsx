@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextPage, GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { ProtocolData } from 'data/types';
@@ -6,6 +6,7 @@ import { getHistoricalData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
+import FilterCard, { Filters } from 'components/FilterCard';
 
 interface HistoricalDataPageProps {
   data: ProtocolData[];
@@ -13,8 +14,28 @@ interface HistoricalDataPageProps {
   date: string;
 }
 
-export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, date, invalid }) => {
+const toggle = (_val: boolean) => !_val;
+
+export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, invalid }) => {
   const router = useRouter();
+
+  const [filterCardOpen, setFilterCardOpen] = useState(false);
+  const [filters, setFilters] = useState<Filters>({});
+
+  let _data = data;
+  let numFilters = 0;
+  if (filters.categories) {
+    numFilters += 1;
+    _data = _data.filter((item: ProtocolData) => filters.categories.indexOf(item.category) !== -1);
+  }
+  if (filters.chains) {
+    numFilters += 1;
+    _data = _data.filter((item: ProtocolData) =>
+      item.blockchain
+        ? filters.chains.indexOf(item.blockchain) !== -1
+        : filters.chains.indexOf('other') !== -1
+    );
+  }
 
   if (invalid) {
     return (
@@ -35,13 +56,20 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, da
       </p>
 
       <Toolbar
-        date={new Date(date)}
         onDateChange={(newDate: Date) =>
           router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })
         }
+        onFilterToggle={() => setFilterCardOpen(toggle)}
+        numFilters={numFilters}
       />
 
-      <List data={data} />
+      <FilterCard
+        open={filterCardOpen}
+        filters={filters}
+        onFilterChange={(_filters: Filters) => setFilters(_filters)}
+      />
+
+      <List data={_data} />
 
       <style jsx>{`
         main {

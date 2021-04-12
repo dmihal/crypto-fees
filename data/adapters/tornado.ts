@@ -39,7 +39,7 @@ export default function registerSushiswap(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'tornado',
-    tokenTicker: 'UNI',
+    tokenTicker: 'TORN',
     tokenCoingecko: 'tornado-cash',
   });
 }
