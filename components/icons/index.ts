@@ -17,6 +17,7 @@ import mstable from './mstable.svg';
 import omen from './omen.png';
 import polkadot from './polkadot.svg';
 import polymarket from './polymarket.svg';
+import quickswap from './quickswap.png';
 import ren from './ren.svg';
 import sushiswap from './sushiswap.svg';
 import synthetix from './synthetix.svg';
@@ -54,6 +55,7 @@ const icons: { [id: string]: string } = {
   omen,
   polkadot,
   polymarket,
+  quickswap,
   sushiswap,
   synthetix,
   tbtc,
