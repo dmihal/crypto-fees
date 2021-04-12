@@ -7,6 +7,7 @@ import { formatDate } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 import FilterCard, { Filters } from 'components/FilterCard';
+import fs from 'fs';
 
 interface HistoricalDataPageProps {
   data: ProtocolData[];
@@ -129,7 +130,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const data = await getHistoricalData(params.date.toString());
   const filteredData = data.filter((val: any) => !!val);
 
-  return { props: { data: filteredData, date: params.date.toString() } };
+  return { props: { data: filteredData, date: params.date.toString(), file: fs.readdirSync(process.cwd()), dir: process.cwd() } };
 };
 
 export default HistoricalDataPage;

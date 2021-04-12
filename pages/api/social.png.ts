@@ -5,6 +5,7 @@ import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import SocialCard from 'components/SocialCard';
 import { getData } from 'data/queries';
+// const fs = require('fs');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = await getData();
