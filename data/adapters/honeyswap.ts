@@ -43,7 +43,7 @@ export default function registerHoneyswap(register: any) {
     blockchain: 'xDai',
     source: 'The Graph Protocol',
     adapter: 'honeyswap',
-    tokenTicker: 'quick',
-    tokenCoingecko: 'quick',
+    tokenTicker: 'HNY',
+    tokenCoingecko: 'honey',
   });
 }
