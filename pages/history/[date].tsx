@@ -16,7 +16,7 @@ interface HistoricalDataPageProps {
 
 const toggle = (_val: boolean) => !_val;
 
-export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, invalid }) => {
+export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, invalid, date }) => {
   const router = useRouter();
 
   const [filterCardOpen, setFilterCardOpen] = useState(false);
@@ -56,6 +56,7 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
       </p>
 
       <Toolbar
+        date={new Date(date)}
         onDateChange={(newDate: Date) =>
           router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })
         }
