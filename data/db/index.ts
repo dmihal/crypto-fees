@@ -1,4 +1,4 @@
-import * as postgres from './postgres';
+import * as mongo from './mongo';
 import * as redis from './redis';
 
 export const getValue = async (protocol: string, attribute: string, date: string) => {
@@ -9,10 +9,10 @@ export const getValue = async (protocol: string, attribute: string, date: string
     return parseFloat(redisVal);
   }
 
-  const response = await postgres.get({ protocol, attribute, date });
+  const response = await mongo.get({ protocol, attribute, date });
 
-  if (response.length > 0) {
-    const value = parseFloat(response[0].value);
+  if (response) {
+    const value = parseFloat(response.value);
     await redis.set(key, value);
     return value;
   }
@@ -28,5 +28,5 @@ export const setValue = async (
 ) => {
   const key = `${protocol}-${attribute}-${date}`;
 
-  await Promise.all([postgres.set({ protocol, attribute, date, value }), redis.set(key, value)]);
+  await Promise.all([mongo.set({ protocol, attribute, date, value }), redis.set(key, value)]);
 };
