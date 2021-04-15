@@ -24,6 +24,8 @@ export interface Metadata {
   adapter: string;
   tokenTicker?: string;
   tokenCoingecko?: string;
+  protocolLaunch?: string;
+  tokenLaunch?: string;
 }
 
 export interface ProtocolData extends Metadata {

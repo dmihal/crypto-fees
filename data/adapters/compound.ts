@@ -59,5 +59,6 @@ export default function registerCompound(register: any) {
     website: 'https://compound.finance',
     tokenTicker: 'COMP',
     tokenCoingecko: 'compound-governance-token',
+    tokenLaunch: '2020-06-22',
   });
 }

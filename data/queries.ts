@@ -1,7 +1,7 @@
 import { adapters, queryAdapter, getIDs, getMetadata } from './adapters';
 import { FeeData, ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
-import { last7Days } from './lib/time';
+import { last7Days, isBefore } from './lib/time';
 import { getHistoricalMarketData } from './lib/pricedata';
 
 async function getValue(protocol: string, attribute: string, date: string) {
@@ -27,6 +27,12 @@ export async function getData(): Promise<ProtocolData[]> {
   const v2Data = await Promise.all(
     getIDs().map(
       async (id: string): Promise<ProtocolData | null> => {
+        const metadata = getMetadata(id);
+
+        if (!isBefore(metadata.protocolLaunch)) {
+          return null;
+        }
+
         let feeForDay;
         try {
           feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
@@ -36,12 +42,10 @@ export async function getData(): Promise<ProtocolData[]> {
         }
         const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
 
-        const metadata = getMetadata(id);
-
         let price: null | number = null;
         let marketCap: null | number = null;
         let psRatio: null | number = null;
-        if (metadata.tokenCoingecko) {
+        if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch)) {
           try {
             ({ price, marketCap } = await getHistoricalMarketData(
               metadata.tokenCoingecko,
@@ -76,6 +80,12 @@ export async function getHistoricalData(date: string): Promise<FeeData[]> {
   const days = last7Days(new Date(date));
   const v2Data = await Promise.all(
     getIDs().map(async (id: string) => {
+      const metadata = getMetadata(id);
+
+      if (!isBefore(metadata.protocolLaunch, date)) {
+        return null;
+      }
+
       let feeForDay;
       try {
         feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
@@ -85,12 +95,10 @@ export async function getHistoricalData(date: string): Promise<FeeData[]> {
       }
       const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
 
-      const metadata = getMetadata(id);
-
       let price: null | number = null;
       let marketCap: null | number = null;
       let psRatio: null | number = null;
-      if (metadata.tokenCoingecko) {
+      if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch, date)) {
         try {
           ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
           psRatio = marketCap / (sevenDayMA * 365);

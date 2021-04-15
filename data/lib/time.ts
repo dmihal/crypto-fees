@@ -90,3 +90,11 @@ export function getYesterdayDate() {
 
 export const last7Days = (date?: Date) =>
   [...new Array(7)].map((_, num: number) => formatDate(subDays(date || new Date(), 7 - num)));
+
+export function isBefore(date?: string, comparrison?: string) {
+  if (!date) {
+    return true;
+  }
+  const _comparrison = comparrison || formatDate(new Date());
+  return new Date(date) < new Date(_comparrison);
+}

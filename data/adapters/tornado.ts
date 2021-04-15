@@ -41,5 +41,6 @@ export default function registerSushiswap(register: any) {
     adapter: 'tornado',
     tokenTicker: 'TORN',
     tokenCoingecko: 'tornado-cash',
+    tokenLaunch: '2021-02-09',
   });
 }

@@ -34,5 +34,6 @@ export default function registerSushiswap(register: any) {
     adapter: 'sushi',
     tokenTicker: 'SUSHI',
     tokenCoingecko: 'sushi',
+    protocolLaunch: '2020-09-09',
   });
 }

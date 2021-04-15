@@ -97,5 +97,7 @@ export default function registerUniswap(register: any) {
     adapter: 'uniswap',
     tokenTicker: 'UNI',
     tokenCoingecko: 'uniswap',
+    protocolLaunch: '2020-05-04',
+    tokenLaunch: '2020-09-14',
   });
 }

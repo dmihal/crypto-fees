@@ -37,5 +37,7 @@ export default function registerBalancer(register: any) {
     source: 'The Graph Protocol',
     adapter: 'balancer',
     website: 'https://balancer.finance',
+    protocolLaunch: '2020-02-27',
+    tokenLaunch: '2020-06-20',
   });
 }
