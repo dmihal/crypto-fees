@@ -27,4 +27,5 @@ export const protocolNames: { [id: string]: string } = {
   bnb_mainnet: 'Binance Chain', // eslint-disable-line @typescript-eslint/camelcase
   zerox: '0x',
   mstable: 'mStable',
+  avalanche: 'Avalanche',
 };

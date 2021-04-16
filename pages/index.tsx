@@ -25,6 +25,7 @@ import { getTerraData } from 'data/terra';
 import { getTornadoData } from 'data/tornado';
 import { getAaveData } from 'data/aave';
 import { getZilliqaData } from 'data/zilliqa';
+import { getAvalancheData } from 'data/avalanche';
 import List from 'components/List';
 
 interface HomeProps {
@@ -158,6 +159,7 @@ export const getStaticProps: GetStaticProps = async () => {
     getTerraData().catch(handleFailure),
     getCompoundData().catch(handleFailure),
     getZilliqaData().catch(handleFailure),
+    getAvalancheData().catch(handleFailure),
   ]);
 
   const data = [...assetData, ...appData].filter((val: any) => !!val);
