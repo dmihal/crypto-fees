@@ -1,5 +1,6 @@
 import { FeeData } from './feeData';
 import { query } from './graph';
+import { getHistoricalAvgDailyPrice } from './pricedata';
 
 const fetcher = async (input: RequestInfo, init?: RequestInit) => {
   const res = await fetch(input, init);
@@ -51,14 +52,6 @@ function getPastDate(days: number) {
   return d;
 }
 
-async function getAvaxPrice() {
-  const res = await fetcher(
-    'https://api.coingecko.com/api/v3/simple/price?ids=avalanche-2&vs_currencies=usd'
-  );
-
-  return parseFloat(res['avalanche-2'].usd);
-}
-
 async function getCChainFees() {
   const [dayBlock, weekBlock] = await Promise.all([
     getBlockFromTimestamp(Math.floor(getPastDate(1).getTime() / 1000)),
@@ -98,12 +91,17 @@ async function getXChainFees() {
 }
 
 export async function getAvalancheData(): Promise<FeeData> {
-  const [usd, cFees, xFees] = await Promise.all([getAvaxPrice(), getCChainFees(), getXChainFees()]);
+  const [priceYesterday, priceLastWeek, cFees, xFees] = await Promise.all([
+    getHistoricalAvgDailyPrice('avalanche-2', 1),
+    getHistoricalAvgDailyPrice('avalanche-2', 7),
+    getCChainFees(),
+    getXChainFees(),
+  ]);
 
   return {
     id: 'avalanche',
     category: 'app',
-    sevenDayMA: usd * (cFees.sevenDayMA + xFees.sevenDayMA),
-    oneDay: usd * (cFees.oneDay + xFees.oneDay),
+    sevenDayMA: priceLastWeek * (cFees.sevenDayMA + xFees.sevenDayMA),
+    oneDay: priceYesterday * (cFees.oneDay + xFees.oneDay),
   };
 }
