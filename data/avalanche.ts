@@ -100,7 +100,7 @@ export async function getAvalancheData(): Promise<FeeData> {
 
   return {
     id: 'avalanche',
-    category: 'app',
+    category: 'l1',
     sevenDayMA: priceLastWeek * (cFees.sevenDayMA + xFees.sevenDayMA),
     oneDay: priceYesterday * (cFees.oneDay + xFees.oneDay),
   };
