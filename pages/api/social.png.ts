@@ -5,6 +5,7 @@ import React from 'react';
 import SocialCard from 'components/SocialCard';
 import { getData } from 'data/queries';
 import path from 'path';
+import { formatDate } from 'data/lib/time';
 
 // These statements causes Next to bundle these files
 path.resolve(process.cwd(), 'fonts', 'fonts.conf');
@@ -15,6 +16,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const svg = ReactDOMServer.renderToString(
     React.createElement(SocialCard, {
       data,
+      date: formatDate(new Date()),
     })
   );
 
