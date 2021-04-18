@@ -135,6 +135,10 @@ async function getCoinMetricsData(id: string, date: string): Promise<number> {
   );
   const { metricData } = await request.json();
 
+  if (!metricData.series[0]) {
+    throw new Error(`Failed to fetch CoinMetrics data for ${id} on ${date}`);
+  }
+
   return parseFloat(metricData.series[0].values[0]);
 }
 
