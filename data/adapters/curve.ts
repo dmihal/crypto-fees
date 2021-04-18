@@ -97,5 +97,7 @@ export default function registerCurve(register: any) {
     website: 'https://www.curve.fi/',
     tokenTicker: 'CRV',
     tokenCoingecko: 'curve-dao-token',
+    protocolLaunch: '2020-02-25',
+    tokenLaunch: '2020-08-12',
   });
 }

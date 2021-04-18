@@ -57,7 +57,8 @@ export default function registerPolkadot(register: any) {
     website: 'https://polkadot.network',
     tokenTicker: 'DOT',
     tokenCoingecko: 'polkadot',
-    protocolLaunch: '2020-05-26',
+    protocolLaunch: '2020-07-25',
+    tokenLaunch: '2020-08-19',
   });
 
   register('kusama', kusamaQuery, {
@@ -71,5 +72,7 @@ export default function registerPolkadot(register: any) {
     website: 'https://kusama.network',
     tokenTicker: 'KSM',
     tokenCoingecko: 'kusama',
+    protocolLaunch: '2020-07-25',
+    tokenLaunch: '2020-09-20',
   });
 }
