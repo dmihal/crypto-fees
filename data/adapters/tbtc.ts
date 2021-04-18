@@ -24,7 +24,7 @@ export async function getTBTCData(date: string): Promise<number> {
   );
 
   const ethPriceYesterday = await getHistoricalPrice('ethereum', date);
-  const wbtcPriceYesterday = await getHistoricalPrice('wrapped-bitcoin', date);
+  const wbtcPriceYesterday = await getHistoricalPrice('bitcoin', date);
 
   const oneDayTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.yesterday.tbtcFees)) / 1e18;
   const oneDayTBTCFeesInUSD = oneDayTBTCFees * wbtcPriceYesterday;
@@ -55,5 +55,6 @@ export default function registerTBTC(register: any) {
     website: 'https://tbtc.network',
     tokenTicker: 'KEEP',
     tokenCoingecko: 'keep-network',
+    protocolLaunch: '2020-09-24',
   });
 }

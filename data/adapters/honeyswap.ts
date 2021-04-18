@@ -45,5 +45,6 @@ export default function registerHoneyswap(register: any) {
     adapter: 'honeyswap',
     tokenTicker: 'HNY',
     tokenCoingecko: 'honey',
+    protocolLaunch: '2020-09-03',
   });
 }

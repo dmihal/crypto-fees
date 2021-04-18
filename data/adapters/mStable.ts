@@ -62,8 +62,8 @@ export async function getMstableData(): Promise<FeeData> {
     data: FeesData;
   };
 
-  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 1);
-  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice('wrapped-bitcoin', 7);
+  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice('bitcoin', 1);
+  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice('bitcoin', 7);
 
   const collectFees = (btcPrice: number) => (
     accumulator: number,

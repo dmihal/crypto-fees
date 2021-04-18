@@ -102,3 +102,13 @@ export async function getHistoricalMarketData(name: string, date: string) {
 
   return cache[cacheName];
 }
+
+export async function cacheMarketData(name: string, date: string, price: number, marketCap: number) {
+  // eslint-disable-next-line no-console
+  console.log(`Optimisticly caching market data for ${name} on ${date}`);
+
+  await Promise.all([
+    setDBValue(name, 'price', date, price),
+    setDBValue(name, 'market-cap', date, marketCap),
+  ]);
+}

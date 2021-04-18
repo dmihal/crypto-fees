@@ -37,7 +37,7 @@ async function getHegicData(date: string): Promise<number> {
   }
 
   const ethPriceYesterday = await getHistoricalPrice('ethereum', date);
-  const wbtcPriceYesterday = await getHistoricalPrice('wrapped-bitcoin', date);
+  const wbtcPriceYesterday = await getHistoricalPrice('bitcoin', date);
 
   // calculate total fees in USD over the past 24h hours
   const totalFeesYesterday =
