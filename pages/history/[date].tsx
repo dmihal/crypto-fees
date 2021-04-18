@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NextPage, GetServerSideProps } from 'next';
+import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import { useRouter } from 'next/router';
 import { ProtocolData } from 'data/types';
 import { getHistoricalData } from 'data/queries';
@@ -7,6 +7,7 @@ import { formatDate } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 import FilterCard, { Filters } from 'components/FilterCard';
+import { last7Days } from 'data/lib/time';
 
 interface HistoricalDataPageProps {
   data: ProtocolData[];
@@ -122,7 +123,9 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const date = params.date.toString();
+
   if (!/20\d{2}-\d{2}-\d{2}/.test(params.date.toString())) {
     return { props: { data: [], invalid: true } };
   }
@@ -130,7 +133,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const data = await getHistoricalData(params.date.toString());
   const filteredData = data.filter((val: any) => !!val);
 
-  return { props: { data: filteredData, date: params.date.toString() } };
+  return {
+    props: {
+      date,
+      data: filteredData,
+    },
+    revalidate: 60,
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: last7Days().map((date: string) => ({ params: { date } })),
+    fallback: 'blocking',
+  };
 };
 
 export default HistoricalDataPage;
