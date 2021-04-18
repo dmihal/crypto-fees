@@ -9,6 +9,8 @@ async function getValue(protocol: string, attribute: string, date: string) {
   if (cachedValue !== null) {
     return cachedValue;
   }
+  // eslint-disable-next-line no-console
+  console.log(`Missed cache for ${protocol} ${attribute} on ${date}`);
 
   const value = await queryAdapter(protocol, attribute, date);
   await setDBValue(protocol, attribute, date, value);

@@ -48,6 +48,9 @@ export const getHistoricalAvgDailyPrice = async (
 };
 
 async function queryCoingecko(name: string, date: string) {
+  // eslint-disable-next-line no-console
+  console.log(`Querying CoinGecko for ${name} on ${date}`);
+
   const reversedDate = date.split('-').reverse().join('-');
   const request = await fetch(
     `https://api.coingecko.com/api/v3/coins/${name}/history?date=${reversedDate}`
