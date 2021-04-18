@@ -45,5 +45,7 @@ export default function registerUniswap(register: any) {
     adapter: 'quickswap',
     tokenTicker: 'quick',
     tokenCoingecko: 'quick',
+    protocolLaunch: '2020-11-03',
+    tokenLaunch: '2021-02-15',
   });
 }
