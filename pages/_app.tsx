@@ -27,7 +27,10 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         />
 
         <meta property="og:title" content="Crypto Fees" />
-        <meta property="og:image" content={`${process.env.VERCEL_URL}/api/social.png`} />
+        <meta
+          property="og:image"
+          content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/social.png`}
+        />
         <meta
           property="og:description"
           content="There's tons of crypto projects. Which ones are people actually paying to use?"
@@ -40,7 +43,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         />
         <meta
           name="twitter:image"
-          content={`${process.env.VERCEL_URL}/api/social.png?${new Date().getDate()}`}
+          content={`https://${
+            process.env.NEXT_PUBLIC_VERCEL_URL
+          }/api/social.png?${new Date().getDate()}`}
         />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
