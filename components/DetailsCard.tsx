@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { ProtocolData } from 'data/types';
 import Attribute from './Attribute';
 
@@ -68,6 +69,12 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
           </Attribute>
         </div>
       )}
+
+      <div>
+        <Link href={`/protocol/${protocol.id}`}>
+          <a>More Details</a>
+        </Link>
+      </div>
 
       <style jsx>{`
         .details-card {

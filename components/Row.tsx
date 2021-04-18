@@ -10,6 +10,8 @@ interface RowProps {
 
 const toggle = (isOpen: boolean) => !isOpen;
 
+const cardHeight = 240;
+
 const Row: React.FC<RowProps> = ({ protocol }) => {
   const [open, setOpen] = useState(false);
 
@@ -83,13 +85,13 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           }
 
           to {
-            height: 210px;
+            height: ${cardHeight}px;
           }
         }
 
         @keyframes slideout {
           from {
-            height: 210px;
+            height: ${cardHeight}px;
           }
 
           to {
@@ -98,7 +100,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         }
 
         .details-container {
-          height: 210px;
+          height: ${cardHeight}px;
           animation: 0.5s 1 slidein;
           overflow: hidden;
 

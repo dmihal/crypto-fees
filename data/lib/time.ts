@@ -98,3 +98,15 @@ export function isBefore(date?: string, comparrison?: string) {
   const _comparrison = comparrison || formatDate(new Date());
   return new Date(date) < new Date(_comparrison);
 }
+
+export function getDateRange(dateStart: string | Date, dateEnd: string | Date) {
+  const _dateStart = dateStart instanceof Date ? dateStart : new Date(dateStart);
+  const _dateEnd = dateEnd instanceof Date ? dateEnd : new Date(dateEnd);
+
+  const days = [];
+  for (let date = _dateStart; date < _dateEnd; date = addDays(date, 1)) {
+    days.push(formatDate(date));
+  }
+
+  return days;
+}

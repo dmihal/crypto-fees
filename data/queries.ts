@@ -1,7 +1,7 @@
 import { adapters, queryAdapter, getIDs, getMetadata } from './adapters';
 import { FeeData, ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
-import { last7Days, isBefore } from './lib/time';
+import { last7Days, isBefore, getDateRange } from './lib/time';
 import { getHistoricalMarketData } from './lib/pricedata';
 
 async function getValue(protocol: string, attribute: string, date: string) {
@@ -151,4 +151,24 @@ export async function getLastWeek(): Promise<any[]> {
 
   const data = v2Data.filter((val: any) => !!val);
   return data;
+}
+
+export async function getDateRangeData(
+  protocol: string,
+  dateStart: string | Date,
+  dateEnd: string | Date
+): Promise<any[]> {
+  const days = getDateRange(dateStart, dateEnd);
+
+  const fees = await Promise.all(
+    days.map(async (day: string) => ({
+      date: day,
+      fee: await getValue(protocol, 'fee', day).catch((e: any) => {
+        console.error(e);
+        return 0;
+      }),
+    }))
+  );
+
+  return fees;
 }
