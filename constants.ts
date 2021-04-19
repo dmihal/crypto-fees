@@ -4,6 +4,7 @@ export const protocolNames: { [id: string]: string } = {
   bancor: 'Bancor Network',
   curve: 'Curve',
   hegic: 'Hegic',
+  futureswap: 'Futureswap',
   omen: 'Omen',
   polymarket: 'Polymarket',
   ren: 'Ren Protocol',

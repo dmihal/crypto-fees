@@ -12,6 +12,7 @@ import { getBalancerData } from 'data/balancer';
 import { getBancorData } from 'data/bancor';
 import { getCompoundData } from 'data/compound';
 import { getCurveData } from 'data/curve';
+import { getFutureswapData } from 'data/futureswap';
 import { getHegicData } from 'data/hegic';
 import { getOmenData } from 'data/omen';
 import { get0xData } from 'data/zerox';
@@ -146,6 +147,7 @@ export const getStaticProps: GetStaticProps = async () => {
     get0xData().catch(handleFailure),
     getCurveData().catch(handleFailure),
     getHegicData().catch(handleFailure),
+    getFutureswapData().catch(handleFailure),
     getKusamaData().catch(handleFailure),
     getOmenData().catch(handleFailure),
     getPolymarketData().catch(handleFailure),
