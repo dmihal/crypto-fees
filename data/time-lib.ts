@@ -1,13 +1,13 @@
-const NOV_3_DAY = 308;
+const MAR_12_DAY = 71;
 
 export enum CHAIN {
   MAINNET,
   MATIC,
 }
 
-const NOV_3_FIRST_BLOCK = {
-  [CHAIN.MAINNET]: 11180802,
-  [CHAIN.MATIC]: 6546231,
+const MAR_12_FIRST_BLOCK = {
+  [CHAIN.MAINNET]: 12020354,
+  [CHAIN.MATIC]: 11901823,
 };
 
 const BLOCKS_PER_DAY = {
@@ -23,16 +23,16 @@ function dayOfYear(): number {
   const oneDay = 1000 * 60 * 60 * 24;
   const day = Math.floor(diff / oneDay);
 
-  const dayWithYearOffset = day + (now.getUTCFullYear() - 2020) * 365;
+  const dayWithYearOffset = day + (now.getUTCFullYear() - 2021) * 365;
 
   return dayWithYearOffset;
 }
 
 export function getBlockDaysAgo(numDaysAgo: number, chain: CHAIN = CHAIN.MAINNET): number {
-  const nov3FirstBlock = NOV_3_FIRST_BLOCK[chain];
+  const mar12FirstBlock = MAR_12_FIRST_BLOCK[chain];
   const blocksPerDay = BLOCKS_PER_DAY[chain];
 
-  const todayBlock = nov3FirstBlock + (dayOfYear() - NOV_3_DAY) * blocksPerDay;
+  const todayBlock = mar12FirstBlock + (dayOfYear() - MAR_12_DAY) * blocksPerDay;
   return todayBlock - blocksPerDay * numDaysAgo;
 }
 
