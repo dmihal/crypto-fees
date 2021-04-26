@@ -155,6 +155,16 @@ export async function getLastWeek(): Promise<any[]> {
   return data;
 }
 
+export async function getDateData(protocol: string, date: string) {
+  return {
+    date,
+    fee: await getValue(protocol, 'fee', date).catch((e: any) => {
+      console.error(e);
+      return 0;
+    }),
+  }
+}
+
 export async function getDateRangeData(
   protocol: string,
   dateStart: string | Date,
@@ -162,15 +172,7 @@ export async function getDateRangeData(
 ): Promise<any[]> {
   const days = getDateRange(dateStart, dateEnd);
 
-  const fees = await Promise.all(
-    days.map(async (day: string) => ({
-      date: day,
-      fee: await getValue(protocol, 'fee', day).catch((e: any) => {
-        console.error(e);
-        return 0;
-      }),
-    }))
-  );
+  const fees = await Promise.all(days.map((day: string) => getDateData(protocol, day)));
 
   return fees;
 }

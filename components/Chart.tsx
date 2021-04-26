@@ -43,9 +43,12 @@ export interface ChartDay {
 
 interface SeriesChartProps {
   data: ChartDay[];
+  primary: string;
+  secondary?: string | null;
+  loading?: boolean;
 }
 
-const Chart: React.FC<SeriesChartProps> = ({ data }) => {
+const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading }) => {
   const color = 'blue';
   const textColor = 'black';
 
@@ -99,11 +102,25 @@ const Chart: React.FC<SeriesChartProps> = ({ data }) => {
           strokeWidth={2}
           dot={false}
           type="monotone"
-          name={'Bitcoin'}
-          dataKey="fee"
+          name={primary}
+          dataKey="primary"
           yAxisId={0}
           stroke="#f2a900"
         />
+        {secondary && (
+          <Line
+            strokeWidth={2}
+            dot={false}
+            type="monotone"
+            name={secondary}
+            dataKey="secondary"
+            yAxisId={0}
+            stroke="#f2a900"
+          />
+        )}
+        {loading && (
+          <rect height="100%" width="100%" opacity="0.5" fill="#666" />
+        )}
       </LineChart>
     </ResponsiveContainer>
   );
