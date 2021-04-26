@@ -71,16 +71,14 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
             David Mihal
           </a>
         </div>
-        <div>
-          Design help from{' '}
-          <a href="https://twitter.com/hey_heey_heeey" target="twitter">
-            @heyheeyheeey
-          </a>
-        </div>
 
         <div>
           <Link href="/submit-project">
-            <a>Want to add a project to CryptoFees.info?</a>
+            <a>Request Project</a>
+          </Link>
+          {' | '}
+          <Link href="/api-docs">
+            <a>API Documentation</a>
           </Link>
         </div>
 
