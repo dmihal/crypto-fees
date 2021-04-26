@@ -24,20 +24,36 @@ function getMissing(data: any, minDate: string, maxDate: string, id: string) {
   return missing;
 }
 
+function getDateWithSmoothing(data: any, id: string, date: Date, smoothing: number) {
+  let fee = data[id][formatDate(date)].fee;
+
+  if (smoothing > 0) {
+    for (let i = 1; i <= smoothing; i += 1) {
+      fee += data[id][formatDate(subDays(date, i))].fee;
+    }
+    fee /= smoothing + 1;
+  }
+
+  return fee;
+}
+
 function formatData(
   data: any,
   minDate: string,
   maxDate: string,
-  primary: string,
-  secondary?: string | null
+  primaryId: string,
+  secondaryId: string | null,
+  smoothing: number
 ) {
   const result = [];
   for (let date = new Date(minDate); !isAfter(date, new Date(maxDate)); date = addDays(date, 1)) {
-    const dateStr = formatDate(date);
+    const primary = getDateWithSmoothing(data, primaryId, date, smoothing);
+    const secondary = secondaryId ? getDateWithSmoothing(data, secondaryId, date, smoothing) : 0;
+
     result.push({
       date: date.getTime() / 1000,
-      primary: data[primary][dateStr].fee,
-      secondary: secondary ? data[secondary][dateStr].fee : 0,
+      primary,
+      secondary,
     });
   }
   return result;
@@ -60,7 +76,8 @@ const useFees = (
   minDate: string,
   maxDate: string,
   primary: string,
-  secondary?: string | null
+  secondary: string | null,
+  smoothing: number
 ) => {
   const fees = useRef(initial);
 
@@ -70,8 +87,14 @@ const useFees = (
   });
 
   useEffect(() => {
-    const missingPrimary = getMissing(fees.current, minDate, maxDate, primary);
-    const missingSecondary = secondary ? getMissing(fees.current, minDate, maxDate, secondary) : [];
+    // We need to fetch extra data if using smoothing
+    const actualMinDate =
+      smoothing > 0 ? formatDate(subDays(new Date(minDate), smoothing)) : minDate;
+
+    const missingPrimary = getMissing(fees.current, actualMinDate, maxDate, primary);
+    const missingSecondary = secondary
+      ? getMissing(fees.current, actualMinDate, maxDate, secondary)
+      : [];
 
     if (missingPrimary.length > 0 || missingSecondary.length > 0) {
       setValue(({ data }) => ({ data, loading: true }));
@@ -91,16 +114,16 @@ const useFees = (
 
           setValue({
             loading: false,
-            data: formatData(fees.current, minDate, maxDate, primary, secondary),
+            data: formatData(fees.current, minDate, maxDate, primary, secondary, smoothing),
           });
         });
     } else {
       setValue({
         loading: false,
-        data: formatData(fees.current, minDate, maxDate, primary, secondary),
+        data: formatData(fees.current, minDate, maxDate, primary, secondary, smoothing),
       });
     }
-  }, [minDate, maxDate, primary, secondary]);
+  }, [minDate, maxDate, primary, secondary, smoothing]);
 
   return value;
 };
@@ -118,15 +141,12 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   feeCache,
   protocols,
 }) => {
-  // const filteredData = feeCache[id].map((day: any) => ({
-  //   date: new Date(day.date).getTime() / 1000,
-  //   fee: day.fee,
-  // }));
   const [minDate, setMinDate] = useState(formatDate(subDays(new Date(), 90)));
   const [maxDate, setMaxDate] = useState(formatDate(subDays(new Date(), 1)));
+  const [smoothing, setSmoothing] = useState(0);
   const [secondary, setSecondary] = useState<string | null>(null);
 
-  const { loading, data } = useFees(feeCache, minDate, maxDate, id, secondary);
+  const { loading, data } = useFees(feeCache, minDate, maxDate, id, secondary, smoothing);
 
   return (
     <main>
@@ -158,6 +178,12 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
           maxDate={subDays(new Date(), 1)}
           popperPlacement="bottom-end"
         />
+
+        <select value={smoothing} onChange={(e: any) => setSmoothing(parseInt(e.target.value))}>
+          <option value={0}>None</option>
+          <option value={2}>3 Days</option>
+          <option value={6}>7 Days</option>
+        </select>
       </div>
 
       <p>{metadata.description}</p>

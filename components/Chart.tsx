@@ -118,9 +118,7 @@ const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading }
             stroke="#f2a900"
           />
         )}
-        {loading && (
-          <rect height="100%" width="100%" opacity="0.5" fill="#666" />
-        )}
+        {loading && <rect height="100%" width="100%" opacity="0.5" fill="#666" />}
       </LineChart>
     </ResponsiveContainer>
   );

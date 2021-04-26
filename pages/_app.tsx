@@ -101,7 +101,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           padding: 0.5rem;
           display: flex;
           flex-direction: column;
-          justify-content: center;
+          justify-content: space-between;
           align-items: center;
         }
 

@@ -162,7 +162,7 @@ export async function getDateData(protocol: string, date: string) {
       console.error(e);
       return 0;
     }),
-  }
+  };
 }
 
 export async function getDateRangeData(
