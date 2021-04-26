@@ -17,8 +17,12 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
 
   return (
     <Fragment>
-      <div
-        onClick={() => setOpen(toggle)}
+      <a
+        href={`/protocol/${protocol.id}`}
+        onClick={(e: any) => {
+          e.preventDefault();
+          setOpen(toggle);
+        }}
         className={`item ${protocol.category !== 'l1' ? 'app' : ''}`}
         style={{
           backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
@@ -37,9 +41,9 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
             currency: 'USD',
           })}
         </div>
-      </div>
+      </a>
 
-      <CSSTransition in={open} transitionName="example" timeout={500} unmountOnExit>
+      <CSSTransition in={open} timeout={500} unmountOnExit>
         <div className="details-container">
           <DetailsCard protocol={protocol} />
         </div>
@@ -54,6 +58,8 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           background-position: 10px center;
           background-size: 20px 20px;
           padding-left: 10px;
+          color: black;
+          text-decoration: none;
         }
         .item:hover {
           background-color: #f5f5f5;
