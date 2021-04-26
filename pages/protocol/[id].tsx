@@ -155,39 +155,63 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 
       <Chart data={data} loading={loading} primary={id} secondary={secondary} />
 
-      <div>
-        <select
-          value={secondary || 'None'}
-          onChange={(e: any) => setSecondary(e.target.value === 'None' ? null : e.target.value)}
-        >
-          <option>None</option>
-          {protocols.map((id: string) => (
-            <option key={id}>{id}</option>
-          ))}
-        </select>
+      <div className="toolbar">
+        <div className="toolbar-col">
+          <DatePicker
+            selected={new Date(minDate)}
+            onChange={(newDate: any) => setMinDate(formatDate(newDate))}
+            maxDate={subDays(new Date(), 1)}
+            popperPlacement="bottom-end"
+          />
+          <div>From</div>
+        </div>
+        <div className="toolbar-col">
+          <DatePicker
+            selected={new Date(maxDate)}
+            onChange={(newDate: any) => setMaxDate(formatDate(newDate))}
+            maxDate={subDays(new Date(), 1)}
+            popperPlacement="bottom-end"
+          />
+          <div>To</div>
+        </div>
 
-        <DatePicker
-          selected={new Date(minDate)}
-          onChange={(newDate: any) => setMinDate(formatDate(newDate))}
-          maxDate={subDays(new Date(), 1)}
-          popperPlacement="bottom-end"
-        />
-        <DatePicker
-          selected={new Date(maxDate)}
-          onChange={(newDate: any) => setMaxDate(formatDate(newDate))}
-          maxDate={subDays(new Date(), 1)}
-          popperPlacement="bottom-end"
-        />
+        <div className="toolbar-col">
+          <select value={smoothing} onChange={(e: any) => setSmoothing(parseInt(e.target.value))}>
+            <option value={0}>None</option>
+            <option value={2}>3 Days</option>
+            <option value={6}>7 Days</option>
+          </select>
+          <div>Smoothing</div>
+        </div>
 
-        <select value={smoothing} onChange={(e: any) => setSmoothing(parseInt(e.target.value))}>
-          <option value={0}>None</option>
-          <option value={2}>3 Days</option>
-          <option value={6}>7 Days</option>
-        </select>
+        <div className="toolbar-col">
+          <select
+            value={secondary || 'None'}
+            onChange={(e: any) => setSecondary(e.target.value === 'None' ? null : e.target.value)}
+          >
+            <option>None</option>
+            {protocols.map((id: string) => (
+              <option key={id}>{id}</option>
+            ))}
+          </select>
+          <div>Compare</div>
+        </div>
       </div>
 
       <p>{metadata.description}</p>
       <p>{metadata.feeDescription}</p>
+
+      <style jsx>{`
+        .toolbar {
+          display: flex;
+          margin: 8px 0;
+        }
+        .toolbar-col {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+        }
+      `}</style>
     </main>
   );
 };
