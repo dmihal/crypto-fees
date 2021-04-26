@@ -3,13 +3,15 @@ import { NextPage, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { getLastWeek } from 'data/queries';
+import { getIDs, getMetadata } from 'data/adapters';
 import ResponsePreview from 'components/ResponsePreview';
 
 interface APIDocsProps {
   lastWeek: any;
+  protocols: any;
 }
 
-const APIDocsPage: NextPage<APIDocsProps> = ({ lastWeek }) => {
+const APIDocsPage: NextPage<APIDocsProps> = ({ lastWeek, protocols }) => {
   return (
     <main>
       <Head>
@@ -33,6 +35,12 @@ const APIDocsPage: NextPage<APIDocsProps> = ({ lastWeek }) => {
       <p>Request metadata & fees from all supported protocols from the last 7 days.</p>
       <ResponsePreview>{JSON.stringify(lastWeek, null, '  ')}</ResponsePreview>
 
+      <h2>
+        <pre>/api/v1/protocols</pre>
+      </h2>
+      <p>Request metadata all supported protocols.</p>
+      <ResponsePreview>{JSON.stringify(protocols, null, '  ')}</ResponsePreview>
+
       <style jsx>{`
         main {
           max-width: 600px;
@@ -55,8 +63,9 @@ export const getStaticProps: GetStaticProps = async () => {
     success: true,
     protocols: lastWeekData.sort((a: any, b: any) => b.fees[0].fee - a.fees[0].fee),
   };
+  const protocols = getIDs().map((id: string) => ({ id, ...getMetadata(id) }));
 
-  return { props: { lastWeek }, revalidate: 60 };
+  return { props: { lastWeek, protocols }, revalidate: 60 };
 };
 
 export default APIDocsPage;
