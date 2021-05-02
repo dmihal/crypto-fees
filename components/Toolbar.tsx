@@ -45,9 +45,16 @@ interface ToolbarProps {
   onDateChange?: (date: Date) => void;
   onFilterToggle?: () => void;
   numFilters?: number;
+  onShare?: () => void;
 }
 
-const Toolbar: React.FC<ToolbarProps> = ({ date, onDateChange, onFilterToggle, numFilters }) => {
+const Toolbar: React.FC<ToolbarProps> = ({
+  date,
+  onDateChange,
+  onFilterToggle,
+  numFilters,
+  onShare,
+}) => {
   const router = useRouter();
   const [changed, setChanged] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,6 +81,8 @@ const Toolbar: React.FC<ToolbarProps> = ({ date, onDateChange, onFilterToggle, n
 
   return (
     <div className="toolbar">
+      <Button onClick={onShare}>Share</Button>
+
       <Button onClick={onFilterToggle}>
         Filters
         {numFilters > 0 && <span className="chip">{numFilters}</span>}

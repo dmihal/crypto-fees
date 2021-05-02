@@ -6,6 +6,7 @@ import { getData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 import FilterCard, { Filters } from 'components/FilterCard';
 import List from 'components/List';
+import ShareModal from 'components/ShareModal';
 import Toolbar from 'components/Toolbar';
 
 interface HomeProps {
@@ -17,6 +18,7 @@ const toggle = (_val: boolean) => !_val;
 export const Home: NextPage<HomeProps> = ({ data }) => {
   const router = useRouter();
   const [filterCardOpen, setFilterCardOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
   const [filters, setFilters] = useState<Filters>({});
 
   let _data = data;
@@ -61,6 +63,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         }
         onFilterToggle={() => setFilterCardOpen(toggle)}
         numFilters={numFilters}
+        onShare={() => setShareOpen(true)}
       />
 
       <FilterCard
@@ -70,6 +73,13 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
       />
 
       <List data={_data} />
+
+      <ShareModal
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        data={_data}
+        date={formatDate(new Date())}
+      />
 
       <style jsx>{`
         main {

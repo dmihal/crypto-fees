@@ -8,6 +8,7 @@ import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 import FilterCard, { Filters } from 'components/FilterCard';
 import { last7Days } from 'data/lib/time';
+import ShareModal from 'components/ShareModal';
 
 interface HistoricalDataPageProps {
   data: ProtocolData[];
@@ -22,6 +23,7 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
 
   const [filterCardOpen, setFilterCardOpen] = useState(false);
   const [filters, setFilters] = useState<Filters>({});
+  const [shareOpen, setShareOpen] = useState(false);
 
   let _data = data;
   let numFilters = 0;
@@ -63,6 +65,7 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
         }
         onFilterToggle={() => setFilterCardOpen(toggle)}
         numFilters={numFilters}
+        onShare={() => setShareOpen(true)}
       />
 
       <FilterCard
@@ -72,6 +75,8 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
       />
 
       <List data={_data} />
+
+      <ShareModal open={shareOpen} onClose={() => setShareOpen(false)} data={_data} date={date} />
 
       <style jsx>{`
         main {

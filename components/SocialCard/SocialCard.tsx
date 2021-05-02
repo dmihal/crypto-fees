@@ -9,12 +9,12 @@ interface SocialCardProps {
 
 const sortByDaily = (a: ProtocolData, b: ProtocolData) => b.oneDay - a.oneDay;
 
+const font = 'SofiaProRegular, Sofia Pro, sofia-pro';
+
 const SocialCard: React.FC<SocialCardProps> = ({ data, date }) => {
   const _data = data.sort(sortByDaily).slice(0, 5);
   return (
     <svg
-      width="688px"
-      height="344px"
       viewBox="0 0 688 344"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
@@ -28,12 +28,12 @@ const SocialCard: React.FC<SocialCardProps> = ({ data, date }) => {
       </defs>
       <g>
         <rect fill="#F9FAFC" x="0" y="0" width="688" height="344"></rect>
-        <text fontFamily="SofiaProRegular, Sofia Pro" fontSize="24" fill="#091636" x="27" y="44">
+        <text fontFamily={font} fontSize="24" fill="#091636" x="27" y="44">
           CryptoFees.info
         </text>
         <text
           opacity="0.4"
-          fontFamily="SofiaProRegular, Sofia Pro"
+          fontFamily={font}
           fontSize="18"
           fill="#091636"
           x="650"
@@ -61,31 +61,13 @@ const SocialCard: React.FC<SocialCardProps> = ({ data, date }) => {
             </g>
 
             <g transform="translate(0, 4)">
-              <text
-                fontFamily="SofiaProRegular, Sofia Pro"
-                fontSize="16"
-                fill="#4D596A"
-                x="10"
-                y="20"
-              >
+              <text fontFamily={font} fontSize="16" fill="#4D596A" x="10" y="20">
                 Name
               </text>
-              <text
-                fontFamily="SofiaProRegular, Sofia Pro"
-                fontSize="16"
-                fill="#4D596A"
-                x="365"
-                y="20"
-              >
+              <text fontFamily={font} fontSize="16" fill="#4D596A" x="365" y="20">
                 1 Day Fees
               </text>
-              <text
-                fontFamily="SofiaProRegular, Sofia Pro"
-                fontSize="16"
-                fill="#4D596A"
-                x="491"
-                y="20"
-              >
+              <text fontFamily={font} fontSize="16" fill="#4D596A" x="491" y="20">
                 7 Day Avg. Fees
               </text>
             </g>

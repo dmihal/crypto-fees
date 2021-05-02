@@ -7,6 +7,8 @@ interface RowProps {
   index: number;
 }
 
+const font = 'SofiaProRegular, Sofia Pro, sofia-pro';
+
 const Row: React.FC<RowProps> = ({ protocol, index }) => {
   let svgImg;
   if (icons[protocol.id]?.indexOf('data:image/svg+xml;base64,') === 0) {
@@ -22,7 +24,7 @@ const Row: React.FC<RowProps> = ({ protocol, index }) => {
       <rect fill={background} x="0" y="0" width="628" height="37"></rect>
 
       <g transform="translate(10, 4)">
-        <text fontFamily="SofiaProRegular, Sofia Pro" fontSize="16" fill="#091636" x="0" y="18">
+        <text fontFamily={font} fontSize="16" fill="#091636" x="0" y="18">
           {index + 1}.
         </text>
 
@@ -30,36 +32,22 @@ const Row: React.FC<RowProps> = ({ protocol, index }) => {
           {svgImg ? (
             <g dangerouslySetInnerHTML={{ __html: svgImg }} />
           ) : (
-            <image x="64" y="0" width="18" height="26" href={icons[protocol.id]} />
+            <image x="0" y="0" width="24" height="24" href={icons[protocol.id]} />
           )}
         </g>
 
-        <text fontFamily="SofiaProRegular, Sofia Pro" fontSize="16" fill="#091636" x="70" y="18">
+        <text fontFamily={font} fontSize="16" fill="#091636" x="70" y="18">
           {protocol.name}
         </text>
 
-        <text
-          y="18"
-          x="440"
-          fontFamily="SofiaProRegular, Sofia Pro"
-          fontSize="16"
-          textAnchor="end"
-          fill="#091636"
-        >
+        <text y="18" x="440" fontFamily={font} fontSize="16" textAnchor="end" fill="#091636">
           {protocol.oneDay?.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}
         </text>
 
-        <text
-          y="18"
-          x="600"
-          fontFamily="SofiaProRegular, Sofia Pro"
-          fontSize="16"
-          textAnchor="end"
-          fill="#091636"
-        >
+        <text y="18" x="600" fontFamily={font} fontSize="16" textAnchor="end" fill="#091636">
           {protocol.sevenDayMA?.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
