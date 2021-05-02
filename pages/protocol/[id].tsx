@@ -9,13 +9,13 @@ import { getIDs, getMetadata } from 'data/adapters';
 import { getDateRangeData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 
-function getMissing(data: any, minDate: string, maxDate: string, id: string) {
+function getMissing(data: any, minDate: Date, maxDate: Date, id: string) {
   const missing = [];
   if (!data[id]) {
     data[id] = {};
   }
 
-  for (let date = new Date(minDate); !isAfter(date, new Date(maxDate)); date = addDays(date, 1)) {
+  for (let date = minDate; !isAfter(date, maxDate); date = addDays(date, 1)) {
     const dateStr = formatDate(date);
     if (!data[id][dateStr]) {
       missing.push(dateStr);
@@ -39,14 +39,14 @@ function getDateWithSmoothing(data: any, id: string, date: Date, smoothing: numb
 
 function formatData(
   data: any,
-  minDate: string,
-  maxDate: string,
+  minDate: Date,
+  maxDate: Date,
   primaryId: string,
   secondaryId: string | null,
   smoothing: number
 ) {
   const result = [];
-  for (let date = new Date(minDate); !isAfter(date, new Date(maxDate)); date = addDays(date, 1)) {
+  for (let date = minDate; !isAfter(date, maxDate); date = addDays(date, 1)) {
     const primary = getDateWithSmoothing(data, primaryId, date, smoothing);
     const secondary = secondaryId ? getDateWithSmoothing(data, secondaryId, date, smoothing) : 0;
 
@@ -73,8 +73,7 @@ function saveFeeData(response: any, storedFees: any) {
 
 const useFees = (
   initial: any,
-  minDate: string,
-  maxDate: string,
+  dateRange: { start: Date; end: Date },
   primary: string,
   secondary: string | null,
   smoothing: number
@@ -88,12 +87,11 @@ const useFees = (
 
   useEffect(() => {
     // We need to fetch extra data if using smoothing
-    const actualMinDate =
-      smoothing > 0 ? formatDate(subDays(new Date(minDate), smoothing)) : minDate;
+    const actualStartDate = smoothing > 0 ? subDays(dateRange.start, smoothing) : dateRange.start;
 
-    const missingPrimary = getMissing(fees.current, actualMinDate, maxDate, primary);
+    const missingPrimary = getMissing(fees.current, actualStartDate, dateRange.end, primary);
     const missingSecondary = secondary
-      ? getMissing(fees.current, actualMinDate, maxDate, secondary)
+      ? getMissing(fees.current, actualStartDate, dateRange.end, secondary)
       : [];
 
     if (missingPrimary.length > 0 || missingSecondary.length > 0) {
@@ -114,16 +112,30 @@ const useFees = (
 
           setValue({
             loading: false,
-            data: formatData(fees.current, minDate, maxDate, primary, secondary, smoothing),
+            data: formatData(
+              fees.current,
+              dateRange.start,
+              dateRange.end,
+              primary,
+              secondary,
+              smoothing
+            ),
           });
         });
     } else {
       setValue({
         loading: false,
-        data: formatData(fees.current, minDate, maxDate, primary, secondary, smoothing),
+        data: formatData(
+          fees.current,
+          dateRange.start,
+          dateRange.end,
+          primary,
+          secondary,
+          smoothing
+        ),
       });
     }
-  }, [minDate, maxDate, primary, secondary, smoothing]);
+  }, [dateRange, primary, secondary, smoothing]);
 
   return value;
 };
@@ -135,18 +147,25 @@ interface ProtocolDetailsProps {
   protocols: string[];
 }
 
+const dateFloor = (date: Date) => {
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
+};
+
 export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   id,
   metadata,
   feeCache,
   protocols,
 }) => {
-  const [minDate, setMinDate] = useState(formatDate(subDays(new Date(), 90)));
-  const [maxDate, setMaxDate] = useState(formatDate(subDays(new Date(), 1)));
+  const [dateRange, setDateRange] = useState({
+    start: dateFloor(subDays(new Date(), 90)),
+    end: dateFloor(subDays(new Date(), 1)),
+  });
   const [smoothing, setSmoothing] = useState(0);
   const [secondary, setSecondary] = useState<string | null>(null);
 
-  const { loading, data } = useFees(feeCache, minDate, maxDate, id, secondary, smoothing);
+  const { loading, data } = useFees(feeCache, dateRange, id, secondary, smoothing);
 
   return (
     <main>
@@ -158,21 +177,16 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
       <div className="toolbar">
         <div className="toolbar-col">
           <DatePicker
-            selected={new Date(minDate)}
-            onChange={(newDate: any) => setMinDate(formatDate(newDate))}
+            selected={new Date(dateRange.start)}
+            startDate={dateRange.start}
+            endDate={dateRange.end}
+            onChange={([start, end]: any[]) => setDateRange({ start, end })}
             maxDate={subDays(new Date(), 1)}
-            popperPlacement="bottom-end"
+            monthsShown={2}
+            popperPlacement="bottom-start"
+            selectsRange
           />
           <div>From</div>
-        </div>
-        <div className="toolbar-col">
-          <DatePicker
-            selected={new Date(maxDate)}
-            onChange={(newDate: any) => setMaxDate(formatDate(newDate))}
-            maxDate={subDays(new Date(), 1)}
-            popperPlacement="bottom-end"
-          />
-          <div>To</div>
         </div>
 
         <div className="toolbar-col">
