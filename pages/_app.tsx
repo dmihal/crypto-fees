@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
+import Header from 'components/Header';
 
 ReactGA.initialize('UA-150445352-3');
 
@@ -50,16 +51,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <header>
-        <ul className="header-links">
-          <li className="header-link">
-            <div>cryptofees.info</div>
-          </li>
-          <li className="header-link">
-            <a href="https://money-movers.info/">money-movers.info</a>
-          </li>
-        </ul>
-      </header>
+      <Header />
 
       <Component {...pageProps} />
 
@@ -103,29 +95,6 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           flex-direction: column;
           justify-content: space-between;
           align-items: center;
-        }
-
-        .header-links {
-          display: flex;
-          margin: 0;
-          padding: 0;
-        }
-
-        .header-link {
-          list-style: none;
-        }
-
-        .header-link > * {
-          padding: 8px;
-          display: block;
-          border: solid 1px transparent;
-          margin: 0 4px;
-        }
-
-        .header-link > a:hover {
-          border-radius: 3px;
-          border: solid 1px #d0d1d9;
-          text-decoration: none;
         }
 
         footer {
