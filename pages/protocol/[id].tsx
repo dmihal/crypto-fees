@@ -144,7 +144,7 @@ interface ProtocolDetailsProps {
   id: string;
   metadata: any;
   feeCache: any;
-  protocols: string[];
+  protocols: { [id: string]: string };
 }
 
 const dateFloor = (date: Date) => {
@@ -167,6 +167,8 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 
   const { loading, data } = useFees(feeCache, dateRange, id, secondary, smoothing);
 
+  const { [id]: filter, ...otherProtocols } = protocols; // eslint-disable-line @typescript-eslint/no-unused-vars
+
   return (
     <main>
       <h1 className="title">CryptoFees.info</h1>
@@ -178,39 +180,15 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         maxDate={subDays(new Date(), 1)}
         smoothing={smoothing}
         onSmoothingChange={setSmoothing}
+        protocols={otherProtocols}
+        secondary={secondary}
+        onSecondaryChange={setSecondary}
       />
 
       <Chart data={data} loading={loading} primary={id} secondary={secondary} />
 
-      <div className="toolbar">
-        <div className="toolbar-col">
-          <select
-            value={secondary || 'None'}
-            onChange={(e: any) => setSecondary(e.target.value === 'None' ? null : e.target.value)}
-          >
-            <option>None</option>
-            {protocols.map((id: string) => (
-              <option key={id}>{id}</option>
-            ))}
-          </select>
-          <div>Compare</div>
-        </div>
-      </div>
-
       <p>{metadata.description}</p>
       <p>{metadata.feeDescription}</p>
-
-      <style jsx>{`
-        .toolbar {
-          display: flex;
-          margin: 8px 0;
-        }
-        .toolbar-col {
-          display: flex;
-          flex-direction: column;
-          width: 100%;
-        }
-      `}</style>
     </main>
   );
 };
@@ -229,6 +207,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     defaultFees[date] = data;
   }
 
+  const ids = getIDs().sort();
+  const protocols: { [id: string]: string } = {};
+  for (const id of ids) {
+    protocols[id] = getMetadata(id).name;
+  }
+
   return {
     props: {
       id,
@@ -236,7 +220,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       feeCache: {
         [id]: defaultFees,
       },
-      protocols: getIDs(),
+      protocols,
     },
     revalidate: 60,
   };
