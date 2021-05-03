@@ -26,6 +26,7 @@
     ]
   },
   "dependencies": {
+    "@popperjs/core": "^2.9.2",
     "@types/react-transition-group": "^4.4.0",
     "@types/redis": "^2.8.28",
     "date-fns": "^2.16.1",
@@ -39,6 +40,7 @@
     "react-datepicker": "^3.6.0",
     "react-dom": "^16.13.1",
     "react-ga": "^3.1.2",
+    "react-popper": "^2.2.5",
     "react-transition-group": "^4.4.1",
     "recharts": "^2.0.9",
     "redis": "^3.1.0",

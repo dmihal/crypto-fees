@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import DatePicker from 'react-datepicker';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import isAfter from 'date-fns/isAfter';
 import Chart from 'components/Chart';
+import ChartToolbar from 'components/ChartToolbar';
 import { getIDs, getMetadata } from 'data/adapters';
 import { getDateRangeData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
@@ -172,23 +172,15 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
       <h1 className="title">CryptoFees.info</h1>
       <h2 className="subtitle">{metadata.name}</h2>
 
+      <ChartToolbar
+        range={dateRange}
+        onRangeChange={setDateRange}
+        maxDate={subDays(new Date(), 1)}
+      />
+
       <Chart data={data} loading={loading} primary={id} secondary={secondary} />
 
       <div className="toolbar">
-        <div className="toolbar-col">
-          <DatePicker
-            selected={new Date(dateRange.start)}
-            startDate={dateRange.start}
-            endDate={dateRange.end}
-            onChange={([start, end]: any[]) => setDateRange({ start, end })}
-            maxDate={subDays(new Date(), 1)}
-            monthsShown={2}
-            popperPlacement="bottom-start"
-            selectsRange
-          />
-          <div>From</div>
-        </div>
-
         <div className="toolbar-col">
           <select value={smoothing} onChange={(e: any) => setSmoothing(parseInt(e.target.value))}>
             <option value={0}>None</option>
