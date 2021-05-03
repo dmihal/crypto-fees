@@ -6,6 +6,7 @@ import subDays from 'date-fns/subDays';
 import isAfter from 'date-fns/isAfter';
 import Chart from 'components/Chart';
 import ChartToolbar from 'components/ChartToolbar';
+import SocialTags from 'components/SocialTags';
 import { getIDs, getMetadata } from 'data/adapters';
 import { getDateRangeData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
@@ -172,6 +173,8 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 
   return (
     <main>
+      <SocialTags title={metadata.name} image={id} />
+
       <h1 className="title">CryptoFees.info</h1>
       <div>
         <Link href="/">

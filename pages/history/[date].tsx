@@ -9,6 +9,7 @@ import Toolbar from 'components/Toolbar';
 import FilterCard, { Filters } from 'components/FilterCard';
 import { last7Days } from 'data/lib/time';
 import ShareModal from 'components/ShareModal';
+import SocialTags from 'components/SocialTags';
 
 interface HistoricalDataPageProps {
   data: ProtocolData[];
@@ -50,6 +51,8 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
 
   return (
     <main>
+      <SocialTags title={date} />
+
       <h1 className="title">Crypto Fees</h1>
 
       <p className="description">

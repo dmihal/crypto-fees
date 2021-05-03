@@ -47,21 +47,31 @@ interface SeriesChartProps {
   secondary?: string | null;
   loading?: boolean;
   protocols: { [id: string]: string };
+  server?: boolean;
 }
 
-const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading, protocols }) => {
+const Chart: React.FC<SeriesChartProps> = ({
+  data,
+  primary,
+  secondary,
+  loading,
+  protocols,
+  server,
+}) => {
   const color = 'blue';
   const textColor = 'black';
 
+  const Container: any = server ? 'div' : ResponsiveContainer;
+
+  const margin = server
+    ? { top: 20, right: 20, bottom: 20, left: 20 }
+    : { top: 0, right: 10, bottom: 6, left: 0 };
+
+  const width = server ? 380 : 500;
+
   return (
-    <ResponsiveContainer height={200}>
-      <LineChart
-        height={200}
-        width={500}
-        margin={{ top: 0, right: 10, bottom: 6, left: 0 }}
-        barCategoryGap={1}
-        data={data}
-      >
+    <Container height={200}>
+      <LineChart height={200} width={width} margin={margin} barCategoryGap={1} data={data}>
         <XAxis
           tickLine={false}
           axisLine={false}
@@ -121,7 +131,7 @@ const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading, 
         )}
         {loading && <rect height="100%" width="100%" opacity="0.5" fill="#666" />}
       </LineChart>
-    </ResponsiveContainer>
+    </Container>
   );
 };
 

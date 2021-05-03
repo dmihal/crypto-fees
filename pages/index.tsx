@@ -7,6 +7,7 @@ import { formatDate } from 'data/lib/time';
 import FilterCard, { Filters } from 'components/FilterCard';
 import List from 'components/List';
 import ShareModal from 'components/ShareModal';
+import SocialTags from 'components/SocialTags';
 import Toolbar from 'components/Toolbar';
 
 interface HomeProps {
@@ -38,6 +39,8 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
   return (
     <main>
+      <SocialTags />
+
       <h1 className="title">Crypto Fees</h1>
 
       <p className="description">

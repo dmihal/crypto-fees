@@ -31,29 +31,6 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;display=swap"
           rel="stylesheet"
         />
-
-        <meta property="og:title" content="Crypto Fees" />
-        <meta
-          property="og:image"
-          content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/social.png`}
-        />
-        <meta
-          property="og:description"
-          content="There's tons of crypto projects. Which ones are people actually paying to use?"
-        />
-
-        <meta name="twitter:title" content="Crypto Fees" />
-        <meta
-          name="twitter:description"
-          content="There's tons of crypto projects. Which ones are people actually paying to use?"
-        />
-        <meta
-          name="twitter:image"
-          content={`https://${
-            process.env.NEXT_PUBLIC_VERCEL_URL
-          }/api/social.png?${new Date().getDate()}`}
-        />
-        <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
       <Header />
