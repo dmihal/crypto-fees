@@ -46,6 +46,8 @@ interface ToolbarProps {
   onFilterToggle?: () => void;
   numFilters?: number;
   onShare?: () => void;
+  tags: { id: string; label: string }[];
+  onTagRemoved: (tag: string) => void;
 }
 
 const Toolbar: React.FC<ToolbarProps> = ({
@@ -54,6 +56,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onFilterToggle,
   numFilters,
   onShare,
+  tags,
+  onTagRemoved,
 }) => {
   const router = useRouter();
   const [changed, setChanged] = useState(false);
@@ -81,6 +85,13 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <div className="toolbar">
+      {tags.map((tag: any) => (
+        <div key={tag.id} className="label" title={tag.label}>
+          <span>{tag.label}</span>
+          <button onClick={() => onTagRemoved(tag.id)}>×</button>
+        </div>
+      ))}
+
       <Button onClick={onShare}>Share</Button>
 
       <Button onClick={onFilterToggle}>
@@ -117,6 +128,30 @@ const Toolbar: React.FC<ToolbarProps> = ({
           font-size: 10px;
           padding: 2px 4px;
           margin-left: 6px;
+        }
+        .label {
+          font-size: 10px;
+          display: flex;
+          max-width: 150px;
+          align-items: center;
+          background: #eeeeee;
+          padding: 2px;
+          border-radius: 4px;
+        }
+        .label span {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .label button {
+          margin-left: 4px;
+          background: transparent;
+          border: none;
+          outline: none;
+          padding: 4px;
+        }
+        .label button:hover {
+          background: #dedede;
         }
       `}</style>
     </div>

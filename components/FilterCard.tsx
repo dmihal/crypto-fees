@@ -7,7 +7,7 @@ interface Category {
   id: string;
 }
 
-const allCategories: Item[] = [
+export const allCategories: Item[] = [
   { name: 'Layer 1', id: 'l1' },
   { name: 'Decentralized Exchange', id: 'dex' },
   { name: 'Lending', id: 'lending' },
@@ -15,7 +15,7 @@ const allCategories: Item[] = [
   { name: 'Other', id: 'other' },
 ];
 
-const allChains: Item[] = [
+export const allChains: Item[] = [
   { name: 'Ethereum', id: 'Ethereum' },
   { name: 'xDai', id: 'xDai' },
   { name: 'Polygon', id: 'Polygon' },

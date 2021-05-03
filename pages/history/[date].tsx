@@ -6,7 +6,7 @@ import { getHistoricalData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
-import FilterCard, { Filters } from 'components/FilterCard';
+import FilterCard, { Filters, allChains, allCategories } from 'components/FilterCard';
 import { last7Days } from 'data/lib/time';
 import ShareModal from 'components/ShareModal';
 import SocialTags from 'components/SocialTags';
@@ -19,6 +19,12 @@ interface HistoricalDataPageProps {
 
 const toggle = (_val: boolean) => !_val;
 
+const filterListToLabel = (list: any[], ids: string[]) =>
+  list
+    .filter((item: any) => ids.indexOf(item.id) !== -1)
+    .map((item: any) => item.name)
+    .join(', ');
+
 export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, invalid, date }) => {
   const router = useRouter();
 
@@ -28,9 +34,14 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
 
   let _data = data;
   let numFilters = 0;
+  const tags = [];
   if (filters.categories) {
     numFilters += 1;
     _data = _data.filter((item: ProtocolData) => filters.categories.indexOf(item.category) !== -1);
+    tags.push({
+      id: 'categories',
+      label: filterListToLabel(allCategories, filters.categories),
+    });
   }
   if (filters.chains) {
     numFilters += 1;
@@ -39,6 +50,10 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
         ? filters.chains.indexOf(item.blockchain) !== -1
         : filters.chains.indexOf('other') !== -1
     );
+    tags.push({
+      id: 'chains',
+      label: filterListToLabel(allChains, filters.chains),
+    });
   }
 
   if (invalid) {
@@ -69,6 +84,8 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
         onFilterToggle={() => setFilterCardOpen(toggle)}
         numFilters={numFilters}
         onShare={() => setShareOpen(true)}
+        tags={tags}
+        onTagRemoved={(tagId: string) => setFilters({ ...filters, [tagId]: undefined })}
       />
 
       <FilterCard
