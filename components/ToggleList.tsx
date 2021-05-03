@@ -17,13 +17,20 @@ const ToggleList: React.FC<ToggleListProps> = ({ items, selected, onSelectedChan
   return (
     <ul className="list">
       {items.map((item: Item) => {
-        const isSelected = _selected.indexOf(item.id) !== -1;
-        const toggle = isSelected
-          ? () => onSelectedChanged(_selected.filter((_id: string) => _id !== item.id))
-          : () =>
-              onSelectedChanged(
-                _selected.length === items.length - 1 ? undefined : [..._selected, item.id]
-              );
+        const isSelected = !selected || _selected.indexOf(item.id) !== -1;
+
+        let toggle;
+
+        if (isSelected && !selected) {
+          toggle = () => onSelectedChanged([item.id]);
+        } else if (isSelected && selected.length === 1) {
+          toggle = () => onSelectedChanged(undefined);
+        } else if (isSelected) {
+          toggle = () => onSelectedChanged(_selected.filter((_id: string) => _id !== item.id));
+        } else {
+          // add filter
+          toggle = () => onSelectedChanged([..._selected, item.id]);
+        }
 
         return (
           <li className={`item ${isSelected ? 'selected' : ''}`} key={item.id} onClick={toggle}>
@@ -49,9 +56,18 @@ const ToggleList: React.FC<ToggleListProps> = ({ items, selected, onSelectedChan
           height: 30px;
         }
 
+        .item:before {
+          content: '✓';
+          display: inline-block;
+          margin-right: 8px;
+        }
+
         .item.selected {
           color: #091636;
           background: #ffffff;
+        }
+        .item.selected:before {
+          content: '✓';
         }
       `}</style>
     </ul>
