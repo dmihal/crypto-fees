@@ -46,9 +46,10 @@ interface SeriesChartProps {
   primary: string;
   secondary?: string | null;
   loading?: boolean;
+  protocols: { [id: string]: string };
 }
 
-const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading }) => {
+const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading, protocols }) => {
   const color = 'blue';
   const textColor = 'black';
 
@@ -102,7 +103,7 @@ const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading }
           strokeWidth={2}
           dot={false}
           type="monotone"
-          name={primary}
+          name={protocols[primary]}
           dataKey="primary"
           yAxisId={0}
           stroke="#f2a900"
@@ -112,10 +113,10 @@ const Chart: React.FC<SeriesChartProps> = ({ data, primary, secondary, loading }
             strokeWidth={2}
             dot={false}
             type="monotone"
-            name={secondary}
+            name={protocols[secondary]}
             dataKey="secondary"
             yAxisId={0}
-            stroke="#f2a900"
+            stroke="#d6d3cc"
           />
         )}
         {loading && <rect height="100%" width="100%" opacity="0.5" fill="#666" />}

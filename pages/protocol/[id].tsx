@@ -185,10 +185,28 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         onSecondaryChange={setSecondary}
       />
 
-      <Chart data={data} loading={loading} primary={id} secondary={secondary} />
+      <div className="chart-container">
+        <Chart
+          data={data}
+          loading={loading}
+          primary={id}
+          secondary={secondary}
+          protocols={protocols}
+        />
+      </div>
 
       <p>{metadata.description}</p>
       <p>{metadata.feeDescription}</p>
+
+      <style jsx>{`
+        .chart-container {
+          padding: 14px;
+          background: #ffffff;
+          border-radius: 8px;
+          margin: 6px 0;
+          border: solid 1px #d0d1d9;
+        }
+      `}</style>
     </main>
   );
 };
