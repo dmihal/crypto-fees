@@ -176,20 +176,13 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         range={dateRange}
         onRangeChange={setDateRange}
         maxDate={subDays(new Date(), 1)}
+        smoothing={smoothing}
+        onSmoothingChange={setSmoothing}
       />
 
       <Chart data={data} loading={loading} primary={id} secondary={secondary} />
 
       <div className="toolbar">
-        <div className="toolbar-col">
-          <select value={smoothing} onChange={(e: any) => setSmoothing(parseInt(e.target.value))}>
-            <option value={0}>None</option>
-            <option value={2}>3 Days</option>
-            <option value={6}>7 Days</option>
-          </select>
-          <div>Smoothing</div>
-        </div>
-
         <div className="toolbar-col">
           <select
             value={secondary || 'None'}
