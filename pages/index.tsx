@@ -46,17 +46,6 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         Which ones are people actually paying to use?
       </p>
 
-      <div>
-        <a
-          href="https://twitter.com/share?ref_src=twsrc%5Etfw"
-          className="twitter-share-button"
-          data-show-count="true"
-        >
-          Tweet
-        </a>
-        <script async src="https://platform.twitter.com/widgets.js"></script>
-      </div>
-
       <Toolbar
         onDateChange={(newDate: Date) =>
           router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })

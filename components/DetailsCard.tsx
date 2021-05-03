@@ -78,7 +78,7 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
 
       <style jsx>{`
         .details-card {
-          padding: 8px;
+          padding: 12px;
         }
         .description {
           margin: 4px 0;

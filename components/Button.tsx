@@ -23,6 +23,7 @@ const Button = forwardRef<any, ButtonProps>(({ children, onClick, href }, ref) =
           outline: none;
           display: inline-block;
           text-decoration: none;
+          font-family: 'sofia-pro', sans-serif;
         }
         .button:hover {
           background: #eeeeee;

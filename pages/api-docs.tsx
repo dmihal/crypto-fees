@@ -20,7 +20,7 @@ const APIDocsPage: NextPage<APIDocsProps> = ({ lastWeek, protocols }) => {
 
       <div>
         <Link href="/">
-          <a>Back to project list</a>
+          <a>Back to list</a>
         </Link>
       </div>
 

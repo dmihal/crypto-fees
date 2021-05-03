@@ -26,6 +26,11 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/3.6.0/react-datepicker.min.css"
         />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;display=swap"
+          rel="stylesheet"
+        />
 
         <meta property="og:title" content="Crypto Fees" />
         <meta
@@ -112,6 +117,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           margin: 0;
           font-family: 'sofia-pro', sans-serif;
           background: #f9fafc;
+          color: #091636;
         }
 
         * {
@@ -119,10 +125,11 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         }
 
         a {
-          color: #666666;
-          text-decoration: none;
+          color: #091636;
+          text-decoration: underline;
         }
         a:hover {
+          color: #666666;
           text-decoration: underline;
         }
       `}</style>

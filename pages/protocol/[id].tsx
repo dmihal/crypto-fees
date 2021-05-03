@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import Link from 'next/link';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import isAfter from 'date-fns/isAfter';
@@ -172,6 +173,12 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   return (
     <main>
       <h1 className="title">CryptoFees.info</h1>
+      <div>
+        <Link href="/">
+          <a>Back to list</a>
+        </Link>
+      </div>
+
       <h2 className="subtitle">{metadata.name}</h2>
 
       <ChartToolbar
@@ -199,6 +206,9 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
       <p>{metadata.feeDescription}</p>
 
       <style jsx>{`
+        .title {
+          margin: 10px 0 4px;
+        }
         .chart-container {
           padding: 14px;
           background: #ffffff;

@@ -106,7 +106,9 @@ const Toolbar: React.FC<ToolbarProps> = ({
           display: flex;
           justify-content: flex-end;
           align-self: stretch;
-          margin: 0 4px;
+        }
+        .toolbar > :global(*) {
+          margin-left: 4px;
         }
         .chip {
           background: #828282;
