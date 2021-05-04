@@ -1,7 +1,6 @@
 import React from 'react';
 import RangeSelector, { DateRange } from './RangeSelector';
-import Select from 'react-select';
-import icons from './icons';
+import Select from './Select';
 
 interface ChartToolbarProps {
   range: DateRange;
@@ -20,23 +19,6 @@ const smoothingOptions = [
   { value: 6, label: '7 Days' },
 ];
 
-const protocolStyles = (styles: any, { data }: any) => ({
-  ...styles,
-  display: 'flex',
-  alignItems: 'center',
-  ':before': {
-    background: icons[data.value] ? `url('${icons[data.value]}')` : null,
-    content: '""',
-    display: 'block',
-    marginRight: 8,
-    height: 20,
-    width: 20,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    backgroundSize: 'contain',
-  },
-});
-
 const ChartToolbar: React.FC<ChartToolbarProps> = ({
   range,
   onRangeChange,
@@ -52,30 +34,19 @@ const ChartToolbar: React.FC<ChartToolbarProps> = ({
       <RangeSelector value={range} onChange={onRangeChange} maxDate={maxDate} />
       <Select
         options={smoothingOptions}
-        value={smoothing && { label: `${smoothing + 1} Days` }}
-        onChange={(val: any) => onSmoothingChange(val.value)}
+        value={smoothing > 0 ? smoothing : undefined}
+        onChange={(val: number) => onSmoothingChange(val)}
         placeholder="Smoothing"
-        isSearchable={false}
-        styles={{
-          control: (provided: any) => ({
-            ...provided,
-            width: 120,
-          }),
-        }}
+        width={120}
       />
       <Select
         options={Object.entries(protocols).map(([value, label]: string[]) => ({ value, label }))}
-        value={secondary && { value: secondary, label: protocols[secondary] }}
-        onChange={(val: any) => onSecondaryChange(val.value)}
+        value={secondary}
+        onChange={(val: string) => onSecondaryChange(val)}
         placeholder="Compare"
-        styles={{
-          control: (provided: any) => ({
-            ...provided,
-            width: 150,
-          }),
-          singleValue: protocolStyles,
-          option: protocolStyles,
-        }}
+        searchable
+        width={150}
+        protocol
       />
 
       <style jsx>{`

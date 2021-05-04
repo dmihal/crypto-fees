@@ -74,7 +74,7 @@ const Chart: React.FC<SeriesChartProps> = ({
       <LineChart height={200} width={width} margin={margin} barCategoryGap={1} data={data}>
         <XAxis
           tickLine={false}
-          axisLine={false}
+          stroke="#efefef"
           interval="preserveStartEnd"
           tickMargin={14}
           minTickGap={0}
@@ -88,8 +88,7 @@ const Chart: React.FC<SeriesChartProps> = ({
           type="number"
           orientation="right"
           tickFormatter={(tick: any) => '$' + toK(tick)}
-          axisLine={false}
-          tickLine={false}
+          stroke="#efefef"
           interval="preserveEnd"
           minTickGap={80}
           yAxisId={0}
