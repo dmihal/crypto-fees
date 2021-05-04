@@ -2,6 +2,7 @@ import React from 'react';
 import { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
+import { ArrowLeft } from 'react-feather';
 
 const APIDocsPage: NextPage = () => {
   return (
@@ -12,7 +13,9 @@ const APIDocsPage: NextPage = () => {
 
       <div>
         <Link href="/">
-          <a>Back to list</a>
+          <a>
+            <ArrowLeft size={14} /> Back to list
+          </a>
         </Link>
       </div>
 

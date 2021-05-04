@@ -4,6 +4,7 @@ import Link from 'next/link';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import isAfter from 'date-fns/isAfter';
+import { ArrowLeft } from 'react-feather';
 import Attribute from 'components/Attribute';
 import Chart from 'components/Chart';
 import ChartToolbar from 'components/ChartToolbar';
@@ -183,7 +184,9 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
       <h1 className="title">CryptoFees.info</h1>
       <div>
         <Link href="/">
-          <a>Back to list</a>
+          <a>
+            <ArrowLeft size={14} /> Back to list
+          </a>
         </Link>
       </div>
 

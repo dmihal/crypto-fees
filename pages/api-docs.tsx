@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getLastWeek } from 'data/queries';
 import { getIDs, getMetadata } from 'data/adapters';
 import ResponsePreview from 'components/ResponsePreview';
+import { ArrowLeft } from 'react-feather';
 
 interface APIDocsProps {
   lastWeek: any;
@@ -20,7 +21,9 @@ const APIDocsPage: NextPage<APIDocsProps> = ({ lastWeek, protocols }) => {
 
       <div>
         <Link href="/">
-          <a>Back to list</a>
+          <a>
+            <ArrowLeft size={14} /> Back to list
+          </a>
         </Link>
       </div>
 
