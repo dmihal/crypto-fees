@@ -106,7 +106,7 @@ export function getDateRange(dateStart: string | Date, dateEnd: string | Date) {
   const _dateEnd = dateEnd instanceof Date ? dateEnd : new Date(dateEnd);
 
   const days = [];
-  for (let date = _dateStart; date < _dateEnd; date = addDays(date, 1)) {
+  for (let date = _dateStart; date <= _dateEnd; date = addDays(date, 1)) {
     days.push(formatDate(date));
   }
 
