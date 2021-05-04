@@ -32,6 +32,7 @@ const Header = () => {
           display: flex;
           margin: 0;
           padding: 0;
+          align-items: center;
         }
 
         .header-link {
@@ -71,6 +72,14 @@ const Header = () => {
         .header-link:hover .dropdown,
         .dropdown:hover {
           display: block;
+        }
+
+        @media (max-width: 700px) {
+          .header-link > a,
+          .header-link > div {
+            margin: 0 1px;
+            padding: 4px;
+          }
         }
       `}</style>
     </header>

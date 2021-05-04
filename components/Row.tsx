@@ -3,6 +3,7 @@ import { ProtocolData } from 'data/types';
 import icons from './icons';
 import { CSSTransition } from 'react-transition-group';
 import ReactGA from 'react-ga';
+import { ChevronDown, ChevronUp } from 'react-feather';
 import DetailsCard from './DetailsCard';
 
 interface RowProps {
@@ -29,7 +30,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
             label: protocol.name,
           });
         }}
-        className={`item ${protocol.category !== 'l1' ? 'app' : ''}`}
+        className={`item ${protocol.category !== 'l1' ? 'app' : ''} ${open ? 'open' : ''}`}
         style={{
           backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
         }}
@@ -47,6 +48,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
             currency: 'USD',
           })}
         </div>
+        <div className="arrow">{open ? <ChevronUp /> : <ChevronDown />}</div>
       </a>
 
       <CSSTransition in={open} timeout={500} unmountOnExit>
@@ -66,6 +68,8 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           padding-left: 10px;
           color: black;
           text-decoration: none;
+          align-items: center;
+          height: 62px;
         }
         .item:hover {
           background-color: #f5f5f5;
@@ -78,18 +82,31 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           background-color: #f8c3f3;
         }
 
-        .item > div {
-          padding: 16px 32px;
+        .amount {
+          padding-left: 32px;
         }
 
         .name {
           flex: 1;
+          padding: 0 32px;
         }
 
         .amount {
-          min-width: 250px;
+          min-width: 200px;
           text-align: right;
           font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        .arrow {
+          padding: 0 4px;
+          height: 24px;
+          opacity: 0;
+          transition: opacity 0.2s;
+        }
+
+        .item:hover .arrow,
+        .item.open .arrow {
+          opacity: 1;
         }
 
         @keyframes slidein {
@@ -128,11 +145,13 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
 
         @media (max-width: 700px) {
           .amount {
-            font-size: 16px;
-            min-width: 130px;
+            font-size: 14px;
+            min-width: 110px;
+            padding-left: 8px;
           }
           .name {
             font-size: 14px;
+            padding: 0;
           }
 
           .item {
@@ -140,8 +159,9 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
             background-position: 6px center;
           }
 
-          .item > div {
-            padding: 8px 2px;
+          .arrow {
+            opacity: 1;
+            padding: 0 2px;
           }
         }
       `}</style>

@@ -22,7 +22,7 @@ const List: React.FC<ListProps> = ({ data }) => {
           {sort === 'daily' && '▼'} 1 Day Fees
         </div>
         <div className="amount" onClick={() => setSort('weekly')}>
-          {sort === 'weekly' && '▼'} 7 Day Avg. Fees
+          {sort === 'weekly' && '▼'} 7 Day Av<span className="g">g</span>. Fees
         </div>
       </div>
 
@@ -85,7 +85,8 @@ const List: React.FC<ListProps> = ({ data }) => {
 
         @media (max-width: 700px) {
           .header {
-            padding-left: 30px;
+            padding-left: 28px;
+            padding-right: 30px;
           }
           .header > div {
             font-size: 14px;
@@ -93,14 +94,18 @@ const List: React.FC<ListProps> = ({ data }) => {
 
           .amount {
             font-size: 16px;
-            min-width: 130px;
+            min-width: 110px;
           }
           .name {
             font-size: 14px;
           }
+          .g {
+            display: none;
+          }
 
           .item {
             padding-left: 30px;
+            padding-right: 0;
             background-position: 6px center;
           }
 
