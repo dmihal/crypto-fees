@@ -47,6 +47,10 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         </div>
 
         <div>
+          <Link href="/faqs">
+            <a>FAQs</a>
+          </Link>
+          {' | '}
           <Link href="/submit-project">
             <a>Request Project</a>
           </Link>
