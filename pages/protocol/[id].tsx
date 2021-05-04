@@ -12,6 +12,7 @@ import SocialTags from 'components/SocialTags';
 import { getIDs, getMetadata } from 'data/adapters';
 import { getDateRangeData, getMarketData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
+import icons from 'components/icons';
 
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
@@ -190,7 +191,10 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         </Link>
       </div>
 
-      <h2 className="subtitle">{metadata.name}</h2>
+      <h2 className="subtitle">
+        <div className="icon" style={{ backgroundImage: `url('${icons[id]}')` }} />
+        {metadata.name}
+      </h2>
 
       <ChartToolbar
         range={dateRange}
@@ -291,6 +295,17 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         }
         .row > :global(div) {
           flex: 1;
+        }
+        h2 {
+          display: flex;
+          align-items: center;
+        }
+        .icon {
+          height: 24px;
+          width: 24px;
+          background-repeat: no-repeat;
+          background-position: center;
+          margin-right: 8px;
         }
       `}</style>
     </main>
