@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ProtocolData } from 'data/types';
 import Attribute from './Attribute';
+import Button from './Button';
 
 interface DetailsCardProps {
   protocol: ProtocolData;
@@ -71,8 +72,8 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
       )}
 
       <div>
-        <Link href={`/protocol/${protocol.id}`}>
-          <a>More Details</a>
+        <Link href={`/protocol/${protocol.id}`} passHref>
+          <Button>More Details</Button>
         </Link>
       </div>
 

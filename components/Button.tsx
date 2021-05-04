@@ -30,6 +30,7 @@ const Button = forwardRef<any, ButtonProps>(({ children, onClick, href, Icon }, 
           font-family: 'sofia-pro', sans-serif;
           display: flex;
           align-items: center;
+          justify-content: center;
         }
         .button:hover {
           background: #eeeeee;

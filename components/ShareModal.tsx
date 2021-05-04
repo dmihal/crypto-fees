@@ -3,6 +3,7 @@ import SocialCard from './SocialCard';
 import { ProtocolData } from 'data/types';
 import Button from './Button';
 import { saveSvgAsPng, svgAsPngUri } from 'save-svg-as-png';
+import { Twitter, Copy, Download } from 'react-feather';
 
 interface ShareModalProps {
   open: boolean;
@@ -60,23 +61,33 @@ const ShareModal: React.FC<ShareModalProps> = ({ open, onClose, data, date }) =>
   return (
     <div className="modal" onClick={onClose}>
       <div className="content" onClick={(e: any) => e.stopPropagation()}>
-        <div>Share</div>
+        <h2>
+          <button className="close" onClick={onClose}>
+            ×
+          </button>
+          Share
+        </h2>
 
         <div className="card-border" ref={svgContainer}>
           <SocialCard data={data} date={date} />
         </div>
 
-        <div>
+        <div className="buttons">
           <Button
             href={`https://twitter.com/intent/tweet?text=${encodeURI(
               'CryptoFees.info'
             )}&url=${encodeURI(window.location.href)}`}
+            Icon={Twitter}
           >
             Share on Twitter
           </Button>
 
-          <Button onClick={copy}>{copied ? 'Copied' : 'Copy Image'}</Button>
-          <Button onClick={download}>Download Image</Button>
+          <Button onClick={copy} Icon={Copy}>
+            {copied ? 'Copied' : 'Copy Image'}
+          </Button>
+          <Button onClick={download} Icon={Download}>
+            Download Image
+          </Button>
         </div>
       </div>
 
@@ -103,6 +114,26 @@ const ShareModal: React.FC<ShareModalProps> = ({ open, onClose, data, date }) =>
         .card-border {
           margin: 4px 0;
           border: solid 1px #777;
+        }
+
+        h2 {
+          margin: 0;
+        }
+
+        .close {
+          border: none;
+          background: transparent;
+          float: right;
+          font-size: 24px;
+          cursor: pointer;
+          outline: none;
+        }
+
+        .buttons {
+          display: flex;
+        }
+        .buttons > :global(*) {
+          margin-right: 4px;
         }
       `}</style>
     </div>
