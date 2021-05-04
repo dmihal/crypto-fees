@@ -4,13 +4,17 @@ interface ButtonProps {
   onClick?: () => any;
   children: any;
   href?: string;
+  Icon?: React.ComponentType<any>;
 }
 
-const Button = forwardRef<any, ButtonProps>(({ children, onClick, href }, ref) => {
+const Button = forwardRef<any, ButtonProps>(({ children, onClick, href, Icon }, ref) => {
   const Element = href ? 'a' : 'button';
   return (
     <Element className="button" onClick={onClick} ref={ref} href={href}>
+      {Icon && <Icon size={18} className="icon" />}
+
       {children}
+
       <style jsx>{`
         .button {
           padding: 3px 10px 2px;
@@ -24,9 +28,14 @@ const Button = forwardRef<any, ButtonProps>(({ children, onClick, href }, ref) =
           display: inline-block;
           text-decoration: none;
           font-family: 'sofia-pro', sans-serif;
+          display: flex;
+          align-items: center;
         }
         .button:hover {
           background: #eeeeee;
+        }
+        .button :global(.icon) {
+          margin-right: 2px;
         }
       `}</style>
     </Element>

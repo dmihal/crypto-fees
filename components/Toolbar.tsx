@@ -2,13 +2,14 @@ import React, { forwardRef, useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import subDays from 'date-fns/subDays';
 import { useRouter } from 'next/router';
+import { Filter, Calendar, Share } from 'react-feather';
 import Button from './Button';
 
 const DateButton = forwardRef<
   HTMLButtonElement,
   { onClick?: any; value?: string; loading?: boolean }
 >(({ onClick, value, loading }, ref) => (
-  <Button ref={ref} onClick={onClick}>
+  <Button ref={ref} onClick={onClick} Icon={Calendar}>
     {loading ? <div className="loader" /> : value || 'Yesterday'}
 
     <style jsx>{`
@@ -92,9 +93,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
         </div>
       ))}
 
-      <Button onClick={onShare}>Share</Button>
+      <Button onClick={onShare} Icon={Share}>
+        Share
+      </Button>
 
-      <Button onClick={onFilterToggle}>
+      <Button onClick={onFilterToggle} Icon={Filter}>
         Filters
         {numFilters > 0 && <span className="chip">{numFilters}</span>}
       </Button>

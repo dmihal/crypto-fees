@@ -45,6 +45,7 @@ const Header = () => {
           display: block;
           border: solid 1px transparent;
           margin: 0 4px;
+          text-align: center;
         }
 
         .header-link > a:hover {
@@ -61,6 +62,9 @@ const Header = () => {
           padding: 4px;
           border: solid 1px #d0d1d9;
           border-radius: 4px;
+        }
+
+        .dropdown .header-link a {
           text-align: right;
         }
 
