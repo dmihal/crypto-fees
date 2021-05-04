@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { ProtocolData } from 'data/types';
 import icons from './icons';
 import { CSSTransition } from 'react-transition-group';
+import ReactGA from 'react-ga';
 import DetailsCard from './DetailsCard';
 
 interface RowProps {
@@ -22,6 +23,11 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         onClick={(e: any) => {
           e.preventDefault();
           setOpen(toggle);
+          ReactGA.event({
+            category: 'Navigation',
+            action: open ? 'Close details' : 'Open details',
+            label: protocol.name,
+          });
         }}
         className={`item ${protocol.category !== 'l1' ? 'app' : ''}`}
         style={{
