@@ -19,7 +19,7 @@ const Attribute: React.FC<AttributeProps> = ({ title, children, tooltip }) => {
       <div className="content">{children}</div>
       <style jsx>{`
         .attribute {
-          margin: 8px 0;
+          margin: 8px 8px 8px 0;
         }
         .title {
           color: #999999;

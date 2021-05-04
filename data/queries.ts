@@ -17,6 +17,24 @@ async function getValue(protocol: string, attribute: string, date: string) {
   return value;
 }
 
+export async function getMarketData(id: string, sevenDayMA: number, date: string) {
+  const metadata = getMetadata(id);
+
+  let price: null | number = null;
+  let marketCap: null | number = null;
+  let psRatio: null | number = null;
+  if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch, date)) {
+    try {
+      ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
+      psRatio = marketCap / (sevenDayMA * 365);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  return { price, marketCap, psRatio };
+}
+
 export async function getData(): Promise<ProtocolData[]> {
   const handleFailure = (e: any) => {
     console.warn(e);
@@ -44,20 +62,7 @@ export async function getData(): Promise<ProtocolData[]> {
         }
         const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
 
-        let price: null | number = null;
-        let marketCap: null | number = null;
-        let psRatio: null | number = null;
-        if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch)) {
-          try {
-            ({ price, marketCap } = await getHistoricalMarketData(
-              metadata.tokenCoingecko,
-              days[6]
-            ));
-            psRatio = marketCap / (sevenDayMA * 365);
-          } catch (e) {
-            console.error(e);
-          }
-        }
+        const { price, marketCap, psRatio } = await getMarketData(id, sevenDayMA, days[6]);
 
         return {
           id,

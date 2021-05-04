@@ -4,12 +4,15 @@ import Link from 'next/link';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import isAfter from 'date-fns/isAfter';
+import Attribute from 'components/Attribute';
 import Chart from 'components/Chart';
 import ChartToolbar from 'components/ChartToolbar';
 import SocialTags from 'components/SocialTags';
 import { getIDs, getMetadata } from 'data/adapters';
-import { getDateRangeData } from 'data/queries';
+import { getDateRangeData, getMarketData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
+
+const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
 function getMissing(data: any, minDate: Date, maxDate: Date, id: string) {
   const missing = [];
@@ -147,6 +150,7 @@ interface ProtocolDetailsProps {
   metadata: any;
   feeCache: any;
   protocols: { [id: string]: string };
+  marketData: { marketCap?: number; price?: number; psRatio?: number };
 }
 
 const dateFloor = (date: Date) => {
@@ -159,6 +163,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   metadata,
   feeCache,
   protocols,
+  marketData,
 }) => {
   const [dateRange, setDateRange] = useState({
     start: dateFloor(subDays(new Date(), 90)),
@@ -206,9 +211,68 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
       </div>
 
       <p>{metadata.description}</p>
-      <p>{metadata.feeDescription}</p>
+
+      {metadata.feeDescription && (
+        <Attribute title="Fee Model">{metadata.feeDescription}</Attribute>
+      )}
+
+      <div className="row">
+        {metadata.website && (
+          <Attribute title="Website">
+            <a href={metadata.website} target="website">
+              {metadata.website.replace('https://', '')}
+            </a>
+          </Attribute>
+        )}
+        {metadata.blockchain && <Attribute title="Blockchain">{metadata.blockchain}</Attribute>}
+        {metadata.source && (
+          <Attribute title="Source">
+            {metadata.adapter ? (
+              <a href={`${GITHUB_URL}${metadata.adapter}.ts`} target="source">
+                {metadata.source}
+              </a>
+            ) : (
+              metadata.source
+            )}
+          </Attribute>
+        )}
+      </div>
+
+      {metadata.tokenTicker && (
+        <div className="row">
+          <Attribute title="Token">
+            <a
+              href={`https://www.coingecko.com/en/coins/${metadata.tokenCoingecko}`}
+              target="coingecko"
+            >
+              {metadata.tokenTicker}
+            </a>
+          </Attribute>
+
+          <Attribute title="Price">
+            {marketData.price?.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}
+          </Attribute>
+          <Attribute title="Market Cap">
+            {marketData.marketCap?.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 0,
+              maximumFractionDigits: 0,
+            })}
+          </Attribute>
+          <Attribute title="P/S Ratio" tooltip="Based on 7 day average fees, annualized">
+            {marketData.psRatio?.toFixed(2)}
+          </Attribute>
+        </div>
+      )}
 
       <style jsx>{`
+        main {
+          margin-bottom: 18px;
+        }
         .title {
           margin: 10px 0 4px;
         }
@@ -218,6 +282,12 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
           border-radius: 8px;
           margin: 6px 0;
           border: solid 1px #d0d1d9;
+        }
+        .row {
+          display: flex;
+        }
+        .row > :global(div) {
+          flex: 1;
         }
       `}</style>
     </main>
@@ -244,6 +314,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     protocols[id] = getMetadata(id).name;
   }
 
+  const sevenDayMA =
+    defaultFeesArray.slice(-7).reduce((acc: number, day: any) => acc + day.fee, 0) / 7;
+  const marketData = await getMarketData(id, sevenDayMA, formatDate(subDays(new Date(), 1)));
+
   return {
     props: {
       id,
@@ -252,6 +326,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         [id]: defaultFees,
       },
       protocols,
+      marketData,
     },
     revalidate: 60,
   };

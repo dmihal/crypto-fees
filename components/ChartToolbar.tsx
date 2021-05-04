@@ -53,6 +53,9 @@ const ChartToolbar: React.FC<ChartToolbarProps> = ({
         .toolbar {
           display: flex;
         }
+        .toolbar > :global(*) {
+          margin-right: 4px;
+        }
         .select {
           width: 100px;
         }
