@@ -28,6 +28,7 @@ const SingleProtocolCard = ({ data, date, name }) => {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
+      <rect fill="#F9FAFC" x="0" y="0" width="688" height="344" />
       <text fontFamily={font} fontSize="24" fill="#091636" x="27" y="44">
         CryptoFees.info
       </text>
