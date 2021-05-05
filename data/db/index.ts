@@ -5,13 +5,13 @@ export const getValue = async (protocol: string, attribute: string, date: string
   const key = `${protocol}-${attribute}-${date}`;
   const redisVal = await redis.get(key);
 
-  if (redisVal) {
+  if (redisVal && redisVal !== 'NaN') {
     return parseFloat(redisVal);
   }
 
   const response = await mongo.get({ protocol, attribute, date });
 
-  if (response) {
+  if (response && !isNaN(response.value)) {
     const value = parseFloat(response.value);
     await redis.set(key, value);
     return value;
