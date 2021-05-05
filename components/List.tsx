@@ -79,7 +79,7 @@ const List: React.FC<ListProps> = ({ data }) => {
         }
 
         .amount {
-          min-width: 250px;
+          min-width: 200px;
           text-align: right;
         }
 
