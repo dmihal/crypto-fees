@@ -12,7 +12,7 @@ interface RowProps {
 
 const toggle = (isOpen: boolean) => !isOpen;
 
-const cardHeight = 240;
+const cardHeight = 300;
 
 const Row: React.FC<RowProps> = ({ protocol }) => {
   const [open, setOpen] = useState(false);
@@ -69,7 +69,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           color: black;
           text-decoration: none;
           align-items: center;
-          height: 62px;
+          height: 54px;
         }
         .item:hover {
           background-color: #f5f5f5;
@@ -136,6 +136,8 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
 
           border-top: solid 1px #e3e3e3;
           border-bottom: solid 1px #e3e3e3;
+          display: flex;
+          flex-direction: column;
         }
 
         .details-container.exit {

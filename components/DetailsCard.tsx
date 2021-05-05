@@ -71,6 +71,8 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
         </div>
       )}
 
+      <div className="spacer" />
+
       <div>
         <Link href={`/protocol/${protocol.id}`} passHref>
           <Button>More Details</Button>
@@ -80,6 +82,9 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
       <style jsx>{`
         .details-card {
           padding: 12px;
+          display: flex;
+          flex-direction: column;
+          flex: 1;
         }
         .description {
           margin: 4px 0;
@@ -88,6 +93,9 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol }) => {
           display: flex;
         }
         .row > :global(div) {
+          flex: 1;
+        }
+        .spacer {
           flex: 1;
         }
       `}</style>

@@ -23,7 +23,7 @@ const Button = forwardRef<any, ButtonProps>(({ children, onClick, href, Icon }, 
           background: transparent;
           font-size: 14px;
           color: #091636;
-          height: 30px;
+          min-height: 30px;
           outline: none;
           display: inline-block;
           text-decoration: none;

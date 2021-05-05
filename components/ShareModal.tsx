@@ -107,6 +107,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ open, onClose, data, date }) =>
 
         .content {
           width: 600px;
+          max-width: 100%;
           background: #f9fafc;
           padding: 12px;
         }

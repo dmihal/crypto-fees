@@ -55,9 +55,15 @@ const ChartToolbar: React.FC<ChartToolbarProps> = ({
         }
         .toolbar > :global(*) {
           margin-right: 4px;
+          margin-bottom: 4px;
         }
         .select {
           width: 100px;
+        }
+        @media (max-width: 700px) {
+          .toolbar {
+            flex-wrap: wrap;
+          }
         }
       `}</style>
     </div>

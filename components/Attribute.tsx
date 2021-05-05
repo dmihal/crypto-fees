@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
+import { usePopper } from 'react-popper';
 
 interface AttributeProps {
   title: string;
@@ -6,17 +7,47 @@ interface AttributeProps {
 }
 
 const Attribute: React.FC<AttributeProps> = ({ title, children, tooltip }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  const target = useRef(null);
+  const tooltipEl = useRef(null);
+  const { styles, attributes } = usePopper(target.current, tooltipEl.current, {
+    placement: 'bottom-start',
+    modifiers: [
+      {
+        name: 'offset',
+        options: {
+          offset: [-100, 0],
+        },
+      },
+    ],
+  });
+
   return (
     <div className="attribute">
       <div className="title">
         {title}
         {tooltip && (
-          <div className="tooltipTarget">
-            ?<span className="tooltipText">{tooltip}</span>
+          <div
+            className="tooltipTarget"
+            ref={target}
+            onMouseOver={() => setShowTooltip(true)}
+            onMouseOut={() => setShowTooltip(false)}
+          >
+            ?
           </div>
         )}
       </div>
       <div className="content">{children}</div>
+      {tooltip && (
+        <div
+          className="tooltipText"
+          ref={tooltipEl}
+          style={{ ...styles.popper, display: showTooltip ? 'block' : 'none' }}
+          {...attributes.popper}
+        >
+          {tooltip}
+        </div>
+      )}
       <style jsx>{`
         .attribute {
           margin: 8px 8px 8px 0;
@@ -41,8 +72,7 @@ const Attribute: React.FC<AttributeProps> = ({ title, children, tooltip }) => {
           margin-left: 8px;
         }
 
-        .tooltipTarget .tooltipText {
-          visibility: hidden;
+        .tooltipText {
           width: 120px;
           background-color: black;
           color: #fff;
@@ -51,7 +81,6 @@ const Attribute: React.FC<AttributeProps> = ({ title, children, tooltip }) => {
           border-radius: 6px;
           white-space: normal;
 
-          position: absolute;
           z-index: 1;
         }
 
