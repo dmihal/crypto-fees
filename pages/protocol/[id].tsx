@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import Link from 'next/link';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
@@ -202,6 +203,10 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 
   return (
     <main>
+      <Head>
+        <title key="title">{metadata.name} - CryptoFees.info</title>
+      </Head>
+
       <SocialTags title={metadata.name} image={id} />
 
       <h1 className="title">CryptoFees.info</h1>

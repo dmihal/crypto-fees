@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ProtocolData } from 'data/types';
 import { getHistoricalData } from 'data/queries';
@@ -66,6 +67,10 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
 
   return (
     <main>
+      <Head>
+        <title key="title">{date} - CryptoFees.info</title>
+      </Head>
+
       <SocialTags title={date} />
 
       <h1 className="title">Crypto Fees</h1>
