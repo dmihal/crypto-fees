@@ -1,56 +1,61 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
-import {
-  FeeData,
-  getFeeData,
-  getLinkswapData,
-  getUniswapV1Data,
-  getUniswapV2Data,
-  getSushiswapData,
-} from 'data/feeData';
-import { getBalancerData } from 'data/balancer';
-import { getBancorData } from 'data/bancor';
-import { getCompoundData } from 'data/compound';
-import { getCurveData } from 'data/curve';
-import { getFutureswapData } from 'data/futureswap';
-import { getHegicData } from 'data/hegic';
-import { getOmenData } from 'data/omen';
-import { get0xData } from 'data/zerox';
-import { getRenData } from 'data/ren';
-import { getSynthetixData } from 'data/synthetix';
-import { getPolymarketData } from 'data/polymarket';
-import { getPolkadotData, getKusamaData } from 'data/polkadot';
-import { getMstableData } from 'data/mStable';
-import { getTBTCData } from 'data/tbtc';
-import { getTerraData } from 'data/terra';
-import { getTornadoData } from 'data/tornado';
-import { getAaveData } from 'data/aave';
-import { getZilliqaData } from 'data/zilliqa';
-import { getAvalancheData } from 'data/avalanche';
+import { useRouter } from 'next/router';
+import { ProtocolData } from 'data/types';
+import { getData } from 'data/queries';
+import { formatDate } from 'data/lib/time';
+import FilterCard, { Filters, allCategories, allChains } from 'components/FilterCard';
 import List from 'components/List';
+import ShareModal from 'components/ShareModal';
+import SocialTags from 'components/SocialTags';
+import Toolbar from 'components/Toolbar';
 
 interface HomeProps {
-  data: FeeData[];
+  data: ProtocolData[];
 }
 
-const ASSETS = [
-  'eth',
-  'btc',
-  'ltc',
-  'ada',
-  'xtz',
-  'bsv',
-  'bch',
-  'xrp',
-  'doge',
-  'xmr',
-  'xlm',
-  'bnb_mainnet',
-];
+const toggle = (_val: boolean) => !_val;
+
+const filterListToLabel = (list: any[], ids: string[]) =>
+  list
+    .filter((item: any) => ids.indexOf(item.id) !== -1)
+    .map((item: any) => item.name)
+    .join(', ');
 
 export const Home: NextPage<HomeProps> = ({ data }) => {
+  const router = useRouter();
+  const [filterCardOpen, setFilterCardOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [filters, setFilters] = useState<Filters>({});
+
+  let _data = data;
+  let numFilters = 0;
+  const tags = [];
+  if (filters.categories) {
+    numFilters += 1;
+    _data = _data.filter((item: ProtocolData) => filters.categories.indexOf(item.category) !== -1);
+    tags.push({
+      id: 'categories',
+      label: filterListToLabel(allCategories, filters.categories),
+    });
+  }
+  if (filters.chains) {
+    numFilters += 1;
+    _data = _data.filter((item: ProtocolData) =>
+      item.blockchain
+        ? filters.chains.indexOf(item.blockchain) !== -1
+        : filters.chains.indexOf('other') !== -1
+    );
+    tags.push({
+      id: 'chains',
+      label: filterListToLabel(allChains, filters.chains),
+    });
+  }
+
   return (
     <main>
+      <SocialTags />
+
       <h1 className="title">Crypto Fees</h1>
 
       <p className="description">
@@ -59,18 +64,31 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         Which ones are people actually paying to use?
       </p>
 
-      <div>
-        <a
-          href="https://twitter.com/share?ref_src=twsrc%5Etfw"
-          className="twitter-share-button"
-          data-show-count="true"
-        >
-          Tweet
-        </a>
-        <script async src="https://platform.twitter.com/widgets.js"></script>
-      </div>
+      <Toolbar
+        onDateChange={(newDate: Date) =>
+          router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })
+        }
+        onFilterToggle={() => setFilterCardOpen(toggle)}
+        numFilters={numFilters}
+        onShare={() => setShareOpen(true)}
+        tags={tags}
+        onTagRemoved={(tagId: string) => setFilters({ ...filters, [tagId]: undefined })}
+      />
 
-      <List data={data} />
+      <FilterCard
+        open={filterCardOpen}
+        filters={filters}
+        onFilterChange={(_filters: Filters) => setFilters(_filters)}
+      />
+
+      <List data={_data} />
+
+      <ShareModal
+        open={shareOpen}
+        onClose={() => setShareOpen(false)}
+        data={_data}
+        date={formatDate(new Date())}
+      />
 
       <style jsx>{`
         main {
@@ -80,14 +98,6 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-        }
-
-        footer {
-          width: 100%;
-          height: auto;
-          border-top: 1px solid lightGray;
-          text-align: center;
-          padding: 2rem 0;
         }
 
         .title a {
@@ -131,42 +141,10 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  const handleFailure = (e: any) => {
-    console.warn(e);
-    return null;
-  };
+  const data = await getData();
+  const filteredData = data.filter((val: any) => !!val);
 
-  const [assetData, ...appData] = await Promise.all([
-    Promise.all(ASSETS.map(getFeeData)).catch(() => []),
-    getAaveData().catch(handleFailure),
-    getUniswapV1Data().catch(handleFailure),
-    getUniswapV2Data().catch(handleFailure),
-    getLinkswapData().catch(handleFailure),
-    getBalancerData().catch(handleFailure),
-    getBancorData().catch(handleFailure),
-    get0xData().catch(handleFailure),
-    getCurveData().catch(handleFailure),
-    getHegicData().catch(handleFailure),
-    getFutureswapData().catch(handleFailure),
-    getKusamaData().catch(handleFailure),
-    getOmenData().catch(handleFailure),
-    getPolymarketData().catch(handleFailure),
-    getPolkadotData().catch(handleFailure),
-    getRenData().catch(handleFailure),
-    getSushiswapData().catch(handleFailure),
-    getSynthetixData().catch(handleFailure),
-    getMstableData().catch(handleFailure),
-    getTornadoData().catch(handleFailure),
-    getTBTCData().catch(handleFailure),
-    getTerraData().catch(handleFailure),
-    getCompoundData().catch(handleFailure),
-    getZilliqaData().catch(handleFailure),
-    getAvalancheData().catch(handleFailure),
-  ]);
-
-  const data = [...assetData, ...appData].filter((val: any) => !!val);
-
-  return { props: { data }, revalidate: 60 };
+  return { props: { data: filteredData }, revalidate: 60 };
 };
 
 export default Home;

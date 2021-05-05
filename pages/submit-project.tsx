@@ -1,6 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { ArrowLeft } from 'react-feather';
 
 const FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLScLF8KcLpYsxzNl7Jv5AVe0D13ADXey7dcUb85N9Yw5LVNbmg/viewform';
@@ -14,7 +15,9 @@ const ListingCriteriaPage = () => {
 
       <div>
         <Link href="/">
-          <a>Back to project list</a>
+          <a>
+            <ArrowLeft size={14} /> Back to list
+          </a>
         </Link>
       </div>
 

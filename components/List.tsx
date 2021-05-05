@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
-import { FeeData } from 'data/feeData';
-import { protocolNames } from '../constants';
-import icons from './icons';
+import { ProtocolData } from 'data/types';
+import Row from './Row';
 
 interface ListProps {
-  data: FeeData[];
+  data: ProtocolData[];
 }
 
-const sortByDaily = (a: FeeData, b: FeeData) => b.oneDay - a.oneDay;
-const sortByWeekly = (a: FeeData, b: FeeData) => b.sevenDayMA - a.sevenDayMA;
+const sortByDaily = (a: ProtocolData, b: ProtocolData) => b.oneDay - a.oneDay;
+const sortByWeekly = (a: ProtocolData, b: ProtocolData) => b.sevenDayMA - a.sevenDayMA;
 
 const List: React.FC<ListProps> = ({ data }) => {
   const [sort, setSort] = useState('daily');
@@ -23,32 +22,12 @@ const List: React.FC<ListProps> = ({ data }) => {
           {sort === 'daily' && '▼'} 1 Day Fees
         </div>
         <div className="amount" onClick={() => setSort('weekly')}>
-          {sort === 'weekly' && '▼'} 7 Day Avg. Fees
+          {sort === 'weekly' && '▼'} 7 Day Av<span className="g">g</span>. Fees
         </div>
       </div>
 
-      {sortedData.map((protocol: FeeData) => (
-        <div
-          className={`item ${protocol.category}`}
-          key={protocol.id}
-          style={{
-            backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
-          }}
-        >
-          <div className="name">{protocol.name || protocolNames[protocol.id]}</div>
-          <div className="amount">
-            {protocol.oneDay.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </div>
-          <div className="amount">
-            {protocol.sevenDayMA.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </div>
-        </div>
+      {sortedData.map((protocol: ProtocolData) => (
+        <Row protocol={protocol} key={protocol.id} />
       ))}
 
       <style jsx>{`
@@ -57,6 +36,8 @@ const List: React.FC<ListProps> = ({ data }) => {
           border-radius: 0px;
           overflow: hidden;
           margin: 4px;
+          max-width: 700px;
+          width: 100%;
         }
 
         .header {
@@ -98,13 +79,14 @@ const List: React.FC<ListProps> = ({ data }) => {
         }
 
         .amount {
-          min-width: 250px;
+          min-width: 200px;
           text-align: right;
         }
 
         @media (max-width: 700px) {
           .header {
-            padding-left: 30px;
+            padding-left: 28px;
+            padding-right: 30px;
           }
           .header > div {
             font-size: 14px;
@@ -112,14 +94,18 @@ const List: React.FC<ListProps> = ({ data }) => {
 
           .amount {
             font-size: 16px;
-            min-width: 130px;
+            min-width: 110px;
           }
           .name {
             font-size: 14px;
           }
+          .g {
+            display: none;
+          }
 
           .item {
             padding-left: 30px;
+            padding-right: 0;
             background-position: 6px center;
           }
 

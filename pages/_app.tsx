@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
+import Header from 'components/Header';
 
 ReactGA.initialize('UA-150445352-3');
 
@@ -20,52 +21,42 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       <Head>
         <title key="title">Crypto Fees</title>
         <link rel="icon" href="/favicon.png" />
+        <link href="https://use.typekit.net/jrq0bbf.css" rel="stylesheet" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap"
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/react-datepicker/3.6.0/react-datepicker.min.css"
+        />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;display=swap"
           rel="stylesheet"
         />
-
-        <meta property="og:title" content="Crypto Fees" />
-        <meta property="og:image" content="https://cryptofees.info/api/screenshot" />
-        <meta
-          property="og:description"
-          content="There's tons of crypto projects. Which ones are people actually paying to use?"
-        />
-
-        <meta name="twitter:title" content="Crypto Fees" />
-        <meta
-          name="twitter:description"
-          content="There's tons of crypto projects. Which ones are people actually paying to use?"
-        />
-        <meta
-          name="twitter:image"
-          content={`https://cryptofees.info/api/screenshot?${new Date().getDate()}`}
-        />
-        <meta name="twitter:card" content="summary_large_image" />
       </Head>
+
+      <Header />
 
       <Component {...pageProps} />
 
       <footer>
         <div>Data updates at midnight, UTC</div>
-        <div>Network data from CoinMetrics, application data from The Graph</div>
-        <div>Application data does not include Ethereum transaction fees</div>
         <div>
           Created by{' '}
           <a href="https://twitter.com/dmihal" target="twitter">
             David Mihal
           </a>
         </div>
-        <div>
-          Design help from{' '}
-          <a href="https://twitter.com/hey_heey_heeey" target="twitter">
-            @heyheeyheeey
-          </a>
-        </div>
 
         <div>
+          <Link href="/faqs">
+            <a>FAQs</a>
+          </Link>
+          {' | '}
           <Link href="/submit-project">
-            <a>Want to add a project to CryptoFees.info?</a>
+            <a>Request Project</a>
+          </Link>
+          {' | '}
+          <Link href="/api-docs">
+            <a>API Documentation</a>
           </Link>
         </div>
 
@@ -88,7 +79,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           padding: 0.5rem;
           display: flex;
           flex-direction: column;
-          justify-content: center;
+          justify-content: space-between;
           align-items: center;
         }
 
@@ -105,8 +96,9 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         body {
           padding: 0;
           margin: 0;
-          font-family: 'Noto Sans TC', sans-serif;
-          background: #eeeeee;
+          font-family: 'sofia-pro', sans-serif;
+          background: #f9fafc;
+          color: #091636;
         }
 
         * {
@@ -114,10 +106,11 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         }
 
         a {
-          color: #666666;
-          text-decoration: none;
+          color: #091636;
+          text-decoration: underline;
         }
         a:hover {
+          color: #666666;
           text-decoration: underline;
         }
       `}</style>
