@@ -1,4 +1,4 @@
-import { FeeData } from './feeData';
+import { FeeData } from '../types';
 import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
 
 const fetcher = async (input: RequestInfo, init?: RequestInit) => {

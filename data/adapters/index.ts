@@ -1,4 +1,3 @@
-import { getLinkswapData } from './feeData';
 import registerBalancer from './balancer';
 import { getBancorData } from './bancor';
 import registerCoinMetrics from './coinmetrics';
@@ -7,6 +6,7 @@ import registerCurve from './curve';
 import registerQuickswap from './quickswap';
 import registerHegic from './hegic';
 import registerHoneyswap from './honeyswap';
+import registerLinkswap from './linkswap';
 import registerMaker from './maker';
 import { getOmenData } from './omen';
 import register0x from './zerox';
@@ -17,20 +17,18 @@ import registerSynthetix from './synthetix';
 import registerPolkadot from './polkadot';
 import { getMstableData } from './mStable';
 import registerTBTC from './tbtc';
-import { getTerraData } from './terra';
+import registerTerra from './terra';
 import registerTornado from './tornado';
 import registerUniswap from './uniswap';
 import { getAaveData } from './aave';
 import { getZilliqaData } from './zilliqa';
 
 export const adapters = [
-  getLinkswapData,
   getBancorData,
   getOmenData,
   // getPolymarketData,
   getMstableData,
   getAaveData,
-  getTerraData,
   getZilliqaData,
 ];
 
@@ -54,6 +52,7 @@ registerCompound(register);
 registerCurve(register);
 registerHegic(register);
 registerHoneyswap(register);
+registerLinkswap(register);
 registerMaker(register);
 registerQuickswap(register);
 registerPolkadot(register);
@@ -61,6 +60,7 @@ registerRen(register);
 registerSushiswap(register);
 registerSynthetix(register);
 registerTBTC(register);
+registerTerra(register);
 registerTornado(register);
 registerUniswap(register);
 

@@ -11,6 +11,7 @@ export interface FeeData {
   website?: string;
   blockchain?: string;
   source?: string;
+  adapter?: string;
 }
 
 export interface Metadata {

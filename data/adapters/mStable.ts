@@ -1,4 +1,4 @@
-import { FeeData } from './feeData';
+import { FeeData } from '../types';
 import { getBlockDaysAgo } from '../lib/time';
 import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
 

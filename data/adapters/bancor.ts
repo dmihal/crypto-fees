@@ -1,4 +1,4 @@
-import { FeeData } from './feeData';
+import { FeeData } from '../types';
 
 const fetcher = async (input: RequestInfo, init?: RequestInit) => {
   const res = await fetch(input, init);

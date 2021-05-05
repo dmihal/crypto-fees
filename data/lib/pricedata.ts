@@ -47,7 +47,7 @@ export const getHistoricalAvgDailyPrice = async (
   return priceCache[cacheName];
 };
 
-async function queryCoingecko(name: string, date: string) {
+export async function queryCoingecko(name: string, date: string, currency = 'usd') {
   // eslint-disable-next-line no-console
   console.log(`Querying CoinGecko for ${name} on ${date}`);
 
@@ -62,8 +62,8 @@ async function queryCoingecko(name: string, date: string) {
   }
 
   return {
-    price: response.market_data.current_price.usd,
-    marketCap: response.market_data.market_cap.usd,
+    price: response.market_data.current_price[currency],
+    marketCap: response.market_data.market_cap[currency],
   };
 }
 
@@ -103,7 +103,12 @@ export async function getHistoricalMarketData(name: string, date: string) {
   return cache[cacheName];
 }
 
-export async function cacheMarketData(name: string, date: string, price: number, marketCap: number) {
+export async function cacheMarketData(
+  name: string,
+  date: string,
+  price: number,
+  marketCap: number
+) {
   // eslint-disable-next-line no-console
   console.log(`Optimisticly caching market data for ${name} on ${date}`);
 

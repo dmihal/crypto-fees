@@ -1,4 +1,4 @@
-import { FeeData } from './feeData';
+import { FeeData } from '../types';
 import { getMaticBlockDaysAgo } from '../lib/time';
 
 export async function getPolymarketData(): Promise<FeeData> {
