@@ -100,13 +100,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         .arrow {
           padding: 0 4px;
           height: 24px;
-          opacity: 0;
-          transition: opacity 0.2s;
-        }
-
-        .item:hover .arrow,
-        .item.open .arrow {
-          opacity: 1;
+          opacity: 0.7;
         }
 
         @keyframes slidein {
@@ -162,7 +156,6 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           }
 
           .arrow {
-            opacity: 1;
             padding: 0 2px;
           }
         }
