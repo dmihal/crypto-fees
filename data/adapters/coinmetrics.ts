@@ -35,12 +35,17 @@ const l1s = [
     tokenTicker: 'LTC',
     tokenCoingecko: 'litecoin',
   },
-  // {
-  //   id: 'ada',
-  //   name: 'Cardano',
-  //   description: 'Cardano is a PoS blockchain which will support smart contracts in the future.',
-  //   feeDescription: 'Transaction fees are paid by users to validators.',
-  // },
+  {
+    id: 'ada',
+    name: 'Cardano',
+    description: 'Cardano is a PoS blockchain which will support smart contracts in the future.',
+    feeDescription: 'Transaction fees are paid by users to validators.',
+    website: 'https://cardano.org',
+    source: 'CoinMetrics',
+    adapter: 'coinmetrics',
+    tokenTicker: 'ADA',
+    tokenCoingecko: 'cardano',
+  },
   {
     id: 'xtz',
     name: 'Tezos',
