@@ -12,8 +12,8 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
 
   useEffect(() => {
-    ReactGA.set({ page: document.location.pathname });
-    ReactGA.pageview(document.location.pathname);
+    ReactGA.set({ page: router.asPath });
+    ReactGA.pageview(router.asPath);
   }, [router.pathname]);
 
   return (
