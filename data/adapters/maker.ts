@@ -1,4 +1,5 @@
-import { dateToBlockNumber } from '../lib/time';
+import { offsetDaysFormatted } from '../lib/time';
+import { getBlockNumber } from '../lib/chain';
 import { query } from '../lib/graph';
 
 async function getMakerFees(date: string) {
@@ -17,8 +18,8 @@ async function getMakerFees(date: string) {
       }
     }`,
     {
-      today: dateToBlockNumber(date, 1),
-      yesterday: dateToBlockNumber(date),
+      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
+      yesterday: await getBlockNumber(date),
     },
     'fees'
   );

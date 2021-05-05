@@ -1,9 +1,10 @@
 import { query } from '../lib/graph';
-import { dateToBlockNumber } from '../lib/time';
+import { offsetDaysFormatted } from '../lib/time';
+import { getBlockNumber } from '../lib/chain';
 
 export async function getRenData(date: string): Promise<number> {
-  const todayBlock = dateToBlockNumber(date, 1);
-  const yesterdayBlock = dateToBlockNumber(date);
+  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
+  const yesterdayBlock = await getBlockNumber(date);
 
   const data = await query(
     'renproject/renvm',
