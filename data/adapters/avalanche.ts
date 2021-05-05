@@ -1,35 +1,12 @@
-import { FeeData } from '../types';
-import { query } from '../lib/graph';
-import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
+import { getBlockNumber } from '../lib/chain';
+import { offsetDaysFormatted } from '../lib/time';
+import { getHistoricalPrice } from '../lib/pricedata';
 
 const fetcher = async (input: RequestInfo, init?: RequestInit) => {
   const res = await fetch(input, init);
   if (res.status !== 200) throw new Error('avalanche did return an error');
   return res.json();
 };
-
-async function getBlockFromTimestamp(timestamp: number) {
-  const res = await query(
-    'dasconnor/avalanche-blocks',
-    `query blocks($timestampFrom: Int!, $timestampTo: Int!) {
-			blocks(
-				first: 1
-				orderBy: timestamp
-				orderDirection: asc
-				where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
-			) {
-				number
-				timestamp
-			}
-		}`,
-    {
-      timestampFrom: timestamp,
-      timestampTo: timestamp + 60 * 60 * 24 * 7,
-    }
-  );
-
-  return parseInt(res.blocks[0].number);
-}
 
 async function getBalance(block: string) {
   const res = await fetcher('https://api.avax.network/ext/bc/C/rpc', {
@@ -46,63 +23,63 @@ async function getBalance(block: string) {
   return parseInt(res.result, 16) / 1e18;
 }
 
-function getPastDate(days: number) {
-  const d = new Date();
-  d.setDate(d.getDate() - days);
-  return d;
+async function getCChainFees(date: string) {
+  const [blockYesterday, blockToday] = await Promise.all([
+    getBlockNumber(date, 'avalanche'),
+    getBlockNumber(offsetDaysFormatted(date, 1), 'avalanche'),
+  ]);
+
+  const [currentBalance, previousBalance] = await Promise.all([
+    getBalance('0x' + blockToday.toString(16)),
+    getBalance('0x' + blockYesterday.toString(16)),
+  ]);
+
+  const diff = currentBalance - previousBalance;
+  return diff;
 }
 
-async function getCChainFees() {
-  const [dayBlock, weekBlock] = await Promise.all([
-    getBlockFromTimestamp(Math.floor(getPastDate(1).getTime() / 1000)),
-    getBlockFromTimestamp(Math.floor(getPastDate(7).getTime() / 1000)),
+async function getXChainFees(date: string) {
+  const startDate = new Date(date).toISOString();
+  const endDate = new Date(offsetDaysFormatted(date, 1)).toISOString();
+  const dayAggregate = await fetcher(
+    `https://explorerapi.avax.network/v2/txfeeAggregates?startTime=${startDate}&endTime=${endDate}`
+  );
+
+  const fees = parseFloat(dayAggregate.aggregates.txfee) / 1e9;
+  return fees;
+}
+
+export async function getAvalancheData(date: string): Promise<number> {
+  const [price, cFees, xFees] = await Promise.all([
+    getHistoricalPrice('avalanche-2', date),
+    getCChainFees(date),
+    getXChainFees(date),
   ]);
 
-  const [currentBalance, dayBalance, weekBalance] = await Promise.all([
-    getBalance('latest'),
-    getBalance('0x' + dayBlock.toString(16)),
-    getBalance('0x' + weekBlock.toString(16)),
-  ]);
+  const feesUSD = price * (cFees + xFees);
 
-  return {
-    sevenDayMA: (currentBalance - weekBalance) / 7,
-    oneDay: currentBalance - dayBalance,
+  return feesUSD;
+}
+
+export default function registerAvalanche(register: any) {
+  const avalancheQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Avalanche doesn't support ${attribute}`);
+    }
+    return getAvalancheData(date);
   };
-}
 
-async function getXChainFees() {
-  const [dayAggregate, weekAggregate] = await Promise.all([
-    fetcher(
-      `https://explorerapi.avax.network/v2/txfeeAggregates?startTime=${getPastDate(
-        1
-      ).toISOString()}&endTime=${getPastDate(0).toISOString()}`
-    ),
-    fetcher(
-      `https://explorerapi.avax.network/v2/txfeeAggregates?startTime=${getPastDate(
-        7
-      ).toISOString()}&endTime=${getPastDate(0).toISOString()}`
-    ),
-  ]);
-
-  return {
-    sevenDayMA: parseFloat(weekAggregate.aggregates.txfee) / 1e9 / 7,
-    oneDay: parseFloat(dayAggregate.aggregates.txfee) / 1e9,
-  };
-}
-
-export async function getAvalancheData(): Promise<FeeData> {
-  const [priceYesterday, priceLastWeek, cFees, xFees] = await Promise.all([
-    getHistoricalAvgDailyPrice('avalanche-2', 1),
-    getHistoricalAvgDailyPrice('avalanche-2', 7),
-    getCChainFees(),
-    getXChainFees(),
-  ]);
-
-  return {
-    id: 'avalanche',
+  register('avalanche', avalancheQuery, {
     name: 'Avalanche',
     category: 'l1',
-    sevenDayMA: priceLastWeek * (cFees.sevenDayMA + xFees.sevenDayMA),
-    oneDay: priceYesterday * (cFees.oneDay + xFees.oneDay),
-  };
+    description: 'Avalanche is a platform for inter-connected blockchains.',
+    feeDescription: 'Transaction fees are burned.',
+    source: 'Ava Labs',
+    adapter: 'avalanche',
+    website: 'https://avalabs.org',
+    tokenTicker: 'AVAX',
+    tokenCoingecko: 'avalanche-2',
+    protocolLaunch: '2020-09-22',
+    tokenLaunch: '2020-09-22',
+  });
 }

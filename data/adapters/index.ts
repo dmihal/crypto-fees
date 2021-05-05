@@ -1,4 +1,4 @@
-import { getAvalancheData } from './avalanche';
+import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import { getBancorData } from './bancor';
 import registerCoinMetrics from './coinmetrics';
@@ -27,7 +27,6 @@ import { getZilliqaData } from './zilliqa';
 
 export const adapters = [
   getAaveData,
-  getAvalancheData,
   getBancorData,
   getFutureswapData,
   getOmenData,
@@ -50,6 +49,7 @@ const register = (id: string, query: any, metadata: any) => {
 };
 
 register0x(register);
+registerAvalanche(register);
 registerBalancer(register);
 registerCoinMetrics(register);
 registerCompound(register);

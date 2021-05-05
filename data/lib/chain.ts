@@ -1,4 +1,5 @@
 import { getValue as getDBValue, setValue as setDBValue } from '../db';
+import { query } from './graph';
 
 const memoryCache: { [key: string]: Promise<number> } = {};
 
@@ -18,6 +19,29 @@ const blockNumLoaders: { [id: string]: (date: string) => Promise<number> } = {
       throw new Error(`Etherscan: ${data.message} ${data.result}`);
     }
     return parseInt(data.result);
+  },
+  async avalanche(date: string) {
+    const time = Math.floor(new Date(date).getTime() / 1000);
+    const res = await query(
+      'dasconnor/avalanche-blocks',
+      `query blocks($timestampFrom: Int!, $timestampTo: Int!) {
+        blocks(
+          first: 1
+          orderBy: timestamp
+          orderDirection: asc
+          where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
+        ) {
+          number
+          timestamp
+        }
+      }`,
+      {
+        timestampFrom: time,
+        timestampTo: time + 60 * 60 * 24 * 7,
+      }
+    );
+
+    return parseInt(res.blocks[0].number);
   },
 };
 
