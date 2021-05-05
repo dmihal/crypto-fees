@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
@@ -167,6 +168,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   protocols,
   marketData,
 }) => {
+  const router = useRouter();
   const [dateRange, setDateRange] = useState({
     start: dateFloor(subDays(new Date(), 90)),
     end: dateFloor(subDays(new Date(), 1)),
@@ -177,6 +179,26 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   const { loading, data } = useFees(feeCache, dateRange, id, secondary, smoothing);
 
   const { [id]: filter, ...otherProtocols } = protocols; // eslint-disable-line @typescript-eslint/no-unused-vars
+
+  useEffect(() => {
+    const { compare, smooth, range } = router.query;
+    if (compare || smooth || range) {
+      if (compare) {
+        setSecondary(compare.toString());
+      }
+      if (smooth) {
+        setSmoothing(parseInt(smooth.toString()) - 1);
+      }
+      if (range) {
+        const [start, end] = range
+          .toString()
+          .split(',')
+          .map((day: string) => new Date(day));
+        setDateRange({ start, end });
+      }
+      router.replace(router.pathname.replace('[id]', id));
+    }
+  }, [router.query]);
 
   return (
     <main>
