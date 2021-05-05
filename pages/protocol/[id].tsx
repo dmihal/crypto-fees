@@ -332,6 +332,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
           width: 24px;
           background-repeat: no-repeat;
           background-position: center;
+          background-size: contain;
           margin-right: 8px;
         }
       `}</style>
