@@ -1,4 +1,5 @@
-import { dateToBlockNumber } from '../lib/time';
+import { offsetDaysFormatted } from '../lib/time';
+import { getBlockNumber } from '../lib/chain';
 import { query } from '../lib/graph';
 
 export async function getTornadoData(date: string): Promise<number> {
@@ -14,8 +15,8 @@ export async function getTornadoData(date: string): Promise<number> {
     'dmihal/tornado-cash',
     graphQuery,
     {
-      today: dateToBlockNumber(date, 1),
-      yesterday: dateToBlockNumber(date),
+      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
+      yesterday: await getBlockNumber(date),
     },
     'fees'
   );

@@ -112,3 +112,7 @@ export function getDateRange(dateStart: string | Date, dateEnd: string | Date) {
 
   return days;
 }
+
+export function offsetDaysFormatted(date: string, numDays: number) {
+  return formatDate(addDays(new Date(date), numDays));
+}

@@ -1,4 +1,5 @@
-import { dateToBlockNumber } from '../lib/time';
+import { offsetDaysFormatted } from '../lib/time';
+import { getBlockNumber } from '../lib/chain';
 import { query } from '../lib/graph';
 
 const EIGHTEEN_DECIMALS = 10 ** 18;
@@ -6,14 +7,19 @@ const EIGHTEEN_DECIMALS = 10 ** 18;
 async function getSynthetixFees(date: string) {
   const data = await query(
     'synthetixio-team/synthetix-exchanges',
-    `{
-      now: total(id: "mainnet", block: {number: ${dateToBlockNumber(date, 1)}}) {
+    `query fees($today: Int!, $yesterday: Int!){
+      now: total(id: "mainnet", block: {number: $today}) {
         totalFeesGeneratedInUSD
       }
-      yesterday: total(id: "mainnet", block: {number: ${dateToBlockNumber(date)}}) {
+      yesterday: total(id: "mainnet", block: {number: $yesterday}) {
         totalFeesGeneratedInUSD
       }
-    }`
+    }`,
+    {
+      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
+      yesterday: await getBlockNumber(date),
+    },
+    'fees'
   );
   const fees =
     (parseInt(data.now.totalFeesGeneratedInUSD) -

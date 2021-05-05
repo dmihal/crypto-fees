@@ -1,4 +1,5 @@
-import { dateToBlockNumber } from '../lib/time';
+import { offsetDaysFormatted } from '../lib/time';
+import { getBlockNumber } from '../lib/chain';
 import { query } from '../lib/graph';
 import { getHistoricalPrice } from '../lib/pricedata';
 
@@ -17,8 +18,8 @@ export async function getTBTCData(date: string): Promise<number> {
     'miracle2k/all-the-keeps',
     graphQuery,
     {
-      today: dateToBlockNumber(date, 1),
-      yesterday: dateToBlockNumber(date),
+      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
+      yesterday: await getBlockNumber(date),
     },
     'fees'
   );
