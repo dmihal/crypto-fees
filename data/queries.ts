@@ -61,6 +61,10 @@ export async function getData(): Promise<ProtocolData[]> {
           return null;
         }
         const sevenDayMA = feeForDay.reduce((a: number, b: number) => a + b, 0) / 7;
+        if (!sevenDayMA || !feeForDay[feeForDay.length - 1]) {
+          console.warn(`Missing data for ${id}`);
+          return null;
+        }
 
         const { price, marketCap, psRatio } = await getMarketData(id, sevenDayMA, days[6]);
 
