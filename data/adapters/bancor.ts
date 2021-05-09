@@ -13,5 +13,10 @@ export async function getBancorData(): Promise<FeeData> {
     category: 'dex',
     oneDay: parseFloat(response.data.fees_24h.usd),
     sevenDayMA: parseFloat(response.data.fees_7d.usd) / 7,
+    description: 'Bancor is a permissionless, decentralized exchange',
+    feeDescription: 'Trading fees are paid to liquidity providers',
+    blockchain: 'Ethereum',
+    source: 'Bancor',
+    adapter: 'bancor',
   };
 }
