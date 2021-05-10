@@ -27,6 +27,7 @@ export interface Metadata {
   tokenCoingecko?: string;
   protocolLaunch?: string;
   tokenLaunch?: string;
+  legacy?: boolean;
 }
 
 export interface ProtocolData extends Metadata {

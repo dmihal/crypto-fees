@@ -40,5 +40,6 @@ export default function registerAave(register: any) {
     website: 'https://aave.com',
     tokenTicker: 'AAVE',
     tokenCoingecko: 'aave',
+    legacy: true,
   });
 }
