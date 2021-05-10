@@ -13,7 +13,9 @@ async function getValue(protocol: string, attribute: string, date: string) {
   console.log(`Missed cache for ${protocol} ${attribute} on ${date}`);
 
   const value = await queryAdapter(protocol, attribute, date);
-  await setDBValue(protocol, attribute, date, value);
+  if (value) {
+    await setDBValue(protocol, attribute, date, value);
+  }
   return value;
 }
 
