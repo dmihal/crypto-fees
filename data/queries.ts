@@ -1,7 +1,7 @@
 import { adapters, queryAdapter, getIDs, getMetadata } from './adapters';
 import { FeeData, ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
-import { last7Days, isBefore, getDateRange } from './lib/time';
+import { last7Days, isBefore, getDateRange, getYesterdayDate } from './lib/time';
 import { getHistoricalMarketData } from './lib/pricedata';
 
 async function getValue(protocol: string, attribute: string, date: string) {
@@ -13,7 +13,9 @@ async function getValue(protocol: string, attribute: string, date: string) {
   console.log(`Missed cache for ${protocol} ${attribute} on ${date}`);
 
   const value = await queryAdapter(protocol, attribute, date);
-  await setDBValue(protocol, attribute, date, value);
+  if (value) {
+    await setDBValue(protocol, attribute, date, value);
+  }
   return value;
 }
 
@@ -40,7 +42,18 @@ export async function getData(): Promise<ProtocolData[]> {
     console.warn(e);
     return null;
   };
-  const runAdapter = (adapter: any) => adapter().catch(handleFailure);
+  const yesterday = getYesterdayDate();
+  const runAdapter = (adapter: any) =>
+    adapter()
+      .then(async (data: FeeData) => {
+        // Let's start saving legacy data, in 1 week we'll be good to show some charts
+        const cachedValue = await getDBValue(data.id, 'fee', yesterday);
+        if (!cachedValue) {
+          await setDBValue(data.id, 'fee', yesterday, data.oneDay);
+        }
+        return data;
+      })
+      .catch(handleFailure);
   const [...appData] = await Promise.all(adapters.map(runAdapter));
 
   const days = last7Days();

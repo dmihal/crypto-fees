@@ -1,3 +1,4 @@
+import registerAave from './aave';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import { getBancorData } from './bancor';
@@ -22,11 +23,9 @@ import registerTBTC from './tbtc';
 import registerTerra from './terra';
 import registerTornado from './tornado';
 import registerUniswap from './uniswap';
-import { getAaveData } from './aave';
 import { getZilliqaData } from './zilliqa';
 
 export const adapters = [
-  getAaveData,
   getBancorData,
   getFutureswapData,
   getOmenData,
@@ -49,6 +48,7 @@ const register = (id: string, query: any, metadata: any) => {
 };
 
 register0x(register);
+registerAave(register);
 registerAvalanche(register);
 registerBalancer(register);
 registerCoinMetrics(register);
