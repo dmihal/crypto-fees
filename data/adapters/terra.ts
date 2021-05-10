@@ -2,7 +2,7 @@ import { queryCoingecko } from '../lib/pricedata';
 
 const fetcher = async (input: RequestInfo, init?: RequestInit) => {
   const res = await fetch(input, init);
-  if (res.status !== 200) throw new Error('aave did return an error');
+  if (res.status !== 200) throw new Error('terra did return an error');
   return res.json();
 };
 

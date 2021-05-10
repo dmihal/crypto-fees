@@ -1,7 +1,7 @@
 import registerAave from './aave';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
-import { getBancorData } from './bancor';
+import registerBancor from './bancor';
 import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
 import registerCurve from './curve';
@@ -26,7 +26,6 @@ import registerUniswap from './uniswap';
 import { getZilliqaData } from './zilliqa';
 
 export const adapters = [
-  getBancorData,
   getFutureswapData,
   getOmenData,
   // getPolymarketData,
@@ -51,6 +50,7 @@ register0x(register);
 registerAave(register);
 registerAvalanche(register);
 registerBalancer(register);
+registerBancor(register);
 registerCoinMetrics(register);
 registerCompound(register);
 registerCurve(register);
