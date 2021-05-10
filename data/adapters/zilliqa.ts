@@ -1,36 +1,58 @@
-import { FeeData } from '../types';
-import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
+import differenceInDays from 'date-fns/differenceInDays';
+import { formatDate } from '../lib/time';
+import { getHistoricalPrice } from '../lib/pricedata';
 
 const fetcher = async (input: RequestInfo, init?: RequestInit) => {
   const res = await fetch(input, init);
-  if (res.status !== 200) throw new Error('zilliqa returned an error');
+  // if (res.status !== 200) throw new Error('zilliqa returned an error');
   return res.json();
 };
 
-export async function getZilliqaData(): Promise<FeeData> {
-  const response = await fetcher(
-    'https://api.viewblock.io/zilliqa/stats/charts/txFeesHistory?network=mainnet',
-    {
-      headers: {
-        Origin: 'https://viewblock.io',
-      },
+let viewBlockPromise;
+
+export async function getZilliqaData(date: string): Promise<number> {
+  if (differenceInDays(new Date(), new Date(date)) > 7) {
+    return null;
+  }
+
+  if (!viewBlockPromise) {
+    viewBlockPromise = await fetcher(
+      'https://api.viewblock.io/zilliqa/stats/charts/txFeesHistory?network=mainnet',
+      {
+        headers: {
+          Origin: 'https://viewblock.io',
+        },
+      }
+    );
+  }
+  const response = await viewBlockPromise;
+
+  for (const day of response.values) {
+    const dayDate = formatDate(new Date(day.x[0]));
+    if (dayDate === date) {
+      const price = await getHistoricalPrice('zilliqa', date);
+      return day.y[0] * price;
     }
-  );
+  }
+  return null;
+}
 
-  const priceYesterday = await getHistoricalAvgDailyPrice('zilliqa', 1);
-  const priceLastWeek = await getHistoricalAvgDailyPrice('zilliqa', 7);
+export default function registerZilliqa(register: any) {
+  const zilliqaQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Zilliqa doesn't support ${attribute}`);
+    }
+    return getZilliqaData(date);
+  };
 
-  const oneDay = response.values[response.values.length - 6].y[0] * priceYesterday;
-  const sevenDaySum = response.values
-    .slice(-7)
-    .reduce((acc: number, day: any) => parseFloat(day.y[0]) + acc, 0);
-  const sevenDayMA = (sevenDaySum / 7) * priceLastWeek;
-
-  return {
-    id: 'zilliqa',
+  register('zilliqa', zilliqaQuery, {
     name: 'Zilliqa',
     category: 'l1',
-    sevenDayMA,
-    oneDay,
-  };
+    source: 'ViewBlock',
+    adapter: 'zilliqa',
+    website: 'https://zilliqa.com',
+    tokenTicker: 'ZIL',
+    tokenCoingecko: 'zilliqa',
+    legacy: true,
+  });
 }
