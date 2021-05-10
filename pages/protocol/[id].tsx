@@ -223,6 +223,8 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         {metadata.name}
       </h2>
 
+      {metadata.legacy && <div className="legacy">Some historical data may be unavailable</div>}
+
       <ChartToolbar
         range={dateRange}
         onRangeChange={setDateRange}
@@ -334,6 +336,14 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
           background-position: center;
           background-size: contain;
           margin-right: 8px;
+        }
+        .legacy {
+          font-size: 12px;
+          color: #666;
+          margin: 4px 0;
+          padding: 6px;
+          background: #f3e8d4;
+          border-radius: 4px;
         }
       `}</style>
     </main>

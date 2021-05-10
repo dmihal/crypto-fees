@@ -21,7 +21,7 @@ const Header = () => {
               <a href="https://stakers.info/">stakers.info</a>
             </li>
             <li className="header-link">
-              <a href="https://ethereumnodes.info/">ethereumnodes.info</a>
+              <a href="https://ethereumnodes.com/">ethereumnodes.com</a>
             </li>
           </ul>
         </li>

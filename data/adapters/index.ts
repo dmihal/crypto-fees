@@ -23,14 +23,13 @@ import registerTBTC from './tbtc';
 import registerTerra from './terra';
 import registerTornado from './tornado';
 import registerUniswap from './uniswap';
-import { getZilliqaData } from './zilliqa';
+import registerZilliqa from './zilliqa';
 
 export const adapters = [
   getFutureswapData,
   getOmenData,
   // getPolymarketData,
   getMstableData,
-  getZilliqaData,
 ];
 
 interface Adapter {
@@ -67,6 +66,7 @@ registerTBTC(register);
 registerTerra(register);
 registerTornado(register);
 registerUniswap(register);
+registerZilliqa(register);
 
 export const getIDs = () => ids;
 
