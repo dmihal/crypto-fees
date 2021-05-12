@@ -77,6 +77,6 @@ export default function registerRen(register: any) {
     adapter: 'ren',
     website: 'https://renproject.io',
     tokenTicker: 'REN',
-    tokenCoingecko: 'ren',
+    tokenCoingecko: 'republic-protocol',
   });
 }

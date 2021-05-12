@@ -40,5 +40,7 @@ export default function registerBalancer(register: any) {
     website: 'https://balancer.finance',
     protocolLaunch: '2020-02-27',
     tokenLaunch: '2020-06-20',
+    tokenTicker: 'BAL',
+    tokenCoingecko: 'balancer',
   });
 }
