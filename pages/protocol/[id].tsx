@@ -80,6 +80,14 @@ function saveFeeData(response: any, storedFees: any) {
   }
 }
 
+const emptyData = ({ start, end }: { start: Date; end: Date }) => {
+  const data = [];
+  for (let date = start; !isAfter(date, end); date = addDays(date, 1)) {
+    data.push({ date: date.getTime() / 1000, primary: null, secondary: null });
+  }
+  return data;
+};
+
 const useFees = (
   initial: any,
   dateRange: { start: Date; end: Date },
@@ -91,7 +99,7 @@ const useFees = (
 
   const [value, setValue] = useState({
     loading: false,
-    data: [],
+    data: emptyData(dateRange),
   });
 
   useEffect(() => {
