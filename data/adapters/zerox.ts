@@ -33,5 +33,7 @@ export default function register0x(register: any) {
     blockchain: 'Ethereum',
     source: '0x API',
     adapter: 'zerox',
+    tokenTicker: 'ZRX',
+    tokenCoingecko: '0x',
   });
 }

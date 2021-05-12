@@ -43,7 +43,7 @@ export default function registerUniswap(register: any) {
     blockchain: 'Polygon',
     source: 'The Graph Protocol',
     adapter: 'quickswap',
-    tokenTicker: 'quick',
+    tokenTicker: 'QUICK',
     tokenCoingecko: 'quick',
     protocolLaunch: '2020-11-03',
     tokenLaunch: '2021-02-15',

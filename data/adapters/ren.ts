@@ -76,5 +76,7 @@ export default function registerRen(register: any) {
     source: 'The Graph Protocol',
     adapter: 'ren',
     website: 'https://renproject.io',
+    tokenTicker: 'REN',
+    tokenCoingecko: 'ren',
   });
 }

@@ -54,5 +54,6 @@ export default function registerZilliqa(register: any) {
     tokenTicker: 'ZIL',
     tokenCoingecko: 'zilliqa',
     legacy: true,
+    protocolLaunch: '2021-05-04', // We don't have data from before this date yet
   });
 }

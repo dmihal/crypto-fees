@@ -41,5 +41,6 @@ export default function registerAave(register: any) {
     tokenTicker: 'AAVE',
     tokenCoingecko: 'aave',
     legacy: true,
+    protocolLaunch: '2021-05-04', // We don't have data from before this date yet
   });
 }
