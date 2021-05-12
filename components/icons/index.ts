@@ -1,7 +1,6 @@
 import aave from './aave.svg';
 import ada from './ada.svg';
 import avalanche from './avalanche.svg';
-import balancer from './balancer.svg';
 import bancor from './bancor.png';
 import bch from './bch.svg';
 import bnb from './bnb.svg';
@@ -41,7 +40,6 @@ const icons: { [id: string]: string } = {
   aave,
   ada,
   avalanche,
-  balancer,
   bancor,
   bch,
   bsc: bnb,
