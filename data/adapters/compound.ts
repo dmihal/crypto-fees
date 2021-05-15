@@ -12,6 +12,7 @@ const assets = [
   '0xf5dce57282a584d2746faf1593d3121fcac444dc',
   '0x35a18000230da775cac24873d00ff85bccded550',
   '0x70e36f6bf80a52b3b46b3af8e106cc0ed743e8e4',
+  '0xccf4429db6322d5c611ee964527d42e5d685dd6a',
 ];
 
 const sum = (a: number, b: number) => a + b;
