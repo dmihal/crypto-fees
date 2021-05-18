@@ -1,52 +1,50 @@
-import { FeeData } from '../types';
-import { getMaticBlockDaysAgo } from '../lib/time';
+import { offsetDaysFormatted } from '../lib/time';
+import { getBlockNumber } from '../lib/chain';
+import { query } from '../lib/graph';
 
-export async function getPolymarketData(): Promise<FeeData> {
-  const request = await fetch(
-    'https://api.thegraph.com/subgraphs/name/tokenunion/polymarket-matic',
+export async function getPolymarketData(date: string): Promise<number> {
+  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1), 'polygon');
+  const yesterdayBlock = await getBlockNumber(date, 'polygon');
+
+  const data = await query(
+    'tokenunion/polymarket-matic',
+    `query lpFeesOverPeriod($today: Int!, $yesterday: Int!){
+      today: global(id: "", block: {number: $today}){
+        scaledCollateralFees
+      }
+      yesterday: global(id: "", block: {number: $yesterday}){
+        scaledCollateralFees
+      }
+    }`,
     {
-      headers: {
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        query: `query lpFeesOverPeriod($today: Int!, $yesterday: Int!, $weekAgo: Int!){
-        today: global(id: "", block: {number: $today}){
-          scaledCollateralFees
-        }
-        yesterday: global(id: "", block: {number: $yesterday}){
-          scaledCollateralFees
-        }
-        weekAgo: global(id: "", block: {number: $weekAgo}){
-          scaledCollateralFees
-        }
-      }`,
-        variables: {
-          today: getMaticBlockDaysAgo(0),
-          yesterday: getMaticBlockDaysAgo(1),
-          weekAgo: getMaticBlockDaysAgo(7),
-        },
-        operationName: 'lpFeesOverPeriod',
-      }),
-      method: 'POST',
-    }
+      today: todayBlock,
+      yesterday: yesterdayBlock,
+    },
+    'lpFeesOverPeriod'
   );
 
-  const { data } = await request.json();
+  return (
+    parseFloat(data.today.scaledCollateralFees) - parseFloat(data.yesterday.scaledCollateralFees)
+  );
+}
 
-  return {
-    id: 'polymarket',
+function polymarketQuery(attribute: string, date: string) {
+  if (attribute !== 'fee') {
+    throw new Error(`mStable doesn't support ${attribute}`);
+  }
+
+  return getPolymarketData(date);
+}
+
+export default function registerPolymarket(register: any) {
+  register('polymarket', polymarketQuery, {
     name: 'Polymarket',
     category: 'dex',
-    oneDay:
-      parseFloat(data.today.scaledCollateralFees) - parseFloat(data.yesterday.scaledCollateralFees),
-    sevenDayMA:
-      (parseFloat(data.today.scaledCollateralFees) -
-        parseFloat(data.weekAgo.scaledCollateralFees)) /
-      7,
     description: 'Polymarket is a prediction market.',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     blockchain: 'Polygon',
     source: 'The Graph Protocol',
     adapter: 'polymarket',
-  };
+    website: 'https://polymarket.com',
+  });
 }

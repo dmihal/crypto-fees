@@ -14,10 +14,10 @@ import registerMaker from './maker';
 import { getOmenData } from './omen';
 import register0x from './zerox';
 import registerMstable from './mStable';
+import registerPolymarket from './polymarket';
 import registerRen from './ren';
 import registerSushiswap from './sushi';
 import registerSynthetix from './synthetix';
-// import { getPolymarketData } from './polymarket';
 import registerPolkadot from './polkadot';
 import registerTBTC from './tbtc';
 import registerTerra from './terra';
@@ -25,11 +25,7 @@ import registerTornado from './tornado';
 import registerUniswap from './uniswap';
 import registerZilliqa from './zilliqa';
 
-export const adapters = [
-  getFutureswapData,
-  getOmenData,
-  // getPolymarketData,
-];
+export const adapters = [getFutureswapData, getOmenData];
 
 interface Adapter {
   query: any;
@@ -59,6 +55,7 @@ registerMaker(register);
 registerMstable(register);
 registerQuickswap(register);
 registerPolkadot(register);
+registerPolymarket(register);
 registerRen(register);
 registerSushiswap(register);
 registerSynthetix(register);
