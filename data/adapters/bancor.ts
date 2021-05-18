@@ -41,5 +41,7 @@ export default function registerBancor(register: any) {
     tokenTicker: 'BNT',
     tokenCoingecko: 'bancor',
     tokenLaunch: '2017-06-12',
+    protocolLaunch: '2021-05-10', // We don't have data from before this date yet
+    legacy: true,
   });
 }
