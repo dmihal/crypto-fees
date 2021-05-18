@@ -20,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.json({ error: `Unknown ${id}` });
   }
 
-  const feeData = await getDateRangeData('eth', subDays(new Date(), 30), subDays(new Date(), 1));
+  const feeData = await getDateRangeData(id, subDays(new Date(), 30), subDays(new Date(), 1));
   const data = feeData.map((val: any) => ({
     date: Math.floor(new Date(val.date).getTime() / 1000),
     primary: val.fee,
