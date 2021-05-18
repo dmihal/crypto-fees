@@ -43,6 +43,29 @@ const blockNumLoaders: { [id: string]: (date: string) => Promise<number> } = {
 
     return parseInt(res.blocks[0].number);
   },
+  async polygon(date: string) {
+    const time = Math.floor(new Date(date).getTime() / 1000);
+    const res = await query(
+      'sameepsi/maticblocks',
+      `query blocks($timestampFrom: Int!, $timestampTo: Int!) {
+        blocks(
+          first: 1
+          orderBy: timestamp
+          orderDirection: asc
+          where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
+        ) {
+          number
+          timestamp
+        }
+      }`,
+      {
+        timestampFrom: time,
+        timestampTo: time + 60 * 60 * 24 * 7,
+      }
+    );
+
+    return parseInt(res.blocks[0].number);
+  },
 };
 
 export function getBlockNumber(date: string, chain = 'ethereum'): Promise<number> {

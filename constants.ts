@@ -29,4 +29,5 @@ export const protocolNames: { [id: string]: string } = {
   zerox: '0x',
   mstable: 'mStable',
   avalanche: 'Avalanche',
+  polygon: 'Polygon',
 };
