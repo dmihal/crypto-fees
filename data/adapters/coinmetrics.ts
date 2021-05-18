@@ -123,17 +123,17 @@ const l1s = [
     tokenTicker: 'XLM',
     tokenCoingecko: 'stellar',
   },
-  {
-    id: 'bnb_mainnet',
-    name: 'Binance Chain',
-    description: 'Binance Chain is a blockchain for trading and exchanging assets.',
-    feeDescription: 'Transaction fees and trading fees are paid by users to validators.',
-    website: 'https://binance.com',
-    source: 'CoinMetrics',
-    adapter: 'coinmetrics',
-    // tokenTicker: 'BNB',
-    // tokenCoingecko: 'binance',
-  },
+  // {
+  // id: 'bnb_mainnet',
+  // name: 'Binance Chain',
+  // description: 'Binance Chain is a blockchain for trading and exchanging assets.',
+  // feeDescription: 'Transaction fees and trading fees are paid by users to validators.',
+  // website: 'https://binance.com',
+  // source: 'CoinMetrics',
+  // adapter: 'coinmetrics',
+  // tokenTicker: 'BNB',
+  // tokenCoingecko: 'binance',
+  // },
 ];
 
 async function getCoinMetricsData(id: string, date: string, coinGecko?: string): Promise<number> {
