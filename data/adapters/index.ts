@@ -13,12 +13,12 @@ import registerLinkswap from './linkswap';
 import registerMaker from './maker';
 import { getOmenData } from './omen';
 import register0x from './zerox';
+import registerMstable from './mStable';
 import registerRen from './ren';
 import registerSushiswap from './sushi';
 import registerSynthetix from './synthetix';
 // import { getPolymarketData } from './polymarket';
 import registerPolkadot from './polkadot';
-import { getMstableData } from './mStable';
 import registerTBTC from './tbtc';
 import registerTerra from './terra';
 import registerTornado from './tornado';
@@ -29,7 +29,6 @@ export const adapters = [
   getFutureswapData,
   getOmenData,
   // getPolymarketData,
-  getMstableData,
 ];
 
 interface Adapter {
@@ -57,6 +56,7 @@ registerHegic(register);
 registerHoneyswap(register);
 registerLinkswap(register);
 registerMaker(register);
+registerMstable(register);
 registerQuickswap(register);
 registerPolkadot(register);
 registerRen(register);
