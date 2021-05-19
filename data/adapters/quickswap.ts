@@ -10,7 +10,7 @@ export async function getQuickswapData(date: string): Promise<number> {
   }`;
 
   const data = await query(
-    'sameepsi/quickswap02',
+    'sameepsi/quickswap06',
     graphQuery,
     {
       date: dateToTimestamp(date),

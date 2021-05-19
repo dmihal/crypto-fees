@@ -1,6 +1,7 @@
-import { FeeData } from '../types';
-import { getBlockDaysAgo } from '../lib/time';
-import { getHistoricalAvgDailyPrice } from '../lib/pricedata';
+import { offsetDaysFormatted } from '../lib/time';
+import { getBlockNumber } from '../lib/chain';
+import { getHistoricalPrice } from '../lib/pricedata';
+import { query } from '../lib/graph';
 
 interface MassetData {
   token: {
@@ -14,56 +15,41 @@ interface MassetData {
 interface FeesData {
   now: MassetData[];
   yesterday: MassetData[];
-  weekAgo: MassetData[];
 }
 
-export async function getMstableData(): Promise<FeeData> {
-  const todayBlock = getBlockDaysAgo(0);
-  const yesterdayBlock = getBlockDaysAgo(1);
-  const weekAgoBlock = getBlockDaysAgo(7);
+export async function getMstableData(date: string): Promise<number> {
+  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
+  const yesterdayBlock = await getBlockNumber(date);
 
-  const request = await fetch('https://api.thegraph.com/subgraphs/name/mstable/mstable-protocol', {
-    headers: {
-      'content-type': 'application/json',
+  const data: FeesData = await query(
+    'mstable/mstable-protocol',
+    `
+    query fees($today: Int!, $yesterday: Int!){
+      now: massets(block: {number: $today}) {
+        token {
+          symbol
+        }
+        cumulativeFeesPaid {
+          simple
+        }
+      }
+      yesterday: massets(block: {number: $yesterday}) {
+        token {
+          symbol
+        }
+        cumulativeFeesPaid {
+          simple
+        }
+      }
+    }`,
+    {
+      today: todayBlock,
+      yesterday: yesterdayBlock,
     },
-    body: JSON.stringify({
-      query: `{
-        now: massets(block: {number: ${todayBlock}}) {
-          token {
-            symbol
-          }
-          cumulativeFeesPaid {
-            simple
-          }
-        }
-        yesterday: massets(block: {number: ${yesterdayBlock}}) {
-          token {
-            symbol
-          }
-          cumulativeFeesPaid {
-            simple
-          }
-        }
-        weekAgo: massets(block: {number: ${weekAgoBlock}}) {
-          token {
-            symbol
-          }
-          cumulativeFeesPaid {
-            simple
-          }
-        }
-      }`,
-      variables: null,
-    }),
-    method: 'POST',
-  });
+    'fees'
+  );
 
-  const { data } = (await request.json()) as {
-    data: FeesData;
-  };
-
-  const wbtcPriceYesterday = await getHistoricalAvgDailyPrice('bitcoin', 1);
-  const wbtcPriceLastWeek = await getHistoricalAvgDailyPrice('bitcoin', 7);
+  const bitcoinPrice = await getHistoricalPrice('bitcoin', date);
 
   const collectFees = (btcPrice: number) => (
     accumulator: number,
@@ -74,15 +60,24 @@ export async function getMstableData(): Promise<FeeData> {
     return accumulator + fees * price;
   };
 
-  const now = data.now.reduce(collectFees(wbtcPriceYesterday), 0);
-  const yesterday = data.yesterday.reduce(collectFees(wbtcPriceYesterday), 0);
-  const weekAgo = data.weekAgo.reduce(collectFees(wbtcPriceLastWeek), 0);
+  const now = data.now.reduce(collectFees(bitcoinPrice), 0);
+  const yesterday = data.yesterday.reduce(collectFees(bitcoinPrice), 0);
 
-  const sevenDayMA = (now - weekAgo) / 7;
   const oneDay = now - yesterday;
 
-  return {
-    id: 'mstable',
+  return oneDay;
+}
+
+function mStableQuery(attribute: string, date: string) {
+  if (attribute !== 'fee') {
+    throw new Error(`mStable doesn't support ${attribute}`);
+  }
+
+  return getMstableData(date);
+}
+
+export default function registerMstable(register: any) {
+  register('mstable', mStableQuery, {
     name: 'mStable',
     category: 'dex',
     description: 'mStable is a stablecoin asset manager.',
@@ -90,7 +85,7 @@ export async function getMstableData(): Promise<FeeData> {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'mStable',
-    sevenDayMA,
-    oneDay,
-  };
+    tokenTicker: 'MTA',
+    tokenCoingecko: 'meta',
+  });
 }

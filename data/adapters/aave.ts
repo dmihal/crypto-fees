@@ -19,7 +19,7 @@ async function getAaveData(): Promise<number> {
 export default function registerAave(register: any) {
   const aaveQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
-      throw new Error(`Balancer doesn't support ${attribute}`);
+      throw new Error(`Aave doesn't support ${attribute}`);
     }
     if (date !== getYesterdayDate()) {
       // Legacy adapter, only "today" supported

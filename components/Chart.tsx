@@ -29,7 +29,7 @@ const formattedNum = (number: number | string) => {
     return '$' + Number(num.toFixed(0)).toLocaleString();
   }
 
-  return Number(num.toFixed(5));
+  return '$' + Number(num.toFixed(0)).toLocaleString();
 };
 
 const toNiceDate = (date: string) => format(new Date(parseInt(date) * 1000), 'MMM dd');

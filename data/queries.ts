@@ -178,11 +178,16 @@ export async function getLastWeek(): Promise<any[]> {
 }
 
 export async function getDateData(protocol: string, date: string) {
+  const { protocolLaunch } = getMetadata(protocol);
+  if (protocolLaunch && isBefore(date, protocolLaunch)) {
+    return { date, fee: null };
+  }
+
   return {
     date,
     fee: await getValue(protocol, 'fee', date).catch((e: any) => {
       console.error(e);
-      return 0;
+      return null;
     }),
   };
 }
