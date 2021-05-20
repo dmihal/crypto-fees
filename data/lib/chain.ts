@@ -1,5 +1,6 @@
 import { getValue as getDBValue, setValue as setDBValue } from '../db';
 import { query } from './graph';
+import { offsetDaysFormatted } from './time';
 
 const memoryCache: { [key: string]: Promise<number> } = {};
 
@@ -20,6 +21,18 @@ const blockNumLoaders: { [id: string]: (date: string) => Promise<number> } = {
     }
     return parseInt(data.result);
   },
+
+  async polygon(date: string) {
+    const req = await fetch(
+      `https://api.covalenthq.com/v1/137/block_v2/${date}/${offsetDaysFormatted(date, 1)}/`
+    );
+    const { data, error } = await req.json();
+    if (error) {
+      throw new Error(`Error fetching polygon block on ${date}`);
+    }
+    return data.items[0].height;
+  },
+
   async avalanche(date: string) {
     const time = Math.floor(new Date(date).getTime() / 1000);
     const res = await query(
