@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ProtocolData } from 'data/types';
 import { getHistoricalData } from 'data/queries';
-import { formatDate } from 'data/lib/time';
+import { formatDate, isBefore } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 import FilterCard, { Filters, allChains, allCategories } from 'components/FilterCard';
@@ -157,6 +157,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const date = params.date.toString();
 
   if (!/20\d{2}-\d{2}-\d{2}/.test(params.date.toString())) {
+    return { props: { data: [], invalid: true } };
+  }
+
+  if (!isBefore(date)) {
     return { props: { data: [], invalid: true } };
   }
 
