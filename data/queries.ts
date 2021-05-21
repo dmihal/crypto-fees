@@ -4,9 +4,11 @@ import { getValue as getDBValue, setValue as setDBValue } from './db';
 import { last7Days, isBefore, getDateRange, getYesterdayDate } from './lib/time';
 import { getHistoricalMarketData } from './lib/pricedata';
 
+const SANITY_CHECK = 1000000000; // Values over this will be automatically hidden
+
 async function getValue(protocol: string, attribute: string, date: string) {
   const cachedValue = await getDBValue(protocol, attribute, date);
-  if (cachedValue !== null) {
+  if (cachedValue !== null && cachedValue < SANITY_CHECK) {
     return cachedValue;
   }
   // eslint-disable-next-line no-console
@@ -14,7 +16,7 @@ async function getValue(protocol: string, attribute: string, date: string) {
 
   const value = await queryAdapter(protocol, attribute, date);
 
-  if (value > 1000000000) {
+  if (value > SANITY_CHECK) {
     console.warn(`Query for ${protocol} on ${date} returned ${value}, exceeded sanity check`);
     return null;
   }
