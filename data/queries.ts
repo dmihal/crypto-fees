@@ -13,6 +13,12 @@ async function getValue(protocol: string, attribute: string, date: string) {
   console.log(`Missed cache for ${protocol} ${attribute} on ${date}`);
 
   const value = await queryAdapter(protocol, attribute, date);
+
+  if (value > 1000000000) {
+    console.warn(`Query for ${protocol} on ${date} returned ${value}, exceeded sanity check`);
+    return null;
+  }
+
   if (value) {
     await setDBValue(protocol, attribute, date, value);
   }
