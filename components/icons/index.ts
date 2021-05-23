@@ -29,7 +29,7 @@ import tbtc from './tbtc.svg';
 import terra from './terra.svg';
 import tornado from './tornado.svg';
 import uniV1 from './uni_v1.png';
-import uniV2 from './uni_v2.svg';
+import uniV3 from './uni_v3.svg';
 import xlm from './xlm.svg';
 import xmr from './xmr.svg';
 import xrp from './xrp.svg';
@@ -70,7 +70,8 @@ const icons: { [id: string]: string } = {
   terra,
   tornado,
   'uniswap-v1': uniV1,
-  'uniswap-v2': uniV2,
+  'uniswap-v2': uniV3,
+  'uniswap-v3': uniV3,
   xlm,
   xmr,
   xrp,

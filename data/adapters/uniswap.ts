@@ -9,6 +9,26 @@ const blacklistAddresses = [
   '0x382a9a8927f97f7489af3f0c202b23ed1eb772b5',
 ];
 
+export async function getUniswapV3Data(date: string): Promise<number> {
+  const graphQuery = `query fees($date: Int!) {
+    uniswapDayDatas(where: {date: $date}) {
+      date
+      feesUSD
+    }
+  }`;
+
+  const data = await query(
+    'ianlapham/uniswap-v3-subgraph',
+    graphQuery,
+    {
+      date: dateToTimestamp(date),
+    },
+    'fees'
+  );
+
+  return parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].feesUSD);
+}
+
 export async function getUniswapV2Data(date: string): Promise<number> {
   const graphQuery = `query fees($date: Int!, $blacklistAddresses: [Bytes!]!) {
     uniswapDayDatas(where: {date: $date}) {
@@ -74,6 +94,12 @@ export default function registerUniswap(register: any) {
     }
     return getUniswapV2Data(date);
   };
+  const v3Query = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Uniswap doesn't support ${attribute}`);
+    }
+    return getUniswapV3Data(date);
+  };
 
   register('uniswap-v1', v1Query, {
     name: 'Uniswap V1',
@@ -98,6 +124,21 @@ export default function registerUniswap(register: any) {
     tokenTicker: 'UNI',
     tokenCoingecko: 'uniswap',
     protocolLaunch: '2020-05-04',
+    tokenLaunch: '2020-09-14',
+  });
+
+  register('uniswap-v3', v3Query, {
+    name: 'Uniswap V3',
+    category: 'dex',
+    description: 'Uniswap is a permissionless, decentralized exchange',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    website: 'https://uniswap.org/',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'uniswap',
+    tokenTicker: 'UNI',
+    tokenCoingecko: 'uniswap',
+    protocolLaunch: '2021-05-10',
     tokenLaunch: '2020-09-14',
   });
 }
