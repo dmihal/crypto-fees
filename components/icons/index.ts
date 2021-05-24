@@ -20,6 +20,7 @@ import maker from './maker.svg';
 import mstable from './mstable.svg';
 import omen from './omen.png';
 import polkadot from './polkadot.svg';
+import polygon from './polygon.svg';
 import polymarket from './polymarket.svg';
 import quickswap from './quickswap.png';
 import ren from './ren.svg';
@@ -62,6 +63,7 @@ const icons: { [id: string]: string } = {
   mstable,
   omen,
   polkadot,
+  polygon,
   polymarket,
   quickswap,
   sushiswap,
