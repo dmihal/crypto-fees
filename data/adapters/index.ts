@@ -2,7 +2,7 @@ import registerAave from './aave';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import registerBancor from './bancor';
-import { getBSCData } from './bsc';
+import registerBSC from './bsc';
 import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
 import registerCurve from './curve';
@@ -28,7 +28,6 @@ import registerUniswap from './uniswap';
 import registerZilliqa from './zilliqa';
 
 export const adapters = [
-  getBSCData,
   getFutureswapData,
   getOmenData,
 ];
@@ -51,6 +50,7 @@ registerAave(register);
 registerAvalanche(register);
 registerBalancer(register);
 registerBancor(register);
+registerBSC(register);
 registerCoinMetrics(register);
 registerCompound(register);
 registerCurve(register);
