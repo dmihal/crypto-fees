@@ -9,6 +9,25 @@ const blacklistAddresses = [
   '0x382a9a8927f97f7489af3f0c202b23ed1eb772b5',
 ];
 
+export async function getUniswapV3Data(date: string): Promise<number> {
+  const graphQuery = `query fees($date: Int!) {
+    uniswapDayDatas(where: {date: $date}) {
+      feesUSD
+    }
+  }`;
+
+  const data = await query(
+    'ianlapham/uniswap-v3-testing',
+    graphQuery,
+    {
+      date: dateToTimestamp(date),
+    },
+    'fees'
+  );
+
+  return parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].feesUSD);
+}
+
 export async function getUniswapV2Data(date: string): Promise<number> {
   const graphQuery = `query fees($date: Int!, $blacklistAddresses: [Bytes!]!) {
     uniswapDayDatas(where: {date: $date}) {
@@ -62,20 +81,17 @@ export async function getUniswapV1Data(date: string): Promise<number> {
 }
 
 export default function registerUniswap(register: any) {
-  const v1Query = (attribute: string, date: string) => {
+  const query = (adapter: (date: string) => Promise<number>) => (
+    attribute: string,
+    date: string
+  ) => {
     if (attribute !== 'fee') {
       throw new Error(`Uniswap doesn't support ${attribute}`);
     }
-    return getUniswapV1Data(date);
-  };
-  const v2Query = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Uniswap doesn't support ${attribute}`);
-    }
-    return getUniswapV2Data(date);
+    return adapter(date);
   };
 
-  register('uniswap-v1', v1Query, {
+  register('uniswap-v1', query(getUniswapV1Data), {
     name: 'Uniswap V1',
     category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
@@ -86,7 +102,7 @@ export default function registerUniswap(register: any) {
     adapter: 'uniswap',
   });
 
-  register('uniswap-v2', v2Query, {
+  register('uniswap-v2', query(getUniswapV2Data), {
     name: 'Uniswap V2',
     category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
@@ -98,6 +114,21 @@ export default function registerUniswap(register: any) {
     tokenTicker: 'UNI',
     tokenCoingecko: 'uniswap',
     protocolLaunch: '2020-05-04',
+    tokenLaunch: '2020-09-14',
+  });
+
+  register('uniswap-v3', query(getUniswapV3Data), {
+    name: 'Uniswap V3',
+    category: 'dex',
+    description: 'Uniswap is a permissionless, decentralized exchange',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    website: 'https://uniswap.org',
+    blockchain: 'Ethereum',
+    source: 'The Graph Protocol',
+    adapter: 'uniswap',
+    tokenTicker: 'UNI',
+    tokenCoingecko: 'uniswap',
+    protocolLaunch: '2021-05-05',
     tokenLaunch: '2020-09-14',
   });
 }

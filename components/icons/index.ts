@@ -73,6 +73,7 @@ const icons: { [id: string]: string } = {
   tornado,
   'uniswap-v1': uniV1,
   'uniswap-v2': uniV2,
+  'uniswap-v3': uniV2,
   xlm,
   xmr,
   xrp,
