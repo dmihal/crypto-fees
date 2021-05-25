@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const svg = ReactDOMServer.renderToString(
     React.createElement(SocialCard, {
       data: filteredData,
-      date: formatDate(new Date()),
+      date: date ? date.toString() : formatDate(new Date()),
     })
   );
 
