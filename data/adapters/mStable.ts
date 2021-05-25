@@ -87,5 +87,6 @@ export default function registerMstable(register: any) {
     adapter: 'mStable',
     tokenTicker: 'MTA',
     tokenCoingecko: 'meta',
+    protocolLaunch: '2020-05-29',
   });
 }
