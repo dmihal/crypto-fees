@@ -43,7 +43,7 @@ const DateButton = forwardRef<
 
 interface ToolbarProps {
   date?: Date;
-  onDateChange?: (date: Date) => void;
+  onDateChange?: (date: string) => void;
   onFilterToggle?: () => void;
   numFilters?: number;
   onShare?: () => void;
@@ -106,9 +106,13 @@ const Toolbar: React.FC<ToolbarProps> = ({
         <DatePicker
           selected={date}
           customInput={<DateButton loading={loading && changed} />}
-          onChange={(newDate: any) => {
+          onChange={(newDate: Date) => {
             setChanged(true);
-            onDateChange(newDate);
+            const pad = (num: number) => (num < 10 ? `0${num}` : num.toString());
+            const formattedDate = `${newDate.getFullYear()}-${pad(newDate.getMonth() + 1)}-${pad(
+              newDate.getDate()
+            )}`;
+            onDateChange(formattedDate);
           }}
           maxDate={subDays(new Date(), 1)}
           popperPlacement="bottom-end"

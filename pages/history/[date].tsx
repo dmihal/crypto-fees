@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { ProtocolData } from 'data/types';
 import { getHistoricalData } from 'data/queries';
-import { formatDate, isBefore } from 'data/lib/time';
+import { isBefore } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
 import FilterCard, { Filters, allChains, allCategories } from 'components/FilterCard';
@@ -83,8 +83,8 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
 
       <Toolbar
         date={new Date(date)}
-        onDateChange={(newDate: Date) =>
-          router.push(`/history/${formatDate(newDate)}`, null, { scroll: false })
+        onDateChange={(newDate: string) =>
+          router.push(`/history/${newDate}`, null, { scroll: false })
         }
         onFilterToggle={() => setFilterCardOpen(toggle)}
         numFilters={numFilters}
