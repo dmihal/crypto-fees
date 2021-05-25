@@ -4,9 +4,10 @@ import Head from 'next/head';
 interface SocialTagsProps {
   title?: string;
   image?: string;
+  query?: string;
 }
 
-const SocialTags: React.FC<SocialTagsProps> = ({ title, image }) => {
+const SocialTags: React.FC<SocialTagsProps> = ({ title, image, query }) => {
   const _title = title ? `${title} - CryptoFees.info` : 'CryptoFees.info';
   return (
     <Head>
@@ -29,7 +30,7 @@ const SocialTags: React.FC<SocialTagsProps> = ({ title, image }) => {
         name="twitter:image"
         content={`https://${process.env.NEXT_PUBLIC_VERCEL_URL}/api/social/${
           image || 'top'
-        }.png?${new Date().getDate()}`}
+        }.png?${new Date().getDate()}${query ? `&${query}` : ''}`}
       />
       <meta name="twitter:card" content="summary_large_image" />
     </Head>
