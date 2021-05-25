@@ -78,5 +78,6 @@ export default function registerRen(register: any) {
     website: 'https://renproject.io',
     tokenTicker: 'REN',
     tokenCoingecko: 'republic-protocol',
+    protocolLaunch: '2020-05-27',
   });
 }
