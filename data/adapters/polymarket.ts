@@ -46,6 +46,6 @@ export default function registerPolymarket(register: any) {
     source: 'The Graph Protocol',
     adapter: 'polymarket',
     website: 'https://polymarket.com',
-    protocolLaunch: '2020-07-01', // I couldn't find an exact date
+    protocolLaunch: '2020-09-05', // I couldn't find an exact date
   });
 }
