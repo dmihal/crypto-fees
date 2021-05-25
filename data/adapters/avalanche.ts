@@ -23,6 +23,22 @@ async function getBalance(block: string) {
   return parseInt(res.result, 16) / 1e18;
 }
 
+async function getChainFees(chain: string, date: string) {
+  const chainIDs = {
+    P: '11111111111111111111111111111111LpoYY',
+    C: '2q9e4r6Mu3U68nU1fYjgbR6JvwrRx36CohpAX5UQxse55x1Q5',
+    X: '2oYMBNV4eNHyqk2fjjV5nVQLDbtmNJzq5s3qs3Lo6ftnC6FByM',
+  };
+
+  const startDate = new Date(date).toISOString();
+  const endDate = new Date(offsetDaysFormatted(date, 1)).toISOString();
+  const dayAggregate = await fetcher(
+    `https://explorerapi.avax.network/v2/txfeeAggregates?startTime=${startDate}&endTime=${endDate}&chainID=${chainIDs[chain]}`
+  );
+
+  return parseFloat(dayAggregate.aggregates.txfee) / 1e9;
+}
+
 async function getCChainFees(date: string) {
   const [blockYesterday, blockToday] = await Promise.all([
     getBlockNumber(date, 'avalanche'),
@@ -34,29 +50,29 @@ async function getCChainFees(date: string) {
     getBalance('0x' + blockYesterday.toString(16)),
   ]);
 
-  const diff = currentBalance - previousBalance;
-  return diff;
+  const txFees = currentBalance - previousBalance;
+  const atomicFees = await getChainFees('C', date);
+
+  return txFees + atomicFees;
 }
 
-async function getXChainFees(date: string) {
-  const startDate = new Date(date).toISOString();
-  const endDate = new Date(offsetDaysFormatted(date, 1)).toISOString();
-  const dayAggregate = await fetcher(
-    `https://explorerapi.avax.network/v2/txfeeAggregates?startTime=${startDate}&endTime=${endDate}`
-  );
+function getXChainFees(date: string) {
+  return getChainFees('X', date);
+}
 
-  const fees = parseFloat(dayAggregate.aggregates.txfee) / 1e9;
-  return fees;
+function getPChainFees(date: string) {
+  return getChainFees('P', date);
 }
 
 export async function getAvalancheData(date: string): Promise<number> {
-  const [price, cFees, xFees] = await Promise.all([
+  const [price, cFees, xFees, pFees] = await Promise.all([
     getHistoricalPrice('avalanche-2', date),
     getCChainFees(date),
     getXChainFees(date),
+    getPChainFees(date),
   ]);
 
-  const feesUSD = price * (cFees + xFees);
+  const feesUSD = price * (cFees + xFees + pFees);
 
   return feesUSD;
 }
