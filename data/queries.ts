@@ -108,7 +108,7 @@ export async function getData(): Promise<ProtocolData[]> {
   return data;
 }
 
-export async function getHistoricalData(date: string): Promise<FeeData[]> {
+export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
   const days = last7Days(new Date(date));
   const v2Data = await Promise.all(
     getIDs().map(async (id: string) => {
