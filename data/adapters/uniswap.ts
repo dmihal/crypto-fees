@@ -91,7 +91,7 @@ export default function registerUniswap(register: any) {
     category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.com',
+    website: 'https://uniswap.org',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'uniswap',
