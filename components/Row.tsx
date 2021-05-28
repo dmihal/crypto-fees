@@ -23,7 +23,7 @@ const Name: React.FC<{ name: string; shortName: string }> = ({ name, shortName }
       <style jsx>{`
         .name {
           flex: 1;
-          padding: 0 32px;
+          padding-left: 32px;
         }
         .short-name {
           display: none;
