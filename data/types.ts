@@ -16,6 +16,7 @@ export interface FeeData {
 
 export interface Metadata {
   name?: string;
+  shortName?: string;
   category: Category;
   description?: string;
   feeDescription?: string;

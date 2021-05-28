@@ -63,7 +63,8 @@ function bscQuery(attribute: string, date: string) {
 export default function registerBSC(register: any) {
   register('bsc', bscQuery, {
     category: 'l1',
-    name: 'BSC',
+    name: 'Binance Smart Chain',
+    shortName: 'BSC',
     description: 'Binance Smart Chain is an inexpensive, EVM-compatable chain',
     feeDescription: 'Transaction fees are paid to validators',
     blockchain: 'BSC',

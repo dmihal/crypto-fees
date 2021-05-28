@@ -14,6 +14,37 @@ const toggle = (isOpen: boolean) => !isOpen;
 
 const cardHeight = 300;
 
+const Name: React.FC<{ name: string; shortName: string }> = ({ name, shortName }) => {
+  return (
+    <div className="name">
+      <div className={shortName ? 'long-name' : ''}>{name}</div>
+      {shortName && <div className="short-name">{shortName}</div>}
+
+      <style jsx>{`
+        .name {
+          flex: 1;
+          padding: 0 32px;
+        }
+        .short-name {
+          display: none;
+        }
+        @media (max-width: 700px) {
+          .name {
+            font-size: 14px;
+            padding: 0;
+          }
+          .short-name {
+            display: block;
+          }
+          .long-name {
+            display: none;
+          }
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const Row: React.FC<RowProps> = ({ protocol }) => {
   const [open, setOpen] = useState(false);
 
@@ -35,7 +66,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
         }}
       >
-        <div className="name">{protocol.name}</div>
+        <Name name={protocol.name} shortName={protocol.shortName} />
         <div className="amount">
           {protocol.oneDay?.toLocaleString('en-US', {
             style: 'currency',
@@ -84,11 +115,6 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
 
         .amount {
           padding-left: 32px;
-        }
-
-        .name {
-          flex: 1;
-          padding: 0 32px;
         }
 
         .amount {
@@ -144,10 +170,6 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
             font-size: 14px;
             min-width: 110px;
             padding-left: 8px;
-          }
-          .name {
-            font-size: 14px;
-            padding: 0;
           }
 
           .item {
