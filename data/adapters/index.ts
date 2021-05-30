@@ -7,7 +7,6 @@ import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
 import registerCurve from './curve';
 import registerQuickswap from './quickswap';
-import { getFutureswapData } from './futureswap';
 import registerHegic from './hegic';
 import registerHoneyswap from './honeyswap';
 import registerLinkswap from './linkswap';
@@ -27,10 +26,7 @@ import registerTornado from './tornado';
 import registerUniswap from './uniswap';
 import registerZilliqa from './zilliqa';
 
-export const adapters = [
-  getFutureswapData,
-  getOmenData,
-];
+export const adapters = [getOmenData];
 
 interface Adapter {
   query: any;
