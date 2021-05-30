@@ -28,7 +28,7 @@ export default function registerSushiswap(register: any) {
     name: 'SushiSwap',
     category: 'dex',
     description: 'SushiSwap is a community-owned permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers and SUSHI stakers',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'sushi',
