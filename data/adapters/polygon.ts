@@ -42,7 +42,7 @@ export default function registerPolygon(register: any) {
   register('polygon', polygonQuery, {
     name: 'Polygon',
     category: 'l1',
-    description: 'Polymarket is a protocol for Ethereum-compatible blockchain networks.',
+    description: 'Polygon is a protocol for Ethereum-compatible blockchain networks.',
     feeDescription: 'Transaction fees are paid by users to validators.',
     blockchain: 'Polygon',
     source: 'The Graph Protocol',
