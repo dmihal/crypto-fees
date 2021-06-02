@@ -48,6 +48,8 @@ const Name: React.FC<{ name: string; shortName: string }> = ({ name, shortName }
 const Row: React.FC<RowProps> = ({ protocol }) => {
   const [open, setOpen] = useState(false);
 
+  const icon = protocol.icon || icons[protocol.id];
+
   return (
     <Fragment>
       <a
@@ -63,7 +65,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         }}
         className={`item ${protocol.category !== 'l1' ? 'app' : ''} ${open ? 'open' : ''}`}
         style={{
-          backgroundImage: icons[protocol.id] ? `url('${icons[protocol.id]}')` : undefined,
+          backgroundImage: icon ? `url('${icon}')` : undefined,
         }}
       >
         <Name name={protocol.name} shortName={protocol.shortName} />

@@ -6,6 +6,7 @@ export interface Metadata {
   category: Category;
   description?: string;
   feeDescription?: string;
+  icon?: string;
   website?: string;
   blockchain?: string;
   source?: string;

@@ -209,6 +209,8 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
     }
   }, [router.query]);
 
+  const icon = metadata.icon || icons[id];
+
   return (
     <main>
       <Head>
@@ -227,7 +229,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
       </div>
 
       <h2 className="subtitle">
-        <div className="icon" style={{ backgroundImage: `url('${icons[id]}')` }} />
+        <div className="icon" style={{ backgroundImage: `url('${icon}')` }} />
         {metadata.name}
       </h2>
 

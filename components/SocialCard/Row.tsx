@@ -11,8 +11,11 @@ const font = 'SofiaProRegular, Sofia Pro, sofia-pro';
 
 const Row: React.FC<RowProps> = ({ protocol, index }) => {
   let svgImg;
-  if (icons[protocol.id]?.indexOf('data:image/svg+xml;base64,') === 0) {
-    const buffer = new Buffer(icons[protocol.id].substr(26), 'base64');
+
+  const icon = protocol.icon || icons[protocol.id];
+
+  if (icon?.indexOf('data:image/svg+xml;base64,') === 0) {
+    const buffer = new Buffer(icon.substr(26), 'base64');
     svgImg = buffer.toString('ascii');
     svgImg = svgImg.replace(/">/, '" width="24" height="24">');
   }
@@ -32,7 +35,7 @@ const Row: React.FC<RowProps> = ({ protocol, index }) => {
           {svgImg ? (
             <g dangerouslySetInnerHTML={{ __html: svgImg }} />
           ) : (
-            <image x="0" y="0" width="24" height="24" href={icons[protocol.id]} />
+            <image x="0" y="0" width="24" height="24" href={icon} />
           )}
         </g>
 
