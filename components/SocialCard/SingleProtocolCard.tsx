@@ -76,9 +76,9 @@ const SingleProtocolCard = ({ data, date, name }) => {
           fontFamily={font}
           fontSize="24"
           fill="#091636"
-          x="180"
+          x="100"
           y="50"
-          textAnchor="end"
+          textAnchor="middle"
         >
           {avg.toLocaleString('en-US', {
             style: 'currency',
@@ -106,9 +106,9 @@ const SingleProtocolCard = ({ data, date, name }) => {
           fontFamily={font}
           fontSize="24"
           fill="#091636"
-          x="180"
+          x="100"
           y="50"
-          textAnchor="end"
+          textAnchor="middle"
         >
           {data[data.length - 1].primary.toLocaleString('en-US', {
             style: 'currency',
