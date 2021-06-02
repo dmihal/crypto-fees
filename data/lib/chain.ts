@@ -1,3 +1,4 @@
+import { encode } from 'base-64';
 import { getValue as getDBValue, setValue as setDBValue } from '../db';
 import { query } from './graph';
 import { offsetDaysFormatted } from './time';
@@ -23,8 +24,17 @@ const blockNumLoaders: { [id: string]: (date: string) => Promise<number> } = {
   },
 
   async polygon(date: string) {
+    if (!process.env.COVALENT_KEY) {
+      throw new Error('Env var COVALENT_KEY not set');
+    }
+
     const req = await fetch(
-      `https://api.covalenthq.com/v1/137/block_v2/${date}/${offsetDaysFormatted(date, 1)}/`
+      `https://api.covalenthq.com/v1/137/block_v2/${date}/${offsetDaysFormatted(date, 1)}/`,
+      {
+        headers: {
+          Authorization: 'Basic ' + encode(`${process.env.COVALENT_KEY}:`),
+        },
+      }
     );
     const { data, error } = await req.json();
     if (error) {
