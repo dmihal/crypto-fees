@@ -9,24 +9,26 @@ export async function getCompoundData(date: string): Promise<number> {
   const assetReq = await fetch('https://api.compound.finance/api/v2/ctoken');
   const assetJson = await assetReq.json();
 
-  const interestByAsset = await Promise.all(
-    assetJson.cToken.map(async (asset: any) => {
-      const url = `https://api.compound.finance/api/v2/market_history/graph?asset=${asset.token_address}&min_block_timestamp=${startTimestamp}&max_block_timestamp=${endTimestamp}&num_buckets=1`;
-      const req = await fetch(url);
-      const json = await req.json();
+  const interestByAsset: number[] = await Promise.all(
+    assetJson.cToken.map(
+      async (asset: any): Promise<number> => {
+        const url = `https://api.compound.finance/api/v2/market_history/graph?asset=${asset.token_address}&min_block_timestamp=${startTimestamp}&max_block_timestamp=${endTimestamp}&num_buckets=1`;
+        const req = await fetch(url);
+        const json = await req.json();
 
-      if (json.total_borrows_history.length === 0) {
-        return 0;
+        if (json.total_borrows_history.length === 0) {
+          return 0;
+        }
+
+        const dailyInterest =
+          (json.total_borrows_history[0].total.value *
+            json.prices_usd[0].price.value *
+            json.borrow_rates[0].rate) /
+          365;
+
+        return dailyInterest || 0;
       }
-
-      const dailyInterest =
-        (json.total_borrows_history[0].total.value *
-          json.prices_usd[0].price.value *
-          json.borrow_rates[0].rate) /
-        365;
-
-      return dailyInterest || 0;
-    })
+    )
   );
 
   const oneDay = interestByAsset.reduce(sum, 0);
