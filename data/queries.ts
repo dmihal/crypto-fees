@@ -1,7 +1,7 @@
-import { adapters, queryAdapter, getIDs, getMetadata } from './adapters';
-import { FeeData, ProtocolData } from './types';
+import { queryAdapter, getIDs, getMetadata } from './adapters';
+import { ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
-import { last7Days, isBefore, getDateRange, getYesterdayDate } from './lib/time';
+import { last7Days, isBefore, getDateRange } from './lib/time';
 import { getHistoricalMarketData } from './lib/pricedata';
 
 const SANITY_CHECK = 1000000000; // Values over this will be automatically hidden
@@ -46,24 +46,6 @@ export async function getMarketData(id: string, sevenDayMA: number, date: string
 }
 
 export async function getData(): Promise<ProtocolData[]> {
-  const handleFailure = (e: any) => {
-    console.warn(e);
-    return null;
-  };
-  const yesterday = getYesterdayDate();
-  const runAdapter = (adapter: any) =>
-    adapter()
-      .then(async (data: FeeData) => {
-        // Let's start saving legacy data, in 1 week we'll be good to show some charts
-        const cachedValue = await getDBValue(data.id, 'fee', yesterday);
-        if (!cachedValue) {
-          await setDBValue(data.id, 'fee', yesterday, data.oneDay);
-        }
-        return data;
-      })
-      .catch(handleFailure);
-  const [...appData] = await Promise.all(adapters.map(runAdapter));
-
   const days = last7Days();
   const v2Data = await Promise.all(
     getIDs().map(
@@ -103,7 +85,7 @@ export async function getData(): Promise<ProtocolData[]> {
     )
   );
 
-  const data = [...appData, ...v2Data].filter((val: any) => !!val);
+  const data = v2Data.filter((val: any) => !!val);
 
   return data;
 }

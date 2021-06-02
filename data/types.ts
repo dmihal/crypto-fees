@@ -1,19 +1,5 @@
 export type Category = 'l1' | 'dex' | 'lending' | 'xchain' | 'other';
 
-export interface FeeData {
-  id: string;
-  name?: string;
-  category: Category;
-  sevenDayMA: number;
-  oneDay: number;
-  description?: string;
-  feeDescription?: string;
-  website?: string;
-  blockchain?: string;
-  source?: string;
-  adapter?: string;
-}
-
 export interface Metadata {
   name?: string;
   shortName?: string;
