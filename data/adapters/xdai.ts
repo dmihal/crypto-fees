@@ -30,7 +30,6 @@ export default function registerXDai(register: any) {
     website: 'https://xdaichain.com',
     tokenTicker: 'STAKE',
     tokenCoingecko: 'xdai-stake',
-    legacy: true,
-    protocolLaunch: '2021-04-29', // We don't have data from before this date yet
+    protocolLaunch: '2020-06-03',
   });
 }
