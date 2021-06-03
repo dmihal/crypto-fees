@@ -23,6 +23,7 @@ import registerTBTC from './tbtc';
 import registerTerra from './terra';
 import registerTornado from './tornado';
 import registerUniswap from './uniswap';
+import registerXDai from './xdai';
 import registerZilliqa from './zilliqa';
 
 interface Adapter {
@@ -63,6 +64,7 @@ registerTBTC(register);
 registerTerra(register);
 registerTornado(register);
 registerUniswap(register);
+registerXDai(register);
 registerZilliqa(register);
 
 export const getIDs = () => ids;
