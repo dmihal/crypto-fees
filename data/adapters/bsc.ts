@@ -65,11 +65,12 @@ export default function registerBSC(register: any) {
     category: 'l1',
     name: 'Binance Smart Chain',
     shortName: 'BSC',
-    description: 'Binance Smart Chain is an inexpensive, EVM-compatable chain',
+    description: 'Binance Smart Chain is an inexpensive, EVM-compatible chain',
     feeDescription: 'Transaction fees are paid to validators',
     blockchain: 'BSC',
     source: 'Etherscan',
     adapter: 'bsc',
+    website: 'https://binance.org',
     tokenTicker: 'BNB',
     tokenCoingecko: 'binancecoin',
   });
