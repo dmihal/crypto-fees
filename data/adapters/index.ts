@@ -24,6 +24,7 @@ import registerTerra from './terra';
 import registerTornado from './tornado';
 import registerUniswap from './uniswap';
 import registerXDai from './xdai';
+import registerYearn from './yearn';
 import registerZilliqa from './zilliqa';
 
 interface Adapter {
@@ -65,6 +66,7 @@ registerTerra(register);
 registerTornado(register);
 registerUniswap(register);
 registerXDai(register);
+registerYearn(register);
 registerZilliqa(register);
 
 export const getIDs = () => ids;
