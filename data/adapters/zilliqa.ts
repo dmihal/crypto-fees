@@ -1,6 +1,7 @@
 import differenceInDays from 'date-fns/differenceInDays';
 import { formatDate } from '../lib/time';
 import { getHistoricalPrice } from '../lib/pricedata';
+import { RegisterFunction } from '../types';
 
 const fetcher = async (input: RequestInfo, init?: RequestInit) => {
   const res = await fetch(input, init);
@@ -37,7 +38,7 @@ export async function getZilliqaData(date: string): Promise<number> {
   return null;
 }
 
-export default function registerZilliqa(register: any) {
+export default function registerZilliqa(register: RegisterFunction) {
   const zilliqaQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Zilliqa doesn't support ${attribute}`);

@@ -1,5 +1,6 @@
 import { dateToTimestamp } from '../lib/time';
 import { query } from '../lib/graph';
+import { RegisterFunction } from '../types';
 
 const blacklistAddresses = [
   '0x7d7e813082ef6c143277c71786e5be626ec77b20',
@@ -80,7 +81,7 @@ export async function getUniswapV1Data(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerUniswap(register: any) {
+export default function registerUniswap(register: RegisterFunction) {
   const query = (adapter: (date: string) => Promise<number>) => (
     attribute: string,
     date: string
@@ -100,6 +101,7 @@ export default function registerUniswap(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'uniswap',
+    protocolLaunch: '2020-11-02',
   });
 
   register('uniswap-v2', query(getUniswapV2Data), {

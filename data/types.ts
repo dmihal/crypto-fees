@@ -13,7 +13,7 @@ export interface Metadata {
   adapter: string;
   tokenTicker?: string;
   tokenCoingecko?: string;
-  protocolLaunch?: string;
+  protocolLaunch: string;
   tokenLaunch?: string;
   legacy?: boolean;
 }
@@ -26,3 +26,7 @@ export interface ProtocolData extends Metadata {
   sevenDayMA: number;
   oneDay: number;
 }
+
+export type QueryFunction = (attribute: string, date: string) => Promise<number>;
+
+export type RegisterFunction = (name: string, fn: QueryFunction, metadata: Metadata) => void;

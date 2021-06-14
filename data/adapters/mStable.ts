@@ -2,6 +2,7 @@ import { offsetDaysFormatted } from '../lib/time';
 import { getBlockNumber } from '../lib/chain';
 import { getHistoricalPrice } from '../lib/pricedata';
 import { query } from '../lib/graph';
+import { RegisterFunction } from '../types';
 
 interface MassetData {
   token: {
@@ -76,7 +77,7 @@ function mStableQuery(attribute: string, date: string) {
   return getMstableData(date);
 }
 
-export default function registerMstable(register: any) {
+export default function registerMstable(register: RegisterFunction) {
   register('mstable', mStableQuery, {
     name: 'mStable',
     category: 'dex',

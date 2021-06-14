@@ -1,3 +1,5 @@
+import { RegisterFunction } from '../types';
+
 async function get0xData(date: string): Promise<number> {
   const request = await fetch(
     'https://api.0xtracker.com/metrics/network?period=all&granularity=day'
@@ -16,7 +18,7 @@ async function get0xData(date: string): Promise<number> {
   throw new Error(`No 0x data found on ${date}`);
 }
 
-export default function register0x(register: any) {
+export default function register0x(register: RegisterFunction) {
   const zeroxQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Tornado Cash doesn't support ${attribute}`);
@@ -25,7 +27,6 @@ export default function register0x(register: any) {
   };
 
   register('zerox', zeroxQuery, {
-    id: 'zerox',
     name: '0x',
     category: 'dex',
     description: '0x is a decentralized exchange protocol.',
@@ -35,5 +36,6 @@ export default function register0x(register: any) {
     adapter: 'zerox',
     tokenTicker: 'ZRX',
     tokenCoingecko: '0x',
+    protocolLaunch: '2017-08-15',
   });
 }

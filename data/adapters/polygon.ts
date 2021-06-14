@@ -2,6 +2,7 @@ import { offsetDaysFormatted } from '../lib/time';
 import { getBlockNumber } from '../lib/chain';
 import { query } from '../lib/graph';
 import { getHistoricalPrice } from '../lib/pricedata';
+import { RegisterFunction } from '../types';
 
 export async function getPolygonData(date: string): Promise<number> {
   const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1), 'polygon');
@@ -38,7 +39,7 @@ function polygonQuery(attribute: string, date: string) {
   return getPolygonData(date);
 }
 
-export default function registerPolygon(register: any) {
+export default function registerPolygon(register: RegisterFunction) {
   register('polygon', polygonQuery, {
     name: 'Polygon',
     category: 'l1',
@@ -50,6 +51,7 @@ export default function registerPolygon(register: any) {
     website: 'https://polygon.technology',
     tokenTicker: 'MATIC',
     tokenCoingecko: 'matic-network',
+    protocolLaunch: '2020-05-30',
     tokenLaunch: '2017-09-09',
   });
 }

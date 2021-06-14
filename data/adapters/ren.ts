@@ -1,6 +1,7 @@
 import { query } from '../lib/graph';
 import { offsetDaysFormatted } from '../lib/time';
 import { getBlockNumber } from '../lib/chain';
+import { RegisterFunction } from '../types';
 
 export async function getRenData(date: string): Promise<number> {
   const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
@@ -59,7 +60,7 @@ export async function getRenData(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerRen(register: any) {
+export default function registerRen(register: RegisterFunction) {
   const renQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Uniswap doesn't support ${attribute}`);
