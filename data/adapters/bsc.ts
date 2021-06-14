@@ -73,5 +73,6 @@ export default function registerBSC(register: any) {
     website: 'https://binance.org',
     tokenTicker: 'BNB',
     tokenCoingecko: 'binancecoin',
+    protocolLaunch: '2020-09-11',
   });
 }
