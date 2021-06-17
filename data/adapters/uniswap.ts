@@ -18,7 +18,7 @@ export async function getUniswapV3Data(date: string): Promise<number> {
   }`;
 
   const data = await query(
-    'ianlapham/uniswap-v3-testing',
+    'ianlapham/uniswap-v3-prod',
     graphQuery,
     {
       date: dateToTimestamp(date),
