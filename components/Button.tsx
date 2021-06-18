@@ -5,12 +5,13 @@ interface ButtonProps {
   children: any;
   href?: string;
   Icon?: React.ComponentType<any>;
+  target?: string;
 }
 
-const Button = forwardRef<any, ButtonProps>(({ children, onClick, href, Icon }, ref) => {
+const Button = forwardRef<any, ButtonProps>(({ children, onClick, href, target, Icon }, ref) => {
   const Element = href ? 'a' : 'button';
   return (
-    <Element className="button" onClick={onClick} ref={ref} href={href}>
+    <Element className="button" onClick={onClick} ref={ref} href={href} target={target}>
       {Icon && <Icon size={18} className="icon" />}
 
       {children}
@@ -37,6 +38,12 @@ const Button = forwardRef<any, ButtonProps>(({ children, onClick, href, Icon }, 
         }
         .button :global(.icon) {
           margin-right: 2px;
+        }
+
+        @media (max-width: 700px) {
+          .button {
+            padding: 3px 6px 2px;
+          }
         }
       `}</style>
     </Element>

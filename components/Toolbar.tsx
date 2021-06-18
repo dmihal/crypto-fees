@@ -4,6 +4,7 @@ import subDays from 'date-fns/subDays';
 import { useRouter } from 'next/router';
 import { Filter, Calendar, Share } from 'react-feather';
 import Button from './Button';
+import gtc from 'icons/gtc.svg';
 
 const DateButton = forwardRef<
   HTMLButtonElement,
@@ -40,6 +41,20 @@ const DateButton = forwardRef<
     `}</style>
   </Button>
 ));
+
+const GTCIcon: React.FC = () => (
+  <div className="gtc">
+    <style jsx>{`
+      .gtc {
+        background: url('${gtc}');
+        height: 18px;
+        width: 18px;
+        margin-right: 2px;
+        flex: 0 0 18px;
+      }
+    `}</style>
+  </div>
+);
 
 interface ToolbarProps {
   date?: Date;
@@ -86,6 +101,10 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <div className="toolbar">
+      <Button Icon={GTCIcon} target="gitcoin" href="https://gitcoin.co/grants/1624/cryptofeesinfo">
+        Support us on Gitcoin
+      </Button>
+
       {tags.map((tag: any) => (
         <div key={tag.id} className="label" title={tag.label}>
           <span>{tag.label}</span>
@@ -159,6 +178,12 @@ const Toolbar: React.FC<ToolbarProps> = ({
         }
         .label button:hover {
           background: #dedede;
+        }
+
+        :global(.react-datepicker-wrapper),
+        :global(.react-datepicker__input-container) {
+          display: inline-flex;
+          align-items: stretch;
         }
       `}</style>
     </div>
