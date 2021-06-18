@@ -6,7 +6,7 @@ import registerBSC from './bsc';
 import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
 // import registerCurve from './curve';
-import registerFTM from './ftm';
+import registerFTM from './fantom';
 import registerQuickswap from './quickswap';
 import registerHegic from './hegic';
 import registerHoneyswap from './honeyswap';

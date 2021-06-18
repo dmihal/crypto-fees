@@ -1,4 +1,6 @@
 import { getHistoricalPrice } from '../lib/pricedata';
+import { RegisterFunction } from '../types';
+import icon from 'icons/fantom.svg';
 
 async function getFeeDataFromFTMscan(): Promise<any[]> {
   const response = await fetch('https://ftmscan.com/chart/transactionfee?output=csv');
@@ -60,18 +62,19 @@ function ftmQuery(attribute: string, date: string) {
   return getFTMData(date);
 }
 
-export default function registerFTM(register: any) {
-  register('ftm', ftmQuery, {
+export default function registerFTM(register: RegisterFunction) {
+  register('fantom', ftmQuery, {
     category: 'l1',
     name: 'Fantom',
-    shortName: 'FTM',
-    description: 'Fantom is aBFT EVM-compatible chain',
+    description: 'Fantom is an aBFT EVM-compatible chain',
     feeDescription: 'Transaction fees are paid to validators',
-    blockchain: 'FTM',
+    blockchain: 'Fantom',
     source: 'FTMscan',
-    adapter: 'ftm',
+    adapter: 'fantom',
     website: 'https://fantom.foundation',
     tokenTicker: 'FTM',
     tokenCoingecko: 'fantom',
+    protocolLaunch: '2020-08-29',
+    icon,
   });
 }

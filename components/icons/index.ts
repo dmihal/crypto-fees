@@ -12,7 +12,6 @@ import curve from './curve.png';
 import hegic from './hegic.png';
 import doge from './doge.svg';
 import eth from './eth.svg';
-import ftm from './ftm.svg';
 import honeyswap from './honeyswap.png';
 import kusama from './kusama.svg';
 import ltc from './ltc.svg';
@@ -55,7 +54,6 @@ const icons: { [id: string]: string } = {
   honeyswap,
   doge,
   eth,
-  ftm,
   ren,
   kusama,
   ltc,
