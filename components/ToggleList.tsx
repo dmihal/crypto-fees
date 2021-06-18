@@ -54,6 +54,10 @@ const ToggleList: React.FC<ToggleListProps> = ({ items, selected, onSelectedChan
           font-size: 14px;
           color: #b0b4bf;
           height: 30px;
+
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .item:before {

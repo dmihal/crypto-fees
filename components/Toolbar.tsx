@@ -101,42 +101,50 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
   return (
     <div className="toolbar">
-      <Button Icon={GTCIcon} target="gitcoin" href="https://gitcoin.co/grants/1624/cryptofeesinfo">
-        Support us on Gitcoin
-      </Button>
+      <div className="tags">
+        {tags.map((tag: any) => (
+          <div key={tag.id} className="label" title={tag.label}>
+            <span>{tag.label}</span>
+            <button onClick={() => onTagRemoved(tag.id)}>×</button>
+          </div>
+        ))}
+      </div>
 
-      {tags.map((tag: any) => (
-        <div key={tag.id} className="label" title={tag.label}>
-          <span>{tag.label}</span>
-          <button onClick={() => onTagRemoved(tag.id)}>×</button>
-        </div>
-      ))}
+      <div className="buttons">
+        <Button
+          Icon={GTCIcon}
+          target="gitcoin"
+          href="https://gitcoin.co/grants/1624/cryptofeesinfo"
+        >
+          Support us on Gitcoin
+        </Button>
 
-      <Button onClick={onShare} Icon={Share}>
-        Share
-      </Button>
+        <Button onClick={onShare} Icon={Share}>
+          Share
+        </Button>
 
-      <Button onClick={onFilterToggle} Icon={Filter}>
-        Filters
-        {numFilters > 0 && <span className="chip">{numFilters}</span>}
-      </Button>
+        <Button onClick={onFilterToggle} Icon={Filter}>
+          Filters
+          {numFilters > 0 && <span className="chip">{numFilters}</span>}
+        </Button>
 
-      {onDateChange && (
-        <DatePicker
-          selected={date}
-          customInput={<DateButton loading={loading && changed} />}
-          onChange={(newDate: Date) => {
-            setChanged(true);
-            const pad = (num: number) => (num < 10 ? `0${num}` : num.toString());
-            const formattedDate = `${newDate.getFullYear()}-${pad(newDate.getMonth() + 1)}-${pad(
-              newDate.getDate()
-            )}`;
-            onDateChange(formattedDate);
-          }}
-          maxDate={subDays(new Date(), 1)}
-          popperPlacement="bottom-end"
-        />
-      )}
+        {onDateChange && (
+          <DatePicker
+            selected={date}
+            customInput={<DateButton loading={loading && changed} />}
+            onChange={(newDate: Date) => {
+              setChanged(true);
+              const pad = (num: number) => (num < 10 ? `0${num}` : num.toString());
+              const formattedDate = `${newDate.getFullYear()}-${pad(newDate.getMonth() + 1)}-${pad(
+                newDate.getDate()
+              )}`;
+              onDateChange(formattedDate);
+            }}
+            maxDate={subDays(new Date(), 1)}
+            popperPlacement="bottom-end"
+          />
+        )}
+      </div>
 
       <style jsx>{`
         .toolbar {
@@ -144,8 +152,18 @@ const Toolbar: React.FC<ToolbarProps> = ({
           justify-content: flex-end;
           align-self: stretch;
         }
-        .toolbar > :global(*) {
+        .buttons > :global(*),
+        .tags > :global(*) {
           margin-left: 4px;
+        }
+        .tags {
+          display: flex;
+          justify-content: flex-end;
+        }
+        .buttons {
+          display: flex;
+          justify-content: flex-end;
+          align-self: stretch;
         }
         .chip {
           background: #828282;
@@ -184,6 +202,15 @@ const Toolbar: React.FC<ToolbarProps> = ({
         :global(.react-datepicker__input-container) {
           display: inline-flex;
           align-items: stretch;
+        }
+
+        @media (max-width: 700px) {
+          .toolbar {
+            flex-direction: column-reverse;
+          }
+          .tags {
+            margin-top: 4px;
+          }
         }
       `}</style>
     </div>
