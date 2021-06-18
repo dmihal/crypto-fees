@@ -19,6 +19,7 @@ export const allChains: Item[] = [
   { name: 'Ethereum', id: 'Ethereum' },
   { name: 'xDai', id: 'xDai' },
   { name: 'Polygon', id: 'Polygon' },
+  { name: 'Fantom', id: 'Fantom' },
   { name: 'Other', id: 'other' },
 ];
 

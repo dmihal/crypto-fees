@@ -1,40 +1,71 @@
 import { dateToTimestamp } from '../lib/time';
 import { query } from '../lib/graph';
+import { RegisterFunction, Category } from '../types';
+import icon from 'icons/sushi.svg';
 
-export async function getSushiswapData(date: string): Promise<number> {
-  const graphQuery = `query fees {
-    uniswapDayDatas(where:{date: ${dateToTimestamp(date)}}) {
-      date
-      dailyVolumeUSD
+async function getSushiswapData(subgraph: string, date: string): Promise<number> {
+  const graphQuery = `query fees($date: Int!) {
+    dayDatas(where: { date: $date }) {
+      volumeUSD
     }
   }`;
 
-  const data = await query('zippoxer/sushiswap-subgraph-fork', graphQuery, {}, 'fees');
+  const data = await query(
+    subgraph,
+    graphQuery,
+    {
+      date: dateToTimestamp(date),
+    },
+    'fees'
+  );
 
-  const oneDay = parseFloat(data.uniswapDayDatas[0].dailyVolumeUSD) * 0.003;
+  if (data.dayDatas.length === 0) {
+    throw new Error(`No Sushi data found on ${date} form ${subgraph}`);
+  }
+
+  const oneDay = parseFloat(data.dayDatas[0].volumeUSD) * 0.003;
 
   return oneDay;
 }
 
-export default function registerSushiswap(register: any) {
-  const sushiQuery = (attribute: string, date: string) => {
+export default function registerSushiswap(register: RegisterFunction) {
+  const createQueryFn = (subgraph: string) => (attribute: string, date: string) => {
     if (attribute !== 'fee') {
-      throw new Error(`Uniswap doesn't support ${attribute}`);
+      throw new Error(`SushiSwap doesn't support ${attribute}`);
     }
-    return getSushiswapData(date);
+    return getSushiswapData(subgraph, date);
   };
 
-  register('sushiswap', sushiQuery, {
-    name: 'SushiSwap',
-    category: 'dex',
+  const metadata = {
+    category: 'dex' as Category,
     description: 'SushiSwap is a community-owned permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers and SUSHI stakers',
-    blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'sushi',
     tokenTicker: 'SUSHI',
     tokenCoingecko: 'sushi',
-    protocolLaunch: '2020-09-09',
     website: 'https://sushi.com',
+    icon,
+  };
+
+  register('sushiswap', createQueryFn('sushiswap/exchange'), {
+    ...metadata,
+    name: 'SushiSwap',
+    blockchain: 'Ethereum',
+    protocolLaunch: '2020-09-09',
+  });
+
+  register('sushiswap-polygon', createQueryFn('sushiswap/matic-exchange'), {
+    ...metadata,
+    name: 'SushiSwap (Polygon)',
+    blockchain: 'Polygon',
+    protocolLaunch: '2021-02-26',
+  });
+
+  register('sushiswap-fantom', createQueryFn('sushiswap/fantom-exchange'), {
+    ...metadata,
+    name: 'SushiSwap (Fantom)',
+    blockchain: 'Fantom',
+    protocolLaunch: '2021-02-26',
   });
 }

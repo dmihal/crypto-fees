@@ -36,6 +36,9 @@ const adapters: { [id: string]: Adapter } = {};
 const ids: string[] = [];
 
 const register = (id: string, query: any, metadata: any) => {
+  if (adapters[id]) {
+    throw new Error(`Adapter ${id} already registered`);
+  }
   ids.push(id);
   adapters[id] = { query, metadata };
 };
