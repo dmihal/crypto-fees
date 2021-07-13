@@ -1,4 +1,4 @@
-export type Category = 'l1' | 'dex' | 'lending' | 'xchain' | 'other';
+export type Category = 'l1' | 'l2' | 'dex' | 'lending' | 'xchain' | 'other';
 
 export interface Metadata {
   name?: string;

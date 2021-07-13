@@ -66,6 +66,27 @@ const blockNumLoaders: { [id: string]: (date: string) => Promise<number> } = {
 
     return parseInt(res.blocks[0].number);
   },
+
+  async optimism(date: string) {
+    const time = Math.floor(new Date(date).getTime() / 1000);
+    const res = await query(
+      'dmihal/optimism-fees',
+      `query blocks($timestamp: String!) {
+        block: dateToBlock(id: $timestamp) {
+          blockNum
+        }
+      }`,
+      {
+        timestamp: time.toString(),
+      }
+    );
+
+    if (!res.block) {
+      throw new Error(`Could not find Optimism block on ${date}`);
+    }
+
+    return parseInt(res.block.blockNum);
+  },
 };
 
 export function getBlockNumber(date: string, chain = 'ethereum'): Promise<number> {

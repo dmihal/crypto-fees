@@ -9,6 +9,7 @@ interface Category {
 
 export const allCategories: Item[] = [
   { name: 'Layer 1', id: 'l1' },
+  { name: 'Layer 2', id: 'l2' },
   { name: 'Decentralized Exchange', id: 'dex' },
   { name: 'Lending', id: 'lending' },
   { name: 'Cross-Chain', id: 'xchain' },
