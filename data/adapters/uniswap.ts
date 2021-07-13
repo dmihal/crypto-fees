@@ -1,6 +1,8 @@
 import { dateToTimestamp } from '../lib/time';
 import { query } from '../lib/graph';
 import { RegisterFunction } from '../types';
+import icon from 'icons/uniswap.svg';
+import iconV1 from 'icons/uniswap-v1.png';
 
 const blacklistAddresses = [
   '0x7d7e813082ef6c143277c71786e5be626ec77b20',
@@ -10,7 +12,7 @@ const blacklistAddresses = [
   '0x382a9a8927f97f7489af3f0c202b23ed1eb772b5',
 ];
 
-export async function getUniswapV3Data(date: string): Promise<number> {
+const uniV3Adapter = (subgraph: string) => async (date: string): Promise<number> => {
   const graphQuery = `query fees($date: Int!) {
     uniswapDayDatas(where: {date: $date}) {
       feesUSD
@@ -18,7 +20,7 @@ export async function getUniswapV3Data(date: string): Promise<number> {
   }`;
 
   const data = await query(
-    'ianlapham/uniswap-v3-prod',
+    subgraph,
     graphQuery,
     {
       date: dateToTimestamp(date),
@@ -26,8 +28,13 @@ export async function getUniswapV3Data(date: string): Promise<number> {
     'fees'
   );
 
+  // Temporary, for while Optimism doesn't have 7 days of data
+  if (data.uniswapDayDatas.length == 0) {
+    return 0;
+  }
+
   return parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].feesUSD);
-}
+};
 
 export async function getUniswapV2Data(date: string): Promise<number> {
   const graphQuery = `query fees($date: Int!, $blacklistAddresses: [Bytes!]!) {
@@ -93,6 +100,7 @@ export default function registerUniswap(register: RegisterFunction) {
   };
 
   register('uniswap-v1', query(getUniswapV1Data), {
+    icon: iconV1,
     name: 'Uniswap V1',
     category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
@@ -105,6 +113,7 @@ export default function registerUniswap(register: RegisterFunction) {
   });
 
   register('uniswap-v2', query(getUniswapV2Data), {
+    icon,
     name: 'Uniswap V2',
     category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
@@ -119,7 +128,8 @@ export default function registerUniswap(register: RegisterFunction) {
     tokenLaunch: '2020-09-14',
   });
 
-  register('uniswap-v3', query(getUniswapV3Data), {
+  register('uniswap-v3', query(uniV3Adapter('ianlapham/uniswap-v3-prod')), {
+    icon,
     name: 'Uniswap V3',
     category: 'dex',
     description: 'Uniswap is a permissionless, decentralized exchange',
@@ -131,6 +141,22 @@ export default function registerUniswap(register: RegisterFunction) {
     tokenTicker: 'UNI',
     tokenCoingecko: 'uniswap',
     protocolLaunch: '2021-05-05',
+    tokenLaunch: '2020-09-14',
+  });
+
+  register('uniswap-optimism', query(uniV3Adapter('ianlapham/uniswap-optimism')), {
+    icon,
+    name: 'Uniswap V3 (Optimism)',
+    category: 'dex',
+    description: 'Uniswap is a permissionless, decentralized exchange',
+    feeDescription: 'Trading fees are paid by traders to liquidity providers',
+    website: 'https://uniswap.org',
+    blockchain: 'Optimism',
+    source: 'The Graph Protocol',
+    adapter: 'uniswap',
+    tokenTicker: 'UNI',
+    tokenCoingecko: 'uniswap',
+    protocolLaunch: '2021-07-09',
     tokenLaunch: '2020-09-14',
   });
 }
