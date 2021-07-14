@@ -18,6 +18,7 @@ export const allCategories: Item[] = [
 
 export const allChains: Item[] = [
   { name: 'Ethereum', id: 'Ethereum' },
+  { name: 'Optimism', id: 'Optimism' },
   { name: 'xDai', id: 'xDai' },
   { name: 'Polygon', id: 'Polygon' },
   { name: 'Fantom', id: 'Fantom' },
@@ -35,6 +36,8 @@ interface FilterCardProps {
   filters: Filters;
   onFilterChange: (filters: Filters) => void;
 }
+
+const height = 220;
 
 const FilterCard: React.FC<FilterCardProps> = ({ open, /*onClose,*/ filters, onFilterChange }) => {
   return (
@@ -70,13 +73,13 @@ const FilterCard: React.FC<FilterCardProps> = ({ open, /*onClose,*/ filters, onF
           }
 
           to {
-            height: 200px;
+            height: ${height}px;
           }
         }
 
         @keyframes filter-slideout {
           from {
-            height: 200px;
+            height: ${height}px;
           }
 
           to {
@@ -96,7 +99,7 @@ const FilterCard: React.FC<FilterCardProps> = ({ open, /*onClose,*/ filters, onF
         }
 
         .filers-card {
-          height: 200px;
+          height: ${height}px;
           animation: 0.5s 1 filter-slidein;
           overflow: hidden;
           display: flex;

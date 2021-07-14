@@ -50,6 +50,8 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
 
   const icon = protocol.icon || icons[protocol.id];
 
+  const isApp = protocol.category !== 'l1' && protocol.category !== 'l2';
+
   return (
     <Fragment>
       <a
@@ -63,7 +65,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
             label: protocol.name,
           });
         }}
-        className={`item ${protocol.category !== 'l1' ? 'app' : ''} ${open ? 'open' : ''}`}
+        className={`item ${isApp ? 'app' : ''} ${open ? 'open' : ''}`}
         style={{
           backgroundImage: icon ? `url('${icon}')` : undefined,
         }}
