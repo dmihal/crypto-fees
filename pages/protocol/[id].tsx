@@ -14,7 +14,7 @@ import SocialTags from 'components/SocialTags';
 import { getIDs, getMetadata } from 'data/adapters';
 import { getDateRangeData, getMarketData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
-import icons from 'components/icons';
+import _icons from 'components/icons';
 
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
@@ -162,6 +162,7 @@ interface ProtocolDetailsProps {
   metadata: any;
   feeCache: any;
   protocols: { [id: string]: string };
+  icons: { [id: string]: string };
   marketData: { marketCap?: number; price?: number; psRatio?: number };
 }
 
@@ -176,6 +177,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   feeCache,
   protocols,
   marketData,
+  icons,
 }) => {
   const router = useRouter();
   const [dateRange, setDateRange] = useState({
@@ -209,7 +211,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
     }
   }, [router.query]);
 
-  const icon = metadata.icon || icons[id];
+  const icon = icons[id];
 
   return (
     <main>
@@ -244,6 +246,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         protocols={otherProtocols}
         secondary={secondary}
         onSecondaryChange={setSecondary}
+        protocolIcons={icons}
       />
 
       <div className="chart-container">
@@ -376,8 +379,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const ids = getIDs().sort();
   const protocols: { [id: string]: string } = {};
+  const icons: { [id: string]: string } = {};
   for (const id of ids) {
-    protocols[id] = getMetadata(id).name;
+    const metadata = getMetadata(id);
+    protocols[id] = metadata.name;
+    icons[id] = metadata.icon || _icons[id];
   }
 
   const sevenDayMA =
@@ -392,6 +398,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         [id]: defaultFees,
       },
       protocols,
+      icons,
       marketData,
     },
     revalidate: 60,

@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactSelect from 'react-select';
-import icons from './icons';
 
 const controlStyles = {
   fontSize: 14,
@@ -16,13 +15,13 @@ const controlStyles = {
   },
 };
 
-const itemStyles = (protocol?: boolean) => {
+const itemStyles = (icons?: { [id: string]: string }) => {
   const sharedStyles = {
     fontSize: 14,
     display: 'flex',
   };
 
-  if (protocol) {
+  if (icons) {
     return (styles: any, { data }: any) => ({
       ...styles,
       ...sharedStyles,
@@ -50,9 +49,9 @@ interface SelectProps {
   value?: any;
   onChange: (value: any) => void;
   placeholder?: string;
-  protocol?: boolean;
   searchable?: boolean;
   width: number;
+  icons?: { [id: string]: string };
 }
 
 const Select: React.FC<SelectProps> = ({
@@ -60,9 +59,9 @@ const Select: React.FC<SelectProps> = ({
   value,
   onChange,
   placeholder,
-  protocol,
   searchable,
   width,
+  icons,
 }) => {
   const [selected] = options.filter((option: any) => option.value === value);
   return (
@@ -86,8 +85,8 @@ const Select: React.FC<SelectProps> = ({
           ...provided,
           margin: '0 2px',
         }),
-        singleValue: itemStyles(protocol),
-        option: itemStyles(protocol),
+        singleValue: itemStyles(icons),
+        option: itemStyles(icons),
       }}
     />
   );
