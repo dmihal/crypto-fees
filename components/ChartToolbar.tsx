@@ -9,6 +9,7 @@ interface ChartToolbarProps {
   smoothing: number;
   onSmoothingChange: (smoothing: number) => void;
   protocols: { [id: string]: string };
+  protocolIcons: { [id: string]: string };
   secondary: string | null;
   onSecondaryChange: (val: string | null) => void;
 }
@@ -26,9 +27,14 @@ const ChartToolbar: React.FC<ChartToolbarProps> = ({
   smoothing,
   onSmoothingChange,
   protocols,
+  protocolIcons,
   secondary,
   onSecondaryChange,
 }) => {
+  const protocolList = Object.entries(protocols)
+    .sort((a: string[], b: string[]) => a[1].localeCompare(b[1]))
+    .map(([value, label]: string[]) => ({ value, label }));
+
   return (
     <div className="toolbar">
       <RangeSelector value={range} onChange={onRangeChange} maxDate={maxDate} />
@@ -40,13 +46,13 @@ const ChartToolbar: React.FC<ChartToolbarProps> = ({
         width={120}
       />
       <Select
-        options={Object.entries(protocols).map(([value, label]: string[]) => ({ value, label }))}
+        options={protocolList}
         value={secondary}
         onChange={(val: string) => onSecondaryChange(val)}
         placeholder="Compare"
         searchable
         width={150}
-        protocol
+        icons={protocolIcons}
       />
 
       <style jsx>{`
