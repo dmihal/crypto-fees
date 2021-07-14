@@ -1,7 +1,5 @@
-import { encode } from 'base-64';
 import { getValue as getDBValue, setValue as setDBValue } from '../db';
 import { query } from './graph';
-import { offsetDaysFormatted } from './time';
 
 const memoryCache: { [key: string]: Promise<number> } = {};
 
@@ -10,61 +8,43 @@ const setCache = (chain: string, date: string, promise: Promise<number>) => {
   memoryCache[`${chain}-${date}`] = promise;
 };
 
+const blockSubgraphQuery = async (subgraph: string, date: string) => {
+  const time = Math.floor(new Date(date).getTime() / 1000);
+  const res = await query(
+    subgraph,
+    `query blocks($timestampFrom: Int!, $timestampTo: Int!) {
+      blocks(
+        first: 1
+        orderBy: timestamp
+        orderDirection: asc
+        where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
+      ) {
+        number
+      }
+    }`,
+    {
+      timestampFrom: time,
+      timestampTo: time + 60 * 60, // 1 hour window
+    }
+  );
+
+  return parseInt(res.blocks[0].number);
+};
+
 const blockNumLoaders: { [id: string]: (date: string) => Promise<number> } = {
   async ethereum(date: string) {
-    const time = Math.floor(new Date(date).getTime() / 1000);
-    const req = await fetch(
-      `https://api.etherscan.io/api?module=block&action=getblocknobytime&timestamp=${time}&closest=before&apikey=${process.env.NEXT_APP_ETHERSCAN_API_KEY}`
-    );
-    const data = await req.json();
-    if (data.status === '0') {
-      throw new Error(`Etherscan: ${data.message} ${data.result}`);
-    }
-    return parseInt(data.result);
+    const block = await blockSubgraphQuery('blocklytics/ethereum-blocks', date);
+    return block;
   },
 
   async polygon(date: string) {
-    if (!process.env.COVALENT_KEY) {
-      throw new Error('Env var COVALENT_KEY not set');
-    }
-
-    const req = await fetch(
-      `https://api.covalenthq.com/v1/137/block_v2/${date}/${offsetDaysFormatted(date, 1)}/`,
-      {
-        headers: {
-          Authorization: 'Basic ' + encode(`${process.env.COVALENT_KEY}:`),
-        },
-      }
-    );
-    const { data, error } = await req.json();
-    if (error) {
-      throw new Error(`Error fetching polygon block on ${date}`);
-    }
-    return data.items[0].height;
+    const block = await blockSubgraphQuery('elkfinance/matic-blocks', date);
+    return block;
   },
 
   async avalanche(date: string) {
-    const time = Math.floor(new Date(date).getTime() / 1000);
-    const res = await query(
-      'dasconnor/avalanche-blocks',
-      `query blocks($timestampFrom: Int!, $timestampTo: Int!) {
-        blocks(
-          first: 1
-          orderBy: timestamp
-          orderDirection: asc
-          where: { timestamp_gt: $timestampFrom, timestamp_lt: $timestampTo }
-        ) {
-          number
-          timestamp
-        }
-      }`,
-      {
-        timestampFrom: time,
-        timestampTo: time + 60 * 60 * 24 * 7,
-      }
-    );
-
-    return parseInt(res.blocks[0].number);
+    const block = await blockSubgraphQuery('dasconnor/avalanche-blocks', date);
+    return block;
   },
 
   async optimism(date: string) {
