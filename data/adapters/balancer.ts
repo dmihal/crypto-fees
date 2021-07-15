@@ -4,9 +4,13 @@ import { getBlockNumber } from '../lib/chain';
 import { Category, RegisterFunction } from 'data/types';
 import icon from 'icons/balancer.svg';
 
-async function getBalancerData(date: string, subgraphName: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
-  const yesterdayBlock = await getBlockNumber(date);
+async function getBalancerData(
+  date: string,
+  subgraphName: string,
+  chain = 'ethereum'
+): Promise<number> {
+  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1), chain);
+  const yesterdayBlock = await getBlockNumber(date, chain);
 
   const data = await query(
     `balancer-labs/${subgraphName}`,
@@ -42,7 +46,7 @@ export default function registerBalancer(register: RegisterFunction) {
     if (attribute !== 'fee') {
       throw new Error(`Balancer doesn't support ${attribute}`);
     }
-    return getBalancerData(date, 'balancer-polygon-v2');
+    return getBalancerData(date, 'balancer-polygon-v2', 'polygon');
   };
 
   const metadata = {
