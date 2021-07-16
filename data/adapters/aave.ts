@@ -1,13 +1,9 @@
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 import { getYesterdayDate } from '../lib/time';
 
-const fetcher = async (input: RequestInfo, init?: RequestInit) => {
-  const res = await fetch(input, init);
-  if (res.status !== 200) throw new Error('aave did return an error');
-  return res.json();
-};
-
-async function getAaveData(): Promise<number> {
-  const response = await fetcher('https://aave-api-v2.aave.com/data/fees-utc');
+async function getAaveData(sdk: CryptoStatsSDK): Promise<number> {
+  const response = await sdk.http.get('https://aave-api-v2.aave.com/data/fees-utc');
 
   if (response.error) {
     throw new Error(response.error);
@@ -16,7 +12,7 @@ async function getAaveData(): Promise<number> {
   return parseFloat(response?.lastDayUTCFees);
 }
 
-export default function registerAave(register: any) {
+export default function registerAave(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const aaveQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Aave doesn't support ${attribute}`);
@@ -25,11 +21,10 @@ export default function registerAave(register: any) {
       // Legacy adapter, only "today" supported
       return null;
     }
-    return getAaveData();
+    return getAaveData(sdk);
   };
 
   register('aave', aaveQuery, {
-    id: 'aave',
     name: 'Aave',
     category: 'lending',
     description: 'Aave is an open borrowing & lending protocol.',

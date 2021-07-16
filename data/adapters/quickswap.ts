@@ -1,7 +1,7 @@
-import { dateToTimestamp } from '../lib/time';
-import { query } from '../lib/graph';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-export async function getQuickswapData(date: string): Promise<number> {
+export async function getQuickswapData(date: string, sdk: CryptoStatsSDK): Promise<number> {
   const graphQuery = `query fees($date: Int!) {
     uniswapDayDatas(where: {date: $date}) {
       date
@@ -9,11 +9,11 @@ export async function getQuickswapData(date: string): Promise<number> {
     }
   }`;
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'sameepsi/quickswap06',
     graphQuery,
     {
-      date: dateToTimestamp(date),
+      date: sdk.date.dateToTimestamp(date),
     },
     'fees'
   );
@@ -26,12 +26,12 @@ export async function getQuickswapData(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerUniswap(register: any) {
+export default function registerUniswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const query = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Quickswap doesn't support ${attribute}`);
     }
-    return getQuickswapData(date);
+    return getQuickswapData(date, sdk);
   };
 
   register('quickswap', query, {

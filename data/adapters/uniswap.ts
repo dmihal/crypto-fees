@@ -1,5 +1,4 @@
-import { dateToTimestamp } from '../lib/time';
-import { query } from '../lib/graph';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
 import { RegisterFunction } from '../types';
 import icon from 'icons/uniswap.svg';
 import iconV1 from 'icons/uniswap-v1.png';
@@ -12,18 +11,20 @@ const blacklistAddresses = [
   '0x382a9a8927f97f7489af3f0c202b23ed1eb772b5',
 ];
 
-const uniV3Adapter = (subgraph: string) => async (date: string): Promise<number> => {
+const uniV3Adapter = (subgraph: string, sdk: CryptoStatsSDK) => async (
+  date: string
+): Promise<number> => {
   const graphQuery = `query fees($date: Int!) {
     uniswapDayDatas(where: {date: $date}) {
       feesUSD
     }
   }`;
 
-  const data = await query(
+  const data = await sdk.graph.query(
     subgraph,
     graphQuery,
     {
-      date: dateToTimestamp(date),
+      date: sdk.date.dateToTimestamp(date),
     },
     'fees'
   );
@@ -36,7 +37,7 @@ const uniV3Adapter = (subgraph: string) => async (date: string): Promise<number>
   return parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].feesUSD);
 };
 
-export async function getUniswapV2Data(date: string): Promise<number> {
+const getUniswapV2Adapter = (sdk: CryptoStatsSDK) => async (date: string): Promise<number> => {
   const graphQuery = `query fees($date: Int!, $blacklistAddresses: [Bytes!]!) {
     uniswapDayDatas(where: {date: $date}) {
       date
@@ -48,11 +49,11 @@ export async function getUniswapV2Data(date: string): Promise<number> {
     }
   }`;
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'uniswap/uniswap-v2',
     graphQuery,
     {
-      date: dateToTimestamp(date),
+      date: sdk.date.dateToTimestamp(date),
       blacklistAddresses,
     },
     'fees'
@@ -70,25 +71,25 @@ export async function getUniswapV2Data(date: string): Promise<number> {
   const oneDay = oneDayVolume * 0.003;
 
   return oneDay;
-}
+};
 
-export async function getUniswapV1Data(date: string): Promise<number> {
+const getUniswapV1Adapter = (sdk: CryptoStatsSDK) => async (date: string): Promise<number> => {
   const graphQuery = `query fees {
-    uniswapDayDatas(where:{date: ${dateToTimestamp(date)}}) {
+    uniswapDayDatas(where:{date: ${sdk.date.dateToTimestamp(date)}}) {
       date
       dailyVolumeInUSD
     }
   }`;
 
-  const data = await query('graphprotocol/uniswap', graphQuery, {}, 'fees');
+  const data = await sdk.graph.query('graphprotocol/uniswap', graphQuery, {}, 'fees');
 
   const oneDay =
     parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].dailyVolumeInUSD) * 0.003;
 
   return oneDay;
-}
+};
 
-export default function registerUniswap(register: RegisterFunction) {
+export default function registerUniswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const query = (adapter: (date: string) => Promise<number>) => (
     attribute: string,
     date: string
@@ -99,7 +100,7 @@ export default function registerUniswap(register: RegisterFunction) {
     return adapter(date);
   };
 
-  register('uniswap-v1', query(getUniswapV1Data), {
+  register('uniswap-v1', query(getUniswapV1Adapter(sdk)), {
     icon: iconV1,
     name: 'Uniswap V1',
     category: 'dex',
@@ -112,7 +113,7 @@ export default function registerUniswap(register: RegisterFunction) {
     protocolLaunch: '2020-11-02',
   });
 
-  register('uniswap-v2', query(getUniswapV2Data), {
+  register('uniswap-v2', query(getUniswapV2Adapter(sdk)), {
     icon,
     name: 'Uniswap V2',
     category: 'dex',
@@ -128,7 +129,7 @@ export default function registerUniswap(register: RegisterFunction) {
     tokenLaunch: '2020-09-14',
   });
 
-  register('uniswap-v3', query(uniV3Adapter('ianlapham/uniswap-v3-prod')), {
+  register('uniswap-v3', query(uniV3Adapter('ianlapham/uniswap-v3-prod', sdk)), {
     icon,
     name: 'Uniswap V3',
     category: 'dex',
@@ -144,7 +145,7 @@ export default function registerUniswap(register: RegisterFunction) {
     tokenLaunch: '2020-09-14',
   });
 
-  register('uniswap-optimism', query(uniV3Adapter('ianlapham/uniswap-optimism')), {
+  register('uniswap-optimism', query(uniV3Adapter('ianlapham/uniswap-optimism', sdk)), {
     icon,
     name: 'Uniswap V3 (Optimism)',
     category: 'dex',

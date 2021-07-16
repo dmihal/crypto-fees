@@ -1,9 +1,8 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-async function getMakerFees(date: string) {
-  const data = await query(
+async function getMakerFees(date: string, sdk: CryptoStatsSDK) {
+  const data = await sdk.graph.query(
     'protofire/maker-protocol',
     `query fees($today: Int!, $yesterday: Int!){
       today: collateralTypes(block: {number: $today}) {
@@ -18,8 +17,8 @@ async function getMakerFees(date: string) {
       }
     }`,
     {
-      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
-      yesterday: await getBlockNumber(date),
+      today: await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1)),
+      yesterday: await sdk.chainData.getBlockNumber(date),
     },
     'fees'
   );
@@ -40,15 +39,15 @@ async function getMakerFees(date: string) {
   return totalFees;
 }
 
-function makerQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`Maker doesn't support ${attribute}`);
+export default function registerSynthetix(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function makerQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`Maker doesn't support ${attribute}`);
+    }
+
+    return getMakerFees(date, sdk);
   }
 
-  return getMakerFees(date);
-}
-
-export default function registerSynthetix(register: any) {
   register('maker', makerQuery, {
     category: 'lending',
     name: 'MakerDAO',
@@ -57,6 +56,7 @@ export default function registerSynthetix(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'maker',
+    protocolLaunch: '2019-11-18',
     tokenTicker: 'MKR',
     tokenCoingecko: 'maker',
   });

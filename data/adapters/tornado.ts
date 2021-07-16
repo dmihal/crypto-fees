@@ -1,8 +1,7 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-export async function getTornadoData(date: string): Promise<number> {
+export async function getTornadoData(date: string, sdk: CryptoStatsSDK): Promise<number> {
   const graphQuery = `query fees($today: Int!, $yesterday: Int!){
     now: tornado(id: "1", block: {number: $today}) {
       totalFeesUSD
@@ -11,12 +10,12 @@ export async function getTornadoData(date: string): Promise<number> {
       totalFeesUSD
     }
   }`;
-  const data = await query(
+  const data = await sdk.graph.query(
     'dmihal/tornado-cash',
     graphQuery,
     {
-      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
-      yesterday: await getBlockNumber(date),
+      today: await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1)),
+      yesterday: await sdk.chainData.getBlockNumber(date),
     },
     'fees'
   );
@@ -24,12 +23,12 @@ export async function getTornadoData(date: string): Promise<number> {
   return parseFloat(data.now.totalFeesUSD) - parseFloat(data.yesterday.totalFeesUSD);
 }
 
-export default function registerSushiswap(register: any) {
+export default function registerSushiswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const tornadoQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Tornado Cash doesn't support ${attribute}`);
     }
-    return getTornadoData(date);
+    return getTornadoData(date, sdk);
   };
 
   register('tornado', tornadoQuery, {
@@ -40,6 +39,7 @@ export default function registerSushiswap(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'tornado',
+    protocolLaunch: '2019-12-16',
     tokenTicker: 'TORN',
     tokenCoingecko: 'tornado-cash',
     tokenLaunch: '2021-02-09',

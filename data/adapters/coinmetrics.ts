@@ -1,4 +1,5 @@
-import { cacheMarketData } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
 const l1s = [
   {
@@ -136,11 +137,15 @@ const l1s = [
   // },
 ];
 
-async function getCoinMetricsData(id: string, date: string, coinGecko?: string): Promise<number> {
-  const request = await fetch(
+async function getCoinMetricsData(
+  id: string,
+  date: string,
+  sdk: CryptoStatsSDK,
+  coinGecko?: string
+): Promise<number> {
+  const { metricData } = await sdk.http.get(
     `https://community-api.coinmetrics.io/v2/assets/${id}/metricdata?metrics=FeeTotUSD,PriceUSD,CapMrktCurUSD&start=${date}&end=${date}`
   );
-  const { metricData } = await request.json();
 
   if (!metricData.series[0]) {
     throw new Error(`Failed to fetch CoinMetrics data for ${id} on ${date}`);
@@ -149,19 +154,19 @@ async function getCoinMetricsData(id: string, date: string, coinGecko?: string):
   if (coinGecko) {
     const price = parseFloat(metricData.series[0].values[1]);
     const marketCap = parseFloat(metricData.series[0].values[2]);
-    await cacheMarketData(coinGecko, date, price, marketCap);
+    await sdk.coinGecko.cacheMarketData(coinGecko, date, price, marketCap);
   }
 
   return parseFloat(metricData.series[0].values[0]);
 }
 
-export default function registerCoinMetrics(register: any) {
+export default function registerCoinMetrics(register: RegisterFunction, sdk: CryptoStatsSDK) {
   l1s.map(({ id, ...metadata }: any) => {
     const query = (attribute: string, date: string) => {
       if (attribute !== 'fee') {
         throw new Error(`Synthetix doesn't support ${attribute}`);
       }
-      return getCoinMetricsData(id, date, metadata.tokenCoingecko);
+      return getCoinMetricsData(id, date, sdk, metadata.tokenCoingecko);
     };
 
     register(id, query, {

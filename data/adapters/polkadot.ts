@@ -1,24 +1,20 @@
-async function fetchJSON(url: string, data: any) {
-  const request = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  });
-  const json = await request.json();
-  return json;
-}
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-async function getSubstrateData(id: string, date: string, divisor: number): Promise<number> {
+async function getSubstrateData(
+  id: string,
+  date: string,
+  divisor: number,
+  sdk: CryptoStatsSDK
+): Promise<number> {
   const [fees, prices] = await Promise.all([
-    fetchJSON(`https://${id}.subscan.io/api/scan/daily`, {
+    sdk.http.post(`https://${id}.subscan.io/api/scan/daily`, {
       start: date,
       end: date,
       format: 'day',
       category: 'Fee',
     }),
-    fetchJSON(`https://${id}.subscan.io/api/scan/price/history`, {
+    sdk.http.post(`https://${id}.subscan.io/api/scan/price/history`, {
       start: date,
       end: date,
     }),
@@ -31,19 +27,19 @@ async function getSubstrateData(id: string, date: string, divisor: number): Prom
   return (fees.data.list[0].balance_amount_total * prices.data.list[0].price) / divisor;
 }
 
-export default function registerPolkadot(register: any) {
+export default function registerPolkadot(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const polkadotQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Polkadot doesn't support ${attribute}`);
     }
-    return getSubstrateData('polkadot', date, 10 ** 10);
+    return getSubstrateData('polkadot', date, 10 ** 10, sdk);
   };
 
   const kusamaQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Kusama doesn't support ${attribute}`);
     }
-    return getSubstrateData('kusama', date, 10 ** 12);
+    return getSubstrateData('kusama', date, 10 ** 12, sdk);
   };
 
   register('polkadot', polkadotQuery, {

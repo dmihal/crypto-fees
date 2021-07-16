@@ -1,12 +1,11 @@
-import { query } from '../lib/graph';
-import { dateToTimestamp } from '../lib/time';
-import { getHistoricalPrice } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-async function getHegicData(date: string): Promise<number> {
-  const start = dateToTimestamp(date);
+async function getHegicData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const start = sdk.date.dateToTimestamp(date);
   const end = start + 86400;
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'ppunky/hegic-v888',
     `{
     yesterday: 
@@ -36,8 +35,8 @@ async function getHegicData(date: string): Promise<number> {
     }
   }
 
-  const ethPriceYesterday = await getHistoricalPrice('ethereum', date);
-  const wbtcPriceYesterday = await getHistoricalPrice('bitcoin', date);
+  const ethPriceYesterday = await sdk.coinGecko.getHistoricalPrice('ethereum', date);
+  const wbtcPriceYesterday = await sdk.coinGecko.getHistoricalPrice('bitcoin', date);
 
   // calculate total fees in USD over the past 24h hours
   const totalFeesYesterday =
@@ -46,12 +45,12 @@ async function getHegicData(date: string): Promise<number> {
   return totalFeesYesterday;
 }
 
-export default function registerHegic(register: any) {
+export default function registerHegic(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const hegicQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Hegic doesn't support ${attribute}`);
     }
-    return getHegicData(date);
+    return getHegicData(date, sdk);
   };
 
   register('hegic', hegicQuery, {
@@ -63,5 +62,6 @@ export default function registerHegic(register: any) {
     source: 'The Graph Protocol',
     adapter: 'hegic',
     website: 'https://www.hegic.co',
+    protocolLaunch: '2020-10-11',
   });
 }

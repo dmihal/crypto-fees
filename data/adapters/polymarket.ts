@@ -1,12 +1,14 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-export async function getPolymarketData(date: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1), 'polygon');
-  const yesterdayBlock = await getBlockNumber(date, 'polygon');
+export async function getPolymarketData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const todayBlock = await sdk.chainData.getBlockNumber(
+    sdk.date.offsetDaysFormatted(date, 1),
+    'polygon'
+  );
+  const yesterdayBlock = await sdk.chainData.getBlockNumber(date, 'polygon');
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'tokenunion/polymarket-matic',
     `query lpFeesOverPeriod($today: Int!, $yesterday: Int!){
       today: global(id: "", block: {number: $today}){
@@ -28,15 +30,15 @@ export async function getPolymarketData(date: string): Promise<number> {
   );
 }
 
-function polymarketQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`mStable doesn't support ${attribute}`);
+export default function registerPolymarket(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function polymarketQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`mStable doesn't support ${attribute}`);
+    }
+
+    return getPolymarketData(date, sdk);
   }
 
-  return getPolymarketData(date);
-}
-
-export default function registerPolymarket(register: any) {
   register('polymarket', polymarketQuery, {
     name: 'Polymarket',
     category: 'dex',

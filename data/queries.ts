@@ -1,8 +1,8 @@
 import { queryAdapter, getIDs, getMetadata } from './adapters';
 import { ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
-import { last7Days, isBefore, getDateRange } from './lib/time';
-import { getHistoricalMarketData } from './lib/pricedata';
+import { last7Days } from './lib/time';
+import sdk from './sdk';
 
 const SANITY_CHECK = 1000000000; // Values over this will be automatically hidden
 
@@ -33,9 +33,12 @@ export async function getMarketData(id: string, sevenDayMA: number, date: string
   let price: null | number = null;
   let marketCap: null | number = null;
   let psRatio: null | number = null;
-  if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch, date)) {
+  if (metadata.tokenCoingecko && sdk.date.isBefore(metadata.tokenLaunch, date)) {
     try {
-      ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
+      ({ price, marketCap } = await sdk.coinGecko.getHistoricalMarketData(
+        metadata.tokenCoingecko,
+        date
+      ));
       psRatio = marketCap / (sevenDayMA * 365);
     } catch (e) {
       console.error(e);
@@ -52,7 +55,7 @@ export async function getData(): Promise<ProtocolData[]> {
       async (id: string): Promise<ProtocolData | null> => {
         const metadata = getMetadata(id);
 
-        if (!isBefore(metadata.protocolLaunch)) {
+        if (!sdk.date.isBefore(metadata.protocolLaunch)) {
           return null;
         }
 
@@ -96,7 +99,7 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
     getIDs().map(async (id: string) => {
       const metadata = getMetadata(id);
 
-      if (!isBefore(metadata.protocolLaunch, date)) {
+      if (!sdk.date.isBefore(metadata.protocolLaunch, date)) {
         return null;
       }
 
@@ -112,9 +115,12 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
       let price: null | number = null;
       let marketCap: null | number = null;
       let psRatio: null | number = null;
-      if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch, date)) {
+      if (metadata.tokenCoingecko && sdk.date.isBefore(metadata.tokenLaunch, date)) {
         try {
-          ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
+          ({ price, marketCap } = await sdk.coinGecko.getHistoricalMarketData(
+            metadata.tokenCoingecko,
+            date
+          ));
           psRatio = marketCap / (sevenDayMA * 365);
         } catch (e) {
           console.error(e);
@@ -169,7 +175,7 @@ export async function getLastWeek(): Promise<any[]> {
 
 export async function getDateData(protocol: string, date: string) {
   const { protocolLaunch } = getMetadata(protocol);
-  if (protocolLaunch && isBefore(date, protocolLaunch)) {
+  if (protocolLaunch && sdk.date.isBefore(date, protocolLaunch)) {
     return { date, fee: null };
   }
 
@@ -187,7 +193,7 @@ export async function getDateRangeData(
   dateStart: string | Date,
   dateEnd: string | Date
 ): Promise<any[]> {
-  const days = getDateRange(dateStart, dateEnd);
+  const days = sdk.date.getDateRange(dateStart, dateEnd);
 
   const fees = await Promise.all(days.map((day: string) => getDateData(protocol, day)));
 

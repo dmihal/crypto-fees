@@ -1,15 +1,15 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
-import { getHistoricalPrice } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
 import { RegisterFunction } from '../types';
 import icon from 'icons/optimism.svg';
 
-export async function getOptimismData(date: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1), 'optimism');
-  const yesterdayBlock = await getBlockNumber(date, 'optimism');
+export async function getOptimismData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const todayBlock = await sdk.chainData.getBlockNumber(
+    sdk.date.offsetDaysFormatted(date, 1),
+    'optimism'
+  );
+  const yesterdayBlock = await sdk.chainData.getBlockNumber(date, 'optimism');
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'dmihal/optimism-fees',
     `query txFees($today: Int!, $yesterday: Int!){
       today: fee(id: "1", block: {number: $today}) {
@@ -26,21 +26,21 @@ export async function getOptimismData(date: string): Promise<number> {
     'txFees'
   );
 
-  const ethPrice = await getHistoricalPrice('ethereum', date);
+  const ethPrice = await sdk.coinGecko.getHistoricalPrice('ethereum', date);
   const feesInETH = parseFloat(data.today.totalFees) - parseFloat(data.yesterday.totalFees);
 
   return feesInETH * ethPrice;
 }
 
-function optimismQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`Polygon doesn't support ${attribute}`);
+export default function registerOptimism(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function optimismQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`Polygon doesn't support ${attribute}`);
+    }
+
+    return getOptimismData(date, sdk);
   }
 
-  return getOptimismData(date);
-}
-
-export default function registerOptimism(register: RegisterFunction) {
   register('optimism', optimismQuery, {
     icon,
     name: 'Optimism',

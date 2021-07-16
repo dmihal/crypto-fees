@@ -1,11 +1,10 @@
+import { CryptoStatsSDK } from '@cryptostats/sdk';
 import { RegisterFunction } from '../types';
 
-async function get0xData(date: string): Promise<number> {
-  const request = await fetch(
+async function get0xData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const data = await sdk.http.get(
     'https://api.0xtracker.com/metrics/network?period=all&granularity=day'
   );
-
-  const data = await request.json();
 
   const dateFullStr = `${date}T00:00:00.000Z`;
 
@@ -18,12 +17,12 @@ async function get0xData(date: string): Promise<number> {
   throw new Error(`No 0x data found on ${date}`);
 }
 
-export default function register0x(register: RegisterFunction) {
+export default function register0x(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const zeroxQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Tornado Cash doesn't support ${attribute}`);
     }
-    return get0xData(date);
+    return get0xData(date, sdk);
   };
 
   register('zerox', zeroxQuery, {

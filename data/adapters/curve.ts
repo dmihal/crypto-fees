@@ -1,7 +1,5 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
-import { getHistoricalPrice } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
 interface Pool {
   name: string;
@@ -42,11 +40,11 @@ const pools: Pool[] = [
   },
 ];
 
-export async function getCurveData(date: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
-  const yesterdayBlock = await getBlockNumber(date);
+export async function getCurveData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const todayBlock = await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1));
+  const yesterdayBlock = await sdk.chainData.getBlockNumber(date);
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'blocklytics/curve',
     `{
     ${pools
@@ -63,7 +61,7 @@ export async function getCurveData(date: string): Promise<number> {
   }`
   );
 
-  const bitcoinPrice = await getHistoricalPrice('bitcoin', date);
+  const bitcoinPrice = await sdk.coinGecko.getHistoricalPrice('bitcoin', date);
 
   let oneDay = 0;
   for (const pool of pools) {
@@ -79,12 +77,12 @@ export async function getCurveData(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerCurve(register: any) {
+export default function registerCurve(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const curveQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Curve doesn't support ${attribute}`);
     }
-    return getCurveData(date);
+    return getCurveData(date, sdk);
   };
 
   register('curve', curveQuery, {

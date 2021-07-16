@@ -1,10 +1,11 @@
-import { getHistoricalPrice } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
 import { RegisterFunction } from '../types';
 import icon from 'icons/fantom.svg';
 
-async function getFeeDataFromFTMscan(): Promise<any[]> {
-  const response = await fetch('https://ftmscan.com/chart/transactionfee?output=csv');
-  const csv = await response.text();
+async function getFeeDataFromFTMscan(sdk: CryptoStatsSDK): Promise<any[]> {
+  const csv = await sdk.http.get('https://ftmscan.com/chart/transactionfee?output=csv', {
+    plainText: true,
+  });
 
   const parsed = csv
     .trim()
@@ -21,9 +22,9 @@ async function getFeeDataFromFTMscan(): Promise<any[]> {
 
 let feeDataPromise: null | Promise<any[]> = null;
 
-export async function getFTMData(date: string): Promise<number> {
+export async function getFTMData(date: string, sdk: CryptoStatsSDK): Promise<number> {
   if (!feeDataPromise) {
-    feeDataPromise = getFeeDataFromFTMscan();
+    feeDataPromise = getFeeDataFromFTMscan(sdk);
   }
   const feeData = await feeDataPromise;
 
@@ -49,20 +50,20 @@ export async function getFTMData(date: string): Promise<number> {
     throw new Error(`Couldn't find FTM data on ${date}`);
   }
 
-  const ftmPrice = await getHistoricalPrice('fantom', date);
+  const ftmPrice = await sdk.coinGecko.getHistoricalPrice('fantom', date);
 
   return ftmFees * ftmPrice;
 }
 
-function ftmQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`FTM doesn't support ${attribute}`);
+export default function registerFTM(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function ftmQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`FTM doesn't support ${attribute}`);
+    }
+
+    return getFTMData(date, sdk);
   }
 
-  return getFTMData(date);
-}
-
-export default function registerFTM(register: RegisterFunction) {
   register('fantom', ftmQuery, {
     category: 'l1',
     name: 'Fantom',

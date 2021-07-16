@@ -1,11 +1,10 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
 const EIGHTEEN_DECIMALS = 10 ** 18;
 
-async function getSynthetixFees(date: string) {
-  const data = await query(
+async function getSynthetixFees(date: string, sdk: CryptoStatsSDK) {
+  const data = await sdk.graph.query(
     'synthetixio-team/synthetix-exchanges',
     `query fees($today: Int!, $yesterday: Int!){
       now: total(id: "mainnet", block: {number: $today}) {
@@ -16,8 +15,8 @@ async function getSynthetixFees(date: string) {
       }
     }`,
     {
-      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
-      yesterday: await getBlockNumber(date),
+      today: await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1)),
+      yesterday: await sdk.chainData.getBlockNumber(date),
     },
     'fees'
   );
@@ -28,15 +27,14 @@ async function getSynthetixFees(date: string) {
   return fees;
 }
 
-function synthetixQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`Synthetix doesn't support ${attribute}`);
+export default function registerSynthetix(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function synthetixQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`Synthetix doesn't support ${attribute}`);
+    }
+
+    return getSynthetixFees(date, sdk);
   }
-
-  return getSynthetixFees(date);
-}
-
-export default function registerSynthetix(register: any) {
   register('synthetix', synthetixQuery, {
     category: 'dex',
     name: 'Synthetix',
@@ -45,6 +43,7 @@ export default function registerSynthetix(register: any) {
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'synthetix',
+    protocolLaunch: '2018-12-07',
     tokenTicker: 'SNX',
     tokenCoingecko: 'havven',
   });

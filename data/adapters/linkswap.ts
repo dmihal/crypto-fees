@@ -1,15 +1,15 @@
-import { query } from '../lib/graph';
-import { dateToTimestamp } from '../lib/time';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
 const LINK_ADDRESS = '0x514910771af9ca656af840dff83e8264ecf986ca';
 
-export async function getLinkswapData(date: string): Promise<number> {
-  const data = await query(
+export async function getLinkswapData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const data = await sdk.graph.query(
     'yflink/linkswap-v1',
     `{
       notlink: 
         pairDayDatas(where:{
-          date: ${dateToTimestamp(date)},
+          date: ${sdk.date.dateToTimestamp(date)},
           token0_not_contains: "${LINK_ADDRESS}",
           token1_not_contains: "${LINK_ADDRESS}"
         }) {
@@ -17,7 +17,7 @@ export async function getLinkswapData(date: string): Promise<number> {
         dailyVolumeUSD
       }
       all: 
-       pairDayDatas(where:{date: ${dateToTimestamp(date)} }) {
+       pairDayDatas(where:{date: ${sdk.date.dateToTimestamp(date)} }) {
         date
         dailyVolumeUSD
       }
@@ -39,12 +39,12 @@ export async function getLinkswapData(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerLinkswap(register: any) {
+export default function registerLinkswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const sushiQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Linkswap doesn't support ${attribute}`);
     }
-    return getLinkswapData(date);
+    return getLinkswapData(date, sdk);
   };
 
   register('linkswap', sushiQuery, {

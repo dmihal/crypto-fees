@@ -1,7 +1,4 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { getHistoricalPrice } from '../lib/pricedata';
-import { query } from '../lib/graph';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
 import { RegisterFunction } from '../types';
 
 interface MassetData {
@@ -18,11 +15,11 @@ interface FeesData {
   yesterday: MassetData[];
 }
 
-export async function getMstableData(date: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
-  const yesterdayBlock = await getBlockNumber(date);
+export async function getMstableData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const todayBlock = await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1));
+  const yesterdayBlock = await sdk.chainData.getBlockNumber(date);
 
-  const data: FeesData = await query(
+  const data: FeesData = await sdk.graph.query(
     'mstable/mstable-protocol',
     `
     query fees($today: Int!, $yesterday: Int!){
@@ -50,7 +47,7 @@ export async function getMstableData(date: string): Promise<number> {
     'fees'
   );
 
-  const bitcoinPrice = await getHistoricalPrice('bitcoin', date);
+  const bitcoinPrice = await sdk.coinGecko.getHistoricalPrice('bitcoin', date);
 
   const collectFees = (btcPrice: number) => (
     accumulator: number,
@@ -69,15 +66,15 @@ export async function getMstableData(date: string): Promise<number> {
   return oneDay;
 }
 
-function mStableQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`mStable doesn't support ${attribute}`);
+export default function registerMstable(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function mStableQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`mStable doesn't support ${attribute}`);
+    }
+
+    return getMstableData(date, sdk);
   }
 
-  return getMstableData(date);
-}
-
-export default function registerMstable(register: RegisterFunction) {
   register('mstable', mStableQuery, {
     name: 'mStable',
     category: 'dex',

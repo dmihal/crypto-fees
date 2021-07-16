@@ -1,8 +1,10 @@
-import { getHistoricalPrice } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-async function getFeeDataFromEtherscan(): Promise<any[]> {
-  const response = await fetch('https://bscscan.com/chart/transactionfee?output=csv');
-  const csv = await response.text();
+async function getFeeDataFromEtherscan(sdk: CryptoStatsSDK): Promise<any[]> {
+  const csv = await sdk.http.get('https://bscscan.com/chart/transactionfee?output=csv', {
+    plainText: true,
+  });
 
   const parsed = csv
     .trim()
@@ -19,9 +21,9 @@ async function getFeeDataFromEtherscan(): Promise<any[]> {
 
 let feeDataPromise: null | Promise<any[]> = null;
 
-export async function getBSCData(date: string): Promise<number> {
+export async function getBSCData(date: string, sdk: CryptoStatsSDK): Promise<number> {
   if (!feeDataPromise) {
-    feeDataPromise = getFeeDataFromEtherscan();
+    feeDataPromise = getFeeDataFromEtherscan(sdk);
   }
   const feeData = await feeDataPromise;
 
@@ -47,20 +49,20 @@ export async function getBSCData(date: string): Promise<number> {
     throw new Error(`Couldn't find BSC data on ${date}`);
   }
 
-  const bnbPrice = await getHistoricalPrice('binancecoin', date);
+  const bnbPrice = await sdk.coinGecko.getHistoricalPrice('binancecoin', date);
 
   return bnbFees * bnbPrice;
 }
 
-function bscQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`BSC doesn't support ${attribute}`);
+export default function registerBSC(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function bscQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`BSC doesn't support ${attribute}`);
+    }
+
+    return getBSCData(date, sdk);
   }
 
-  return getBSCData(date);
-}
-
-export default function registerBSC(register: any) {
   register('bsc', bscQuery, {
     category: 'l1',
     name: 'Binance Smart Chain',

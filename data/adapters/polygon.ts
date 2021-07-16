@@ -1,14 +1,14 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
-import { getHistoricalPrice } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
 import { RegisterFunction } from '../types';
 
-export async function getPolygonData(date: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1), 'polygon');
-  const yesterdayBlock = await getBlockNumber(date, 'polygon');
+export async function getPolygonData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const todayBlock = await sdk.chainData.getBlockNumber(
+    sdk.date.offsetDaysFormatted(date, 1),
+    'polygon'
+  );
+  const yesterdayBlock = await sdk.chainData.getBlockNumber(date, 'polygon');
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'dmihal/polygon-fees',
     `query txFees($today: Int!, $yesterday: Int!){
       today: fee(id: "1", block: {number: $today}) {
@@ -25,21 +25,21 @@ export async function getPolygonData(date: string): Promise<number> {
     'txFees'
   );
 
-  const maticPrice = await getHistoricalPrice('matic-network', date);
+  const maticPrice = await sdk.coinGecko.getHistoricalPrice('matic-network', date);
   const feesInMatic = parseFloat(data.today.totalFees) - parseFloat(data.yesterday.totalFees);
 
   return feesInMatic * maticPrice;
 }
 
-function polygonQuery(attribute: string, date: string) {
-  if (attribute !== 'fee') {
-    throw new Error(`Polygon doesn't support ${attribute}`);
+export default function registerPolygon(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  function polygonQuery(attribute: string, date: string) {
+    if (attribute !== 'fee') {
+      throw new Error(`Polygon doesn't support ${attribute}`);
+    }
+
+    return getPolygonData(date, sdk);
   }
 
-  return getPolygonData(date);
-}
-
-export default function registerPolygon(register: RegisterFunction) {
   register('polygon', polygonQuery, {
     name: 'Polygon',
     category: 'l1',

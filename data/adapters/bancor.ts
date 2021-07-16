@@ -1,13 +1,9 @@
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 import { getYesterdayDate } from '../lib/time';
 
-const fetcher = async (input: RequestInfo, init?: RequestInit) => {
-  const res = await fetch(input, init);
-  if (res.status !== 200) throw new Error('bancor did return an error');
-  return res.json();
-};
-
-async function getBancorData(): Promise<number> {
-  const response = await fetcher('https://api-v2.bancor.network/stats');
+async function getBancorData(sdk: CryptoStatsSDK): Promise<number> {
+  const response = await sdk.http.get('https://api-v2.bancor.network/stats');
 
   if (response.error) {
     throw new Error(response.error);
@@ -16,7 +12,7 @@ async function getBancorData(): Promise<number> {
   return parseFloat(response?.data.fees_24h.usd);
 }
 
-export default function registerBancor(register: any) {
+export default function registerBancor(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const bancorQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Bancor doesn't support ${attribute}`);
@@ -25,11 +21,10 @@ export default function registerBancor(register: any) {
       // Legacy adapter, only "today" supported
       return null;
     }
-    return getBancorData();
+    return getBancorData(sdk);
   };
 
   register('bancor', bancorQuery, {
-    id: 'bancor',
     name: 'Bancor',
     category: 'dex',
     description: 'Bancor is a permissionless, decentralized exchange',

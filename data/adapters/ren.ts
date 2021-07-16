@@ -1,13 +1,11 @@
-import { query } from '../lib/graph';
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
 import { RegisterFunction } from '../types';
 
-export async function getRenData(date: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
-  const yesterdayBlock = await getBlockNumber(date);
+export async function getRenData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const todayBlock = await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1));
+  const yesterdayBlock = await sdk.chainData.getBlockNumber(date);
 
-  const data = await query(
+  const data = await sdk.graph.query(
     'renproject/renvm',
     `
     query feesOverPeriod($today: Int!, $yesterday: Int!){
@@ -60,12 +58,12 @@ export async function getRenData(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerRen(register: RegisterFunction) {
+export default function registerRen(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const renQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Uniswap doesn't support ${attribute}`);
     }
-    return getRenData(date);
+    return getRenData(date, sdk);
   };
 
   register('ren', renQuery, {

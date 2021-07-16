@@ -1,9 +1,7 @@
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
-import { query } from '../lib/graph';
-import { getHistoricalPrice } from '../lib/pricedata';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
-export async function getTBTCData(date: string): Promise<number> {
+export async function getTBTCData(date: string, sdk: CryptoStatsSDK): Promise<number> {
   const graphQuery = `query fees($today: Int!, $yesterday: Int!){
     now: statsRecord(id: "current", block: {number: $today}) {
       tbtcFees
@@ -14,18 +12,18 @@ export async function getTBTCData(date: string): Promise<number> {
       randomBeaconFees
     }
   }`;
-  const data = await query(
+  const data = await sdk.graph.query(
     'miracle2k/all-the-keeps',
     graphQuery,
     {
-      today: await getBlockNumber(offsetDaysFormatted(date, 1)),
-      yesterday: await getBlockNumber(date),
+      today: await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1)),
+      yesterday: await sdk.chainData.getBlockNumber(date),
     },
     'fees'
   );
 
-  const ethPriceYesterday = await getHistoricalPrice('ethereum', date);
-  const wbtcPriceYesterday = await getHistoricalPrice('bitcoin', date);
+  const ethPriceYesterday = await sdk.coinGecko.getHistoricalPrice('ethereum', date);
+  const wbtcPriceYesterday = await sdk.coinGecko.getHistoricalPrice('bitcoin', date);
 
   const oneDayTBTCFees = (parseInt(data.now.tbtcFees) - parseInt(data.yesterday.tbtcFees)) / 1e18;
   const oneDayTBTCFeesInUSD = oneDayTBTCFees * wbtcPriceYesterday;
@@ -37,12 +35,12 @@ export async function getTBTCData(date: string): Promise<number> {
   return oneDayTBTCFeesInUSD + oneDayBeaconFeesInUSD;
 }
 
-export default function registerTBTC(register: any) {
+export default function registerTBTC(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const tbtcQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Tornado Cash doesn't support ${attribute}`);
     }
-    return getTBTCData(date);
+    return getTBTCData(date, sdk);
   };
 
   register('tbtc', tbtcQuery, {

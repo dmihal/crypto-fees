@@ -1,20 +1,19 @@
-import { dateToTimestamp } from '../lib/time';
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
 const sum = (a: number, b: number) => a + b;
 
-export async function getCompoundData(date: string): Promise<number> {
-  const startTimestamp = dateToTimestamp(date);
+export async function getCompoundData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const startTimestamp = sdk.date.dateToTimestamp(date);
   const endTimestamp = startTimestamp + 86400;
 
-  const assetReq = await fetch('https://api.compound.finance/api/v2/ctoken');
-  const assetJson = await assetReq.json();
+  const assetJson = await sdk.http.get('https://api.compound.finance/api/v2/ctoken');
 
   const interestByAsset: number[] = await Promise.all(
     assetJson.cToken.map(
       async (asset: any): Promise<number> => {
         const url = `https://api.compound.finance/api/v2/market_history/graph?asset=${asset.token_address}&min_block_timestamp=${startTimestamp}&max_block_timestamp=${endTimestamp}&num_buckets=1`;
-        const req = await fetch(url);
-        const json = await req.json();
+        const json = await sdk.http.get(url);
 
         if (json.total_borrows_history.length === 0) {
           return 0;
@@ -36,12 +35,12 @@ export async function getCompoundData(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerCompound(register: any) {
+export default function registerCompound(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const compoundQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Uniswap doesn't support ${attribute}`);
     }
-    return getCompoundData(date);
+    return getCompoundData(date, sdk);
   };
 
   register('compound', compoundQuery, {
@@ -53,6 +52,7 @@ export default function registerCompound(register: any) {
     source: 'Compound API',
     adapter: 'compound',
     website: 'https://compound.finance',
+    protocolLaunch: '2019-05-23',
     tokenTicker: 'COMP',
     tokenCoingecko: 'compound-governance-token',
     tokenLaunch: '2020-06-22',

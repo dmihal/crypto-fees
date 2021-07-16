@@ -1,24 +1,19 @@
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 import icon from 'icons/xdai.svg';
 
-async function getxDaiData(date: string): Promise<number> {
-  const req = await fetch(
-    `https://blockscout.com/xdai/mainnet/api?module=stats&action=totalfees&date=${date}`
-  );
-  const json = await req.json();
-
-  return json.result && json.result / 1e18;
-}
-
-export default function registerXDai(register: any) {
-  const xdaiQuery = (attribute: string, date: string) => {
+export default function registerXDai(register: RegisterFunction, sdk: CryptoStatsSDK) {
+  const xdaiQuery = async (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`xDai doesn't support ${attribute}`);
     }
-    return getxDaiData(date);
+    const json = await sdk.http.get(
+      `https://blockscout.com/xdai/mainnet/api?module=stats&action=totalfees&date=${date}`
+    );
+    return json.result ? json.result / 1e18 : null;
   };
 
   register('xdai', xdaiQuery, {
-    id: 'xdai',
     name: 'xDai',
     category: 'l1',
     description: 'xDai is an Ethereum sidechain that uses Dai as the base asset.',

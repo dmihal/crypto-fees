@@ -1,10 +1,5 @@
-import { queryCoingecko } from '../lib/pricedata';
-
-const fetcher = async (input: RequestInfo, init?: RequestInit) => {
-  const res = await fetch(input, init);
-  if (res.status !== 200) throw new Error('terra did return an error');
-  return res.json();
-};
+import { CryptoStatsSDK } from '@cryptostats/sdk';
+import { RegisterFunction } from '../types';
 
 const ONE_DAY = 86400000;
 
@@ -24,9 +19,9 @@ function binarySearch(days: any[], search: number) {
   throw new Error(`Unable to find terra day ${search}`);
 }
 
-async function getTerraData(date: string): Promise<number> {
-  const response = await fetcher('https://fcd.terra.dev/v1/dashboard/block_rewards');
-  const { price: krw } = await queryCoingecko('usd-coin', date, 'krw');
+async function getTerraData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+  const response = await sdk.http.get('https://fcd.terra.dev/v1/dashboard/block_rewards');
+  const { price: krw } = await sdk.coinGecko.queryCoingecko('usd-coin', date, 'krw');
 
   const targetDay = new Date(date).setUTCHours(15, 0, 0, 0) - ONE_DAY;
   const blockReward = binarySearch(response.periodic, targetDay);
@@ -36,12 +31,12 @@ async function getTerraData(date: string): Promise<number> {
   return oneDay;
 }
 
-export default function registerTerra(register: any) {
+export default function registerTerra(register: RegisterFunction, sdk: CryptoStatsSDK) {
   const terraQuery = (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Terra doesn't support ${attribute}`);
     }
-    return getTerraData(date);
+    return getTerraData(date, sdk);
   };
 
   register('terra', terraQuery, {
