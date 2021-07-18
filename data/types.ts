@@ -28,5 +28,3 @@ export interface ProtocolData extends Metadata {
 }
 
 export type QueryFunction = (attribute: string, date: string) => Promise<number>;
-
-export type RegisterFunction = (name: string, fn: QueryFunction, metadata: Metadata) => void;

@@ -1,23 +1,15 @@
 import differenceInDays from 'date-fns/differenceInDays';
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
-
-// TODO: move to SDK
-const fetcher = async (input: RequestInfo, init?: RequestInit) => {
-  const res = await fetch(input, init);
-  // if (res.status !== 200) throw new Error('zilliqa returned an error');
-  return res.json();
-};
+import { Context } from '@cryptostats/sdk';
 
 let viewBlockPromise;
 
-export async function getZilliqaData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getZilliqaData(date: string, sdk: Context): Promise<number> {
   if (differenceInDays(new Date(), new Date(date)) > 7) {
     return null;
   }
 
   if (!viewBlockPromise) {
-    viewBlockPromise = fetcher(
+    viewBlockPromise = sdk.http.get(
       'https://api.viewblock.io/zilliqa/stats/charts/txFeesHistory?network=mainnet',
       {
         headers: {
@@ -38,23 +30,22 @@ export async function getZilliqaData(date: string, sdk: CryptoStatsSDK): Promise
   return null;
 }
 
-export default function registerZilliqa(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const zilliqaQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Zilliqa doesn't support ${attribute}`);
-    }
-    return getZilliqaData(date, sdk);
-  };
-
-  register('zilliqa', zilliqaQuery, {
-    name: 'Zilliqa',
-    category: 'l1',
-    source: 'ViewBlock',
-    adapter: 'zilliqa',
-    website: 'https://zilliqa.com',
-    tokenTicker: 'ZIL',
-    tokenCoingecko: 'zilliqa',
-    legacy: true,
-    protocolLaunch: '2021-05-04', // We don't have data from before this date yet
+export default function registerZilliqa(sdk: Context) {
+  sdk.register({
+    id: 'zilliqa',
+    queries: {
+      fees: (date: string) => getZilliqaData(date, sdk),
+    },
+    metadata: {
+      name: 'Zilliqa',
+      category: 'l1',
+      source: 'ViewBlock',
+      adapter: 'zilliqa',
+      website: 'https://zilliqa.com',
+      tokenTicker: 'ZIL',
+      tokenCoingecko: 'zilliqa',
+      legacy: true,
+      protocolLaunch: '2021-05-04', // We don't have data from before this date yet
+    },
   });
 }

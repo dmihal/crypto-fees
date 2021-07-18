@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-async function get0xData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+async function get0xData(date: string, sdk: Context): Promise<number> {
   const data = await sdk.http.get(
     'https://api.0xtracker.com/metrics/network?period=all&granularity=day'
   );
@@ -17,24 +16,23 @@ async function get0xData(date: string, sdk: CryptoStatsSDK): Promise<number> {
   throw new Error(`No 0x data found on ${date}`);
 }
 
-export default function register0x(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const zeroxQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Tornado Cash doesn't support ${attribute}`);
-    }
-    return get0xData(date, sdk);
-  };
-
-  register('zerox', zeroxQuery, {
-    name: '0x',
-    category: 'dex',
-    description: '0x is a decentralized exchange protocol.',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    blockchain: 'Ethereum',
-    source: '0x API',
-    adapter: 'zerox',
-    tokenTicker: 'ZRX',
-    tokenCoingecko: '0x',
-    protocolLaunch: '2017-08-15',
+export default function register0x(sdk: Context) {
+  sdk.register({
+    id: 'zerox',
+    queries: {
+      fees: (date: string) => get0xData(date, sdk),
+    },
+    metadata: {
+      name: '0x',
+      category: 'dex',
+      description: '0x is a decentralized exchange protocol.',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      blockchain: 'Ethereum',
+      source: '0x API',
+      adapter: 'zerox',
+      tokenTicker: 'ZRX',
+      tokenCoingecko: '0x',
+      protocolLaunch: '2017-08-15',
+    },
   });
 }

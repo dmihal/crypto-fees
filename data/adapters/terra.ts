@@ -1,5 +1,4 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
 const ONE_DAY = 86400000;
 
@@ -19,7 +18,7 @@ function binarySearch(days: any[], search: number) {
   throw new Error(`Unable to find terra day ${search}`);
 }
 
-async function getTerraData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+async function getTerraData(date: string, sdk: Context): Promise<number> {
   const response = await sdk.http.get('https://fcd.terra.dev/v1/dashboard/block_rewards');
   const { price: krw } = await sdk.coinGecko.queryCoingecko('usd-coin', date, 'krw');
 
@@ -31,26 +30,25 @@ async function getTerraData(date: string, sdk: CryptoStatsSDK): Promise<number> 
   return oneDay;
 }
 
-export default function registerTerra(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const terraQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Terra doesn't support ${attribute}`);
-    }
-    return getTerraData(date, sdk);
-  };
-
-  register('terra', terraQuery, {
-    name: 'Terra',
-    category: 'l1',
-    description: 'Terra is a blockchain built on fiat-pegged stablecoins.',
-    feeDescription: 'Terra stakers earn rewards from gas fees, "taxes" and seigniorage rewards.',
-    blockchain: 'Terra',
-    source: 'Terra',
-    adapter: 'terra',
-    website: 'https://www.terra.money',
-    tokenTicker: 'LUNA',
-    tokenCoingecko: 'terra-luna',
-    tokenLaunch: '2019-05-08',
-    protocolLaunch: '2019-05-06',
+export default function registerTerra(sdk: Context) {
+  sdk.register({
+    id: 'terra',
+    queries: {
+      fees: (date: string) => getTerraData(date, sdk),
+    },
+    metadata: {
+      name: 'Terra',
+      category: 'l1',
+      description: 'Terra is a blockchain built on fiat-pegged stablecoins.',
+      feeDescription: 'Terra stakers earn rewards from gas fees, "taxes" and seigniorage rewards.',
+      blockchain: 'Terra',
+      source: 'Terra',
+      adapter: 'terra',
+      website: 'https://www.terra.money',
+      tokenTicker: 'LUNA',
+      tokenCoingecko: 'terra-luna',
+      tokenLaunch: '2019-05-08',
+      protocolLaunch: '2019-05-06',
+    },
   });
 }

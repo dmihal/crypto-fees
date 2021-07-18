@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-export async function getRenData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getRenData(date: string, sdk: Context): Promise<number> {
   const todayBlock = await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1));
   const yesterdayBlock = await sdk.chainData.getBlockNumber(date);
 
@@ -58,25 +57,24 @@ export async function getRenData(date: string, sdk: CryptoStatsSDK): Promise<num
   return oneDay;
 }
 
-export default function registerRen(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const renQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Uniswap doesn't support ${attribute}`);
-    }
-    return getRenData(date, sdk);
-  };
-
-  register('ren', renQuery, {
-    name: 'Ren Protocol',
-    category: 'xchain',
-    description: 'Ren Protocol is a protocol for cross-chain asset transfers.',
-    feeDescription: 'Transfer fees are paid by users to node operators (Darknodes).',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'ren',
-    website: 'https://renproject.io',
-    tokenTicker: 'REN',
-    tokenCoingecko: 'republic-protocol',
-    protocolLaunch: '2020-05-27',
+export default function registerRen(sdk: Context) {
+  sdk.register({
+    id: 'ren',
+    queries: {
+      fees: (date: string) => getRenData(date, sdk),
+    },
+    metadata: {
+      name: 'Ren Protocol',
+      category: 'xchain',
+      description: 'Ren Protocol is a protocol for cross-chain asset transfers.',
+      feeDescription: 'Transfer fees are paid by users to node operators (Darknodes).',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'ren',
+      website: 'https://renproject.io',
+      tokenTicker: 'REN',
+      tokenCoingecko: 'republic-protocol',
+      protocolLaunch: '2020-05-27',
+    },
   });
 }

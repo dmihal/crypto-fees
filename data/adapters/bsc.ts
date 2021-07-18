@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-async function getFeeDataFromEtherscan(sdk: CryptoStatsSDK): Promise<any[]> {
+async function getFeeDataFromEtherscan(sdk: Context): Promise<any[]> {
   const csv = await sdk.http.get('https://bscscan.com/chart/transactionfee?output=csv', {
     plainText: true,
   });
@@ -21,7 +20,7 @@ async function getFeeDataFromEtherscan(sdk: CryptoStatsSDK): Promise<any[]> {
 
 let feeDataPromise: null | Promise<any[]> = null;
 
-export async function getBSCData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getBSCData(date: string, sdk: Context): Promise<number> {
   if (!feeDataPromise) {
     feeDataPromise = getFeeDataFromEtherscan(sdk);
   }
@@ -54,27 +53,25 @@ export async function getBSCData(date: string, sdk: CryptoStatsSDK): Promise<num
   return bnbFees * bnbPrice;
 }
 
-export default function registerBSC(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  function bscQuery(attribute: string, date: string) {
-    if (attribute !== 'fee') {
-      throw new Error(`BSC doesn't support ${attribute}`);
-    }
-
-    return getBSCData(date, sdk);
-  }
-
-  register('bsc', bscQuery, {
-    category: 'l1',
-    name: 'Binance Smart Chain',
-    shortName: 'BSC',
-    description: 'Binance Smart Chain is an inexpensive, EVM-compatible chain',
-    feeDescription: 'Transaction fees are paid to validators',
-    blockchain: 'BSC',
-    source: 'Etherscan',
-    adapter: 'bsc',
-    website: 'https://binance.org',
-    tokenTicker: 'BNB',
-    tokenCoingecko: 'binancecoin',
-    protocolLaunch: '2020-09-11',
+export default function registerBSC(sdk: Context) {
+  sdk.register({
+    id: 'bsc',
+    queries: {
+      fees: (date: string) => getBSCData(date, sdk),
+    },
+    metadata: {
+      category: 'l1',
+      name: 'Binance Smart Chain',
+      shortName: 'BSC',
+      description: 'Binance Smart Chain is an inexpensive, EVM-compatible chain',
+      feeDescription: 'Transaction fees are paid to validators',
+      blockchain: 'BSC',
+      source: 'Etherscan',
+      adapter: 'bsc',
+      website: 'https://binance.org',
+      tokenTicker: 'BNB',
+      tokenCoingecko: 'binancecoin',
+      protocolLaunch: '2020-09-11',
+    },
   });
 }

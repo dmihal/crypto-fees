@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-async function getBalance(block: string, sdk: CryptoStatsSDK) {
+async function getBalance(block: string, sdk: Context) {
   const res = await sdk.http.post('https://api.avax.network/ext/bc/C/rpc', {
     id: 1,
     jsonrpc: '2.0',
@@ -12,7 +11,7 @@ async function getBalance(block: string, sdk: CryptoStatsSDK) {
   return parseInt(res.result, 16) / 1e18;
 }
 
-async function getChainFees(chain: string, date: string, sdk: CryptoStatsSDK) {
+async function getChainFees(chain: string, date: string, sdk: Context) {
   const chainIDs = {
     P: '11111111111111111111111111111111LpoYY',
     C: '2q9e4r6Mu3U68nU1fYjgbR6JvwrRx36CohpAX5UQxse55x1Q5',
@@ -28,7 +27,7 @@ async function getChainFees(chain: string, date: string, sdk: CryptoStatsSDK) {
   return parseFloat(dayAggregate.aggregates.txfee) / 1e9;
 }
 
-async function getCChainFees(date: string, sdk: CryptoStatsSDK) {
+async function getCChainFees(date: string, sdk: Context) {
   const [blockYesterday, blockToday] = await Promise.all([
     sdk.chainData.getBlockNumber(date, 'avalanche'),
     sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1), 'avalanche'),
@@ -45,15 +44,15 @@ async function getCChainFees(date: string, sdk: CryptoStatsSDK) {
   return txFees + atomicFees;
 }
 
-function getXChainFees(date: string, sdk: CryptoStatsSDK) {
+function getXChainFees(date: string, sdk: Context) {
   return getChainFees('X', date, sdk);
 }
 
-function getPChainFees(date: string, sdk: CryptoStatsSDK) {
+function getPChainFees(date: string, sdk: Context) {
   return getChainFees('P', date, sdk);
 }
 
-export async function getAvalancheData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getAvalancheData(date: string, sdk: Context): Promise<number> {
   const [price, cFees, xFees, pFees] = await Promise.all([
     sdk.coinGecko.getHistoricalPrice('avalanche-2', date),
     getCChainFees(date, sdk),
@@ -66,25 +65,24 @@ export async function getAvalancheData(date: string, sdk: CryptoStatsSDK): Promi
   return feesUSD;
 }
 
-export default function registerAvalanche(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const avalancheQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Avalanche doesn't support ${attribute}`);
-    }
-    return getAvalancheData(date, sdk);
-  };
-
-  register('avalanche', avalancheQuery, {
-    name: 'Avalanche',
-    category: 'l1',
-    description: 'Avalanche is a platform for inter-connected blockchains.',
-    feeDescription: 'Transaction fees are burned.',
-    source: 'Ava Labs',
-    adapter: 'avalanche',
-    website: 'https://avalabs.org',
-    tokenTicker: 'AVAX',
-    tokenCoingecko: 'avalanche-2',
-    protocolLaunch: '2020-09-22',
-    tokenLaunch: '2020-09-22',
+export default function registerAvalanche(sdk: Context) {
+  sdk.register({
+    id: 'avalanche',
+    queries: {
+      fees: (date: string) => getAvalancheData(date, sdk),
+    },
+    metadata: {
+      name: 'Avalanche',
+      category: 'l1',
+      description: 'Avalanche is a platform for inter-connected blockchains.',
+      feeDescription: 'Transaction fees are burned.',
+      source: 'Ava Labs',
+      adapter: 'avalanche',
+      website: 'https://avalabs.org',
+      tokenTicker: 'AVAX',
+      tokenCoingecko: 'avalanche-2',
+      protocolLaunch: '2020-09-22',
+      tokenLaunch: '2020-09-22',
+    },
   });
 }

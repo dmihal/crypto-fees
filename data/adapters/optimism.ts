@@ -1,8 +1,7 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 import icon from 'icons/optimism.svg';
 
-export async function getOptimismData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getOptimismData(date: string, sdk: Context): Promise<number> {
   const todayBlock = await sdk.chainData.getBlockNumber(
     sdk.date.offsetDaysFormatted(date, 1),
     'optimism'
@@ -32,25 +31,23 @@ export async function getOptimismData(date: string, sdk: CryptoStatsSDK): Promis
   return feesInETH * ethPrice;
 }
 
-export default function registerOptimism(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  function optimismQuery(attribute: string, date: string) {
-    if (attribute !== 'fee') {
-      throw new Error(`Polygon doesn't support ${attribute}`);
-    }
-
-    return getOptimismData(date, sdk);
-  }
-
-  register('optimism', optimismQuery, {
-    icon,
-    name: 'Optimism',
-    category: 'l2',
-    description: 'Optimism is an optimistic-rollup scaling solution built on Ethereum.',
-    feeDescription: 'Transaction fees are paid to sequencers.',
-    blockchain: 'Optimism',
-    source: 'The Graph Protocol',
-    adapter: 'optimism',
-    website: 'https://optimism.io',
-    protocolLaunch: '2021-06-24',
+export default function registerOptimism(sdk: Context) {
+  sdk.register({
+    id: 'optimism',
+    queries: {
+      fees: (date: string) => getOptimismData(date, sdk),
+    },
+    metadata: {
+      icon,
+      name: 'Optimism',
+      category: 'l2',
+      description: 'Optimism is an optimistic-rollup scaling solution built on Ethereum.',
+      feeDescription: 'Transaction fees are paid to sequencers.',
+      blockchain: 'Optimism',
+      source: 'The Graph Protocol',
+      adapter: 'optimism',
+      website: 'https://optimism.io',
+      protocolLaunch: '2021-06-24',
+    },
   });
 }

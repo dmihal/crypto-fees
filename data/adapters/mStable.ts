@@ -1,5 +1,4 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
 interface MassetData {
   token: {
@@ -15,7 +14,7 @@ interface FeesData {
   yesterday: MassetData[];
 }
 
-export async function getMstableData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getMstableData(date: string, sdk: Context): Promise<number> {
   const todayBlock = await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1));
   const yesterdayBlock = await sdk.chainData.getBlockNumber(date);
 
@@ -66,25 +65,23 @@ export async function getMstableData(date: string, sdk: CryptoStatsSDK): Promise
   return oneDay;
 }
 
-export default function registerMstable(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  function mStableQuery(attribute: string, date: string) {
-    if (attribute !== 'fee') {
-      throw new Error(`mStable doesn't support ${attribute}`);
-    }
-
-    return getMstableData(date, sdk);
-  }
-
-  register('mstable', mStableQuery, {
-    name: 'mStable',
-    category: 'dex',
-    description: 'mStable is a stablecoin asset manager.',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'mStable',
-    tokenTicker: 'MTA',
-    tokenCoingecko: 'meta',
-    protocolLaunch: '2020-05-29',
+export default function registerMstable(sdk: Context) {
+  sdk.register({
+    id: 'mstable',
+    queries: {
+      fees: (date: string) => getMstableData(date, sdk),
+    },
+    metadata: {
+      name: 'mStable',
+      category: 'dex',
+      description: 'mStable is a stablecoin asset manager.',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'mStable',
+      tokenTicker: 'MTA',
+      tokenCoingecko: 'meta',
+      protocolLaunch: '2020-05-29',
+    },
   });
 }

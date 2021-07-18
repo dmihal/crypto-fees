@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-export async function getTBTCData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getTBTCData(date: string, sdk: Context): Promise<number> {
   const graphQuery = `query fees($today: Int!, $yesterday: Int!){
     now: statsRecord(id: "current", block: {number: $today}) {
       tbtcFees
@@ -35,25 +34,24 @@ export async function getTBTCData(date: string, sdk: CryptoStatsSDK): Promise<nu
   return oneDayTBTCFeesInUSD + oneDayBeaconFeesInUSD;
 }
 
-export default function registerTBTC(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const tbtcQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Tornado Cash doesn't support ${attribute}`);
-    }
-    return getTBTCData(date, sdk);
-  };
-
-  register('tbtc', tbtcQuery, {
-    name: 'tBTC',
-    category: 'xchain',
-    description: 'tBTC is a protocol for cross-chain asset transfers',
-    feeDescription: 'Transfer fees are paid by users to node operators.',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'tbtc',
-    website: 'https://tbtc.network',
-    tokenTicker: 'KEEP',
-    tokenCoingecko: 'keep-network',
-    protocolLaunch: '2020-09-24',
+export default function registerTBTC(sdk: Context) {
+  sdk.register({
+    id: 'tbtc',
+    queries: {
+      fees: (date: string) => getTBTCData(date, sdk),
+    },
+    metadata: {
+      name: 'tBTC',
+      category: 'xchain',
+      description: 'tBTC is a protocol for cross-chain asset transfers',
+      feeDescription: 'Transfer fees are paid by users to node operators.',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'tbtc',
+      website: 'https://tbtc.network',
+      tokenTicker: 'KEEP',
+      tokenCoingecko: 'keep-network',
+      protocolLaunch: '2020-09-24',
+    },
   });
 }

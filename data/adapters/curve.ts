@@ -1,5 +1,4 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
 interface Pool {
   name: string;
@@ -40,7 +39,7 @@ const pools: Pool[] = [
   },
 ];
 
-export async function getCurveData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getCurveData(date: string, sdk: Context): Promise<number> {
   const todayBlock = await sdk.chainData.getBlockNumber(sdk.date.offsetDaysFormatted(date, 1));
   const yesterdayBlock = await sdk.chainData.getBlockNumber(date);
 
@@ -77,26 +76,25 @@ export async function getCurveData(date: string, sdk: CryptoStatsSDK): Promise<n
   return oneDay;
 }
 
-export default function registerCurve(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const curveQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Curve doesn't support ${attribute}`);
-    }
-    return getCurveData(date, sdk);
-  };
-
-  register('curve', curveQuery, {
-    name: 'Curve',
-    category: 'dex',
-    description: 'Curve is a decentralized exchange for stable-value assets.',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers.',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'curve',
-    website: 'https://www.curve.fi/',
-    tokenTicker: 'CRV',
-    tokenCoingecko: 'curve-dao-token',
-    protocolLaunch: '2020-02-25',
-    tokenLaunch: '2020-08-12',
+export default function registerCurve(sdk: Context) {
+  sdk.register({
+    id: 'curve',
+    queries: {
+      fees: (date: string) => getCurveData(date, sdk),
+    },
+    metadata: {
+      name: 'Curve',
+      category: 'dex',
+      description: 'Curve is a decentralized exchange for stable-value assets.',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers.',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'curve',
+      website: 'https://www.curve.fi/',
+      tokenTicker: 'CRV',
+      tokenCoingecko: 'curve-dao-token',
+      protocolLaunch: '2020-02-25',
+      tokenLaunch: '2020-08-12',
+    },
   });
 }

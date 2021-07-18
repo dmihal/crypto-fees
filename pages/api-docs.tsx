@@ -3,9 +3,9 @@ import { NextPage, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { getLastWeek } from 'data/queries';
-import { getIDs, getMetadata } from 'data/adapters';
 import ResponsePreview from 'components/ResponsePreview';
 import { ArrowLeft } from 'react-feather';
+import sdk from 'data/sdk';
 
 interface APIDocsProps {
   lastWeek: any;
@@ -66,7 +66,15 @@ export const getStaticProps: GetStaticProps = async () => {
     success: true,
     protocols: lastWeekData.sort((a: any, b: any) => b.fees[0].fee - a.fees[0].fee),
   };
-  const protocols = getIDs().map((id: string) => ({ id, ...getMetadata(id) }));
+
+  const list = sdk.getList('fees');
+
+  const protocols = await Promise.all(
+    list.getAdapters().map(async (adapter: any) => ({
+      id: adapter.id,
+      ...(await adapter.getMetadata()),
+    }))
+  );
 
   return { props: { lastWeek, protocols }, revalidate: 60 };
 };

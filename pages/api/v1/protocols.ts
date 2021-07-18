@@ -1,8 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getIDs, getMetadata } from 'data/adapters';
+import sdk from 'data/sdk';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const protocols = getIDs().map((id: string) => ({ id, ...getMetadata(id) }));
+  const list = sdk.getList('fees');
+
+  const protocols = await Promise.all(
+    list.getAdapters().map(async (adapter: any) => ({
+      id: adapter.id,
+      ...(await adapter.getMetadata()),
+    }))
+  );
 
   res.json({
     success: true,

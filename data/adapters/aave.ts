@@ -1,8 +1,7 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 import { getYesterdayDate } from '../lib/time';
 
-async function getAaveData(sdk: CryptoStatsSDK): Promise<number> {
+async function getAaveData(sdk: Context): Promise<number> {
   const response = await sdk.http.get('https://aave-api-v2.aave.com/data/fees-utc');
 
   if (response.error) {
@@ -12,30 +11,31 @@ async function getAaveData(sdk: CryptoStatsSDK): Promise<number> {
   return parseFloat(response?.lastDayUTCFees);
 }
 
-export default function registerAave(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const aaveQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Aave doesn't support ${attribute}`);
-    }
-    if (date !== getYesterdayDate()) {
-      // Legacy adapter, only "today" supported
-      return null;
-    }
-    return getAaveData(sdk);
-  };
-
-  register('aave', aaveQuery, {
-    name: 'Aave',
-    category: 'lending',
-    description: 'Aave is an open borrowing & lending protocol.',
-    feeDescription: 'Interest fees are paid from borrowers to lenders.',
-    blockchain: 'Ethereum',
-    source: 'Aave',
-    adapter: 'aave',
-    website: 'https://aave.com',
-    tokenTicker: 'AAVE',
-    tokenCoingecko: 'aave',
-    legacy: true,
-    protocolLaunch: '2021-05-04', // We don't have data from before this date yet
+export default function registerAave(sdk: Context) {
+  sdk.register({
+    id: 'aave',
+    queries: {
+      fees: (date: string) => {
+        if (date !== getYesterdayDate()) {
+          // Legacy adapter, only "today" supported
+          return null;
+        }
+        return getAaveData(sdk);
+      },
+    },
+    metadata: {
+      name: 'Aave',
+      category: 'lending',
+      description: 'Aave is an open borrowing & lending protocol.',
+      feeDescription: 'Interest fees are paid from borrowers to lenders.',
+      blockchain: 'Ethereum',
+      source: 'Aave',
+      adapter: 'aave',
+      website: 'https://aave.com',
+      tokenTicker: 'AAVE',
+      tokenCoingecko: 'aave',
+      legacy: true,
+      protocolLaunch: '2021-05-04', // We don't have data from before this date yet
+    },
   });
 }

@@ -1,34 +1,14 @@
-import { queryAdapter, getIDs, getMetadata } from './adapters';
+import './adapters';
 import { ProtocolData } from './types';
-import { getValue as getDBValue, setValue as setDBValue } from './db';
 import { last7Days } from './lib/time';
 import sdk from './sdk';
 
-const SANITY_CHECK = 1000000000; // Values over this will be automatically hidden
+// const SANITY_CHECK = 1000000000; // Values over this will be automatically hidden
 
-async function getValue(protocol: string, attribute: string, date: string) {
-  const cachedValue = await getDBValue(protocol, attribute, date);
-  if (cachedValue !== null && cachedValue < SANITY_CHECK) {
-    return cachedValue;
-  }
-  // eslint-disable-next-line no-console
-  console.log(`Missed cache for ${protocol} ${attribute} on ${date}`);
-
-  const value = await queryAdapter(protocol, attribute, date);
-
-  if (value > SANITY_CHECK) {
-    console.warn(`Query for ${protocol} on ${date} returned ${value}, exceeded sanity check`);
-    return null;
-  }
-
-  if (value) {
-    await setDBValue(protocol, attribute, date, value);
-  }
-  return value;
-}
+const feesList = sdk.getList('fees');
 
 export async function getMarketData(id: string, sevenDayMA: number, date: string) {
-  const metadata = getMetadata(id);
+  const metadata = await feesList.getAdapter(id).getMetadata();
 
   let price: null | number = null;
   let marketCap: null | number = null;
@@ -51,9 +31,10 @@ export async function getMarketData(id: string, sevenDayMA: number, date: string
 export async function getData(): Promise<ProtocolData[]> {
   const days = last7Days();
   const v2Data = await Promise.all(
-    getIDs().map(
+    feesList.getIDs().map(
       async (id: string): Promise<ProtocolData | null> => {
-        const metadata = getMetadata(id);
+        const adapter = feesList.getAdapter(id);
+        const metadata = await adapter.getMetadata();
 
         if (!sdk.date.isBefore(metadata.protocolLaunch)) {
           return null;
@@ -61,7 +42,9 @@ export async function getData(): Promise<ProtocolData[]> {
 
         let feeForDay;
         try {
-          feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+          feeForDay = await Promise.all(
+            days.map((day: string) => adapter.executeQuery('fees', day))
+          );
         } catch (e) {
           console.warn(e);
           return null;
@@ -96,8 +79,9 @@ export async function getData(): Promise<ProtocolData[]> {
 export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
   const days = last7Days(new Date(date));
   const v2Data = await Promise.all(
-    getIDs().map(async (id: string) => {
-      const metadata = getMetadata(id);
+    feesList.getIDs().map(async (id: string) => {
+      const adapter = feesList.getAdapter(id);
+      const metadata = await adapter.getMetadata();
 
       if (!sdk.date.isBefore(metadata.protocolLaunch, date)) {
         return null;
@@ -105,7 +89,7 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
 
       let feeForDay;
       try {
-        feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+        feeForDay = await Promise.all(days.map((day: string) => adapter.executeQuery('fees', day)));
       } catch (e) {
         console.warn(e);
         return null;
@@ -129,7 +113,7 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
 
       return {
         id,
-        ...getMetadata(id),
+        ...metadata,
         sevenDayMA,
         oneDay: feeForDay[feeForDay.length - 1],
 
@@ -148,18 +132,21 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
 export async function getLastWeek(): Promise<any[]> {
   const days = last7Days().reverse();
   const v2Data = await Promise.all(
-    getIDs().map(async (id: string) => {
+    feesList.getIDs().map(async (id: string) => {
+      const adapter = feesList.getAdapter(id);
+      const metadata = await adapter.getMetadata();
+
       try {
         const fees = await Promise.all(
           days.map(async (day: string) => ({
             date: day,
-            fee: await getValue(id, 'fee', day),
+            fee: await adapter.executeQuery('fees', day),
           }))
         );
 
         return {
           id,
-          ...getMetadata(id),
+          ...metadata,
           fees,
         };
       } catch (e) {
@@ -174,14 +161,15 @@ export async function getLastWeek(): Promise<any[]> {
 }
 
 export async function getDateData(protocol: string, date: string) {
-  const { protocolLaunch } = getMetadata(protocol);
+  const adapter = feesList.getAdapter(protocol);
+  const { protocolLaunch } = await adapter.getMetadata();
   if (protocolLaunch && sdk.date.isBefore(date, protocolLaunch)) {
     return { date, fee: null };
   }
 
   return {
     date,
-    fee: await getValue(protocol, 'fee', date).catch((e: any) => {
+    fee: await adapter.executeQuery('fees', date).catch((e: any) => {
       console.error(e);
       return null;
     }),

@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-export async function getPolygonData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getPolygonData(date: string, sdk: Context): Promise<number> {
   const todayBlock = await sdk.chainData.getBlockNumber(
     sdk.date.offsetDaysFormatted(date, 1),
     'polygon'
@@ -31,27 +30,25 @@ export async function getPolygonData(date: string, sdk: CryptoStatsSDK): Promise
   return feesInMatic * maticPrice;
 }
 
-export default function registerPolygon(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  function polygonQuery(attribute: string, date: string) {
-    if (attribute !== 'fee') {
-      throw new Error(`Polygon doesn't support ${attribute}`);
-    }
-
-    return getPolygonData(date, sdk);
-  }
-
-  register('polygon', polygonQuery, {
-    name: 'Polygon',
-    category: 'l1',
-    description: 'Polygon is a protocol for Ethereum-compatible blockchain networks.',
-    feeDescription: 'Transaction fees are paid by users to validators.',
-    blockchain: 'Polygon',
-    source: 'The Graph Protocol',
-    adapter: 'polygon',
-    website: 'https://polygon.technology',
-    tokenTicker: 'MATIC',
-    tokenCoingecko: 'matic-network',
-    protocolLaunch: '2020-05-30',
-    tokenLaunch: '2017-09-09',
+export default function registerPolygon(sdk: Context) {
+  sdk.register({
+    id: 'polygon',
+    queries: {
+      fees: (date: string) => getPolygonData(date, sdk),
+    },
+    metadata: {
+      name: 'Polygon',
+      category: 'l1',
+      description: 'Polygon is a protocol for Ethereum-compatible blockchain networks.',
+      feeDescription: 'Transaction fees are paid by users to validators.',
+      blockchain: 'Polygon',
+      source: 'The Graph Protocol',
+      adapter: 'polygon',
+      website: 'https://polygon.technology',
+      tokenTicker: 'MATIC',
+      tokenCoingecko: 'matic-network',
+      protocolLaunch: '2020-05-30',
+      tokenLaunch: '2017-09-09',
+    },
   });
 }

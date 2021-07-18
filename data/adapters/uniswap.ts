@@ -1,7 +1,4 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
-import icon from 'icons/uniswap.svg';
-import iconV1 from 'icons/uniswap-v1.png';
+import { Context } from '@cryptostats/sdk';
 
 const blacklistAddresses = [
   '0x7d7e813082ef6c143277c71786e5be626ec77b20',
@@ -11,9 +8,7 @@ const blacklistAddresses = [
   '0x382a9a8927f97f7489af3f0c202b23ed1eb772b5',
 ];
 
-const uniV3Adapter = (subgraph: string, sdk: CryptoStatsSDK) => async (
-  date: string
-): Promise<number> => {
+const uniV3Adapter = (subgraph: string, sdk: Context) => async (date: string): Promise<number> => {
   const graphQuery = `query fees($date: Int!) {
     uniswapDayDatas(where: {date: $date}) {
       feesUSD
@@ -37,7 +32,7 @@ const uniV3Adapter = (subgraph: string, sdk: CryptoStatsSDK) => async (
   return parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].feesUSD);
 };
 
-const getUniswapV2Adapter = (sdk: CryptoStatsSDK) => async (date: string): Promise<number> => {
+const getUniswapV2Adapter = (sdk: Context) => async (date: string): Promise<number> => {
   const graphQuery = `query fees($date: Int!, $blacklistAddresses: [Bytes!]!) {
     uniswapDayDatas(where: {date: $date}) {
       date
@@ -73,7 +68,7 @@ const getUniswapV2Adapter = (sdk: CryptoStatsSDK) => async (date: string): Promi
   return oneDay;
 };
 
-const getUniswapV1Adapter = (sdk: CryptoStatsSDK) => async (date: string): Promise<number> => {
+const getUniswapV1Adapter = (sdk: Context) => async (date: string): Promise<number> => {
   const graphQuery = `query fees {
     uniswapDayDatas(where:{date: ${sdk.date.dateToTimestamp(date)}}) {
       date
@@ -89,75 +84,98 @@ const getUniswapV1Adapter = (sdk: CryptoStatsSDK) => async (date: string): Promi
   return oneDay;
 };
 
-export default function registerUniswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const query = (adapter: (date: string) => Promise<number>) => (
-    attribute: string,
-    date: string
-  ) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Uniswap doesn't support ${attribute}`);
-    }
-    return adapter(date);
-  };
+export default function registerUniswap(sdk: Context) {
+  const uniswapIconLoader = sdk.ipfs.getDataURILoader(
+    'QmPXoiG66a9gCDX1NX51crWV7UAijoFd5wycHrfRKM6Y1n',
+    'image/svg+xml'
+  );
+  const uniswapV1IconLoader = sdk.ipfs.getDataURILoader(
+    'QmQZhDfjDjT1Tv9xfaWYcRkywD4GCavkhge7Yi4A74rJ4b',
+    'image/png'
+  );
 
-  register('uniswap-v1', query(getUniswapV1Adapter(sdk)), {
-    icon: iconV1,
-    name: 'Uniswap V1',
-    category: 'dex',
-    description: 'Uniswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.com',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'uniswap',
-    protocolLaunch: '2020-11-02',
+  sdk.register({
+    id: 'uniswap-v1',
+    queries: {
+      fees: getUniswapV1Adapter(sdk),
+    },
+    metadata: {
+      icon: uniswapV1IconLoader,
+      name: 'Uniswap V1',
+      category: 'dex',
+      description: 'Uniswap is a permissionless, decentralized exchange',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      website: 'https://uniswap.com',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'uniswap',
+      protocolLaunch: '2020-11-02',
+    },
   });
 
-  register('uniswap-v2', query(getUniswapV2Adapter(sdk)), {
-    icon,
-    name: 'Uniswap V2',
-    category: 'dex',
-    description: 'Uniswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.org',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'uniswap',
-    tokenTicker: 'UNI',
-    tokenCoingecko: 'uniswap',
-    protocolLaunch: '2020-05-04',
-    tokenLaunch: '2020-09-14',
+  sdk.register({
+    id: 'uniswap-v2',
+    queries: {
+      fees: getUniswapV2Adapter(sdk),
+    },
+    metadata: {
+      icon: uniswapIconLoader,
+      name: 'Uniswap V2',
+      category: 'dex',
+      description: 'Uniswap is a permissionless, decentralized exchange',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      website: 'https://uniswap.org',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'uniswap',
+      tokenTicker: 'UNI',
+      tokenCoingecko: 'uniswap',
+      protocolLaunch: '2020-05-04',
+      tokenLaunch: '2020-09-14',
+    },
   });
 
-  register('uniswap-v3', query(uniV3Adapter('ianlapham/uniswap-v3-prod', sdk)), {
-    icon,
-    name: 'Uniswap V3',
-    category: 'dex',
-    description: 'Uniswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.org',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'uniswap',
-    tokenTicker: 'UNI',
-    tokenCoingecko: 'uniswap',
-    protocolLaunch: '2021-05-05',
-    tokenLaunch: '2020-09-14',
+  sdk.register({
+    id: 'uniswap-v3',
+    queries: {
+      fees: uniV3Adapter('ianlapham/uniswap-v3-prod', sdk),
+    },
+    metadata: {
+      icon: uniswapIconLoader,
+      name: 'Uniswap V3',
+      category: 'dex',
+      description: 'Uniswap is a permissionless, decentralized exchange',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      website: 'https://uniswap.org',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'uniswap',
+      tokenTicker: 'UNI',
+      tokenCoingecko: 'uniswap',
+      protocolLaunch: '2021-05-05',
+      tokenLaunch: '2020-09-14',
+    },
   });
 
-  register('uniswap-optimism', query(uniV3Adapter('ianlapham/uniswap-optimism', sdk)), {
-    icon,
-    name: 'Uniswap V3 (Optimism)',
-    category: 'dex',
-    description: 'Uniswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.org',
-    blockchain: 'Optimism',
-    source: 'The Graph Protocol',
-    adapter: 'uniswap',
-    tokenTicker: 'UNI',
-    tokenCoingecko: 'uniswap',
-    protocolLaunch: '2021-07-09',
-    tokenLaunch: '2020-09-14',
+  sdk.register({
+    id: 'uniswap-optimism',
+    queries: {
+      fees: uniV3Adapter('ianlapham/uniswap-optimism', sdk),
+    },
+    metadata: {
+      icon: uniswapIconLoader,
+      name: 'Uniswap V3 (Optimism)',
+      category: 'dex',
+      description: 'Uniswap is a permissionless, decentralized exchange',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      website: 'https://uniswap.org',
+      blockchain: 'Optimism',
+      source: 'The Graph Protocol',
+      adapter: 'uniswap',
+      tokenTicker: 'UNI',
+      tokenCoingecko: 'uniswap',
+      protocolLaunch: '2021-07-09',
+      tokenLaunch: '2020-09-14',
+    },
   });
 }

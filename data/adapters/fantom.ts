@@ -1,8 +1,7 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 import icon from 'icons/fantom.svg';
 
-async function getFeeDataFromFTMscan(sdk: CryptoStatsSDK): Promise<any[]> {
+async function getFeeDataFromFTMscan(sdk: Context): Promise<any[]> {
   const csv = await sdk.http.get('https://ftmscan.com/chart/transactionfee?output=csv', {
     plainText: true,
   });
@@ -22,7 +21,7 @@ async function getFeeDataFromFTMscan(sdk: CryptoStatsSDK): Promise<any[]> {
 
 let feeDataPromise: null | Promise<any[]> = null;
 
-export async function getFTMData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getFTMData(date: string, sdk: Context): Promise<number> {
   if (!feeDataPromise) {
     feeDataPromise = getFeeDataFromFTMscan(sdk);
   }
@@ -55,27 +54,25 @@ export async function getFTMData(date: string, sdk: CryptoStatsSDK): Promise<num
   return ftmFees * ftmPrice;
 }
 
-export default function registerFTM(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  function ftmQuery(attribute: string, date: string) {
-    if (attribute !== 'fee') {
-      throw new Error(`FTM doesn't support ${attribute}`);
-    }
-
-    return getFTMData(date, sdk);
-  }
-
-  register('fantom', ftmQuery, {
-    category: 'l1',
-    name: 'Fantom',
-    description: 'Fantom is an aBFT EVM-compatible chain',
-    feeDescription: 'Transaction fees are paid to validators',
-    blockchain: 'Fantom',
-    source: 'FTMscan',
-    adapter: 'fantom',
-    website: 'https://fantom.foundation',
-    tokenTicker: 'FTM',
-    tokenCoingecko: 'fantom',
-    protocolLaunch: '2020-08-29',
-    icon,
+export default function registerFTM(sdk: Context) {
+  sdk.register({
+    id: 'fantom',
+    queries: {
+      fees: (date: string) => getFTMData(date, sdk),
+    },
+    metadata: {
+      category: 'l1',
+      name: 'Fantom',
+      description: 'Fantom is an aBFT EVM-compatible chain',
+      feeDescription: 'Transaction fees are paid to validators',
+      blockchain: 'Fantom',
+      source: 'FTMscan',
+      adapter: 'fantom',
+      website: 'https://fantom.foundation',
+      tokenTicker: 'FTM',
+      tokenCoingecko: 'fantom',
+      protocolLaunch: '2020-08-29',
+      icon,
+    },
   });
 }

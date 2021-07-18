@@ -3,22 +3,22 @@ import sharp from 'sharp';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import SingleProtocolCard from 'components/SocialCard/SingleProtocolCard';
-import { getMetadata } from 'data/adapters';
 import path from 'path';
 import { formatDate } from 'data/lib/time';
 import { getDateRangeData } from 'data/queries';
 import subDays from 'date-fns/subDays';
+import sdk from 'data/sdk';
 
 // These statements causes Next to bundle these files
 path.resolve(process.cwd(), 'fonts', 'fonts.conf');
 path.resolve(process.cwd(), 'fonts', 'SofiaProRegular.ttf');
 
+const list = sdk.getList('fees');
+
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const id = req.query.id.toString().replace('.png', '');
-  const metadata = getMetadata(id);
-  if (!metadata) {
-    return res.json({ error: `Unknown ${id}` });
-  }
+  const adapter = list.getAdapter(id);
+  const metadata = await adapter.getMetadata();
 
   const feeData = await getDateRangeData(id, subDays(new Date(), 30), subDays(new Date(), 1));
   const data = feeData.map((val: any) => ({

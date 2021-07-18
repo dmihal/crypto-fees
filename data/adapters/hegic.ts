@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-async function getHegicData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+async function getHegicData(date: string, sdk: Context): Promise<number> {
   const start = sdk.date.dateToTimestamp(date);
   const end = start + 86400;
 
@@ -45,23 +44,22 @@ async function getHegicData(date: string, sdk: CryptoStatsSDK): Promise<number> 
   return totalFeesYesterday;
 }
 
-export default function registerHegic(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const hegicQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Hegic doesn't support ${attribute}`);
-    }
-    return getHegicData(date, sdk);
-  };
-
-  register('hegic', hegicQuery, {
-    name: 'Hegic',
-    category: 'other',
-    description: 'Hegic is a decentralized options trading platform',
-    // feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'hegic',
-    website: 'https://www.hegic.co',
-    protocolLaunch: '2020-10-11',
+export default function registerHegic(sdk: Context) {
+  sdk.register({
+    id: 'hegic',
+    queries: {
+      fees: (date: string) => getHegicData(date, sdk),
+    },
+    metadata: {
+      name: 'Hegic',
+      category: 'other',
+      description: 'Hegic is a decentralized options trading platform',
+      // feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'hegic',
+      website: 'https://www.hegic.co',
+      protocolLaunch: '2020-10-11',
+    },
   });
 }

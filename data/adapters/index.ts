@@ -30,66 +30,34 @@ import registerUniswap from './uniswap';
 import registerXDai from './xdai';
 import registerZilliqa from './zilliqa';
 
-interface Adapter {
-  query: any;
-  metadata: any;
-}
+const feesList = sdk.getList('fees');
 
-const adapters: { [id: string]: Adapter } = {};
-const ids: string[] = [];
-
-const register = (id: string, query: any, metadata: any) => {
-  if (adapters[id]) {
-    throw new Error(`Adapter ${id} already registered`);
-  }
-  ids.push(id);
-  adapters[id] = { query, metadata };
-};
-
-register0x(register, sdk);
-registerAave(register, sdk);
-registerAvalanche(register, sdk);
-registerBalancer(register, sdk);
-registerBancor(register, sdk);
-registerBSC(register, sdk);
-registerCoinMetrics(register, sdk);
-registerCompound(register, sdk);
-// registerCurve(register);
-registerFTM(register, sdk);
-registerHegic(register, sdk);
-registerHoneyswap(register, sdk);
-registerLinkswap(register, sdk);
-registerMaker(register, sdk);
-registerMstable(register, sdk);
-registerOptimism(register, sdk);
-registerQuickswap(register, sdk);
-registerPolkadot(register, sdk);
-registerPolygon(register, sdk);
-registerPolymarket(register, sdk);
-registerRen(register, sdk);
-registerSushiswap(register, sdk);
-registerSynthetix(register, sdk);
-registerTBTC(register, sdk);
-registerTerra(register, sdk);
-registerTornado(register, sdk);
-registerUniswap(register, sdk);
-registerXDai(register, sdk);
-registerZilliqa(register, sdk);
-
-export const getIDs = () => ids;
-
-export function getMetadata(id: string) {
-  if (!adapters[id]) {
-    throw new Error(`Unknown protocol ${id}`);
-  }
-  return adapters[id].metadata;
-}
-
-export async function queryAdapter(protocol: string, attribute: string, date: string) {
-  if (!adapters[protocol]) {
-    throw new Error(`Unknown protocol ${protocol}`);
-  }
-
-  const value = adapters[protocol].query(attribute, date);
-  return value;
-}
+feesList.addAdaptersWithSetupFunction(register0x);
+feesList.addAdaptersWithSetupFunction(registerAave);
+feesList.addAdaptersWithSetupFunction(registerAvalanche);
+feesList.addAdaptersWithSetupFunction(registerBalancer);
+feesList.addAdaptersWithSetupFunction(registerBancor);
+feesList.addAdaptersWithSetupFunction(registerBSC);
+feesList.addAdaptersWithSetupFunction(registerCoinMetrics);
+feesList.addAdaptersWithSetupFunction(registerCompound);
+//feesList.addAdaptersWithSetupFunction( registerCurve(register);
+feesList.addAdaptersWithSetupFunction(registerFTM);
+feesList.addAdaptersWithSetupFunction(registerHegic);
+feesList.addAdaptersWithSetupFunction(registerHoneyswap);
+feesList.addAdaptersWithSetupFunction(registerLinkswap);
+feesList.addAdaptersWithSetupFunction(registerMaker);
+feesList.addAdaptersWithSetupFunction(registerMstable);
+feesList.addAdaptersWithSetupFunction(registerOptimism);
+feesList.addAdaptersWithSetupFunction(registerQuickswap);
+feesList.addAdaptersWithSetupFunction(registerPolkadot);
+feesList.addAdaptersWithSetupFunction(registerPolygon);
+feesList.addAdaptersWithSetupFunction(registerPolymarket);
+feesList.addAdaptersWithSetupFunction(registerRen);
+feesList.addAdaptersWithSetupFunction(registerSushiswap);
+feesList.addAdaptersWithSetupFunction(registerSynthetix);
+feesList.addAdaptersWithSetupFunction(registerTBTC);
+feesList.addAdaptersWithSetupFunction(registerTerra);
+feesList.addAdaptersWithSetupFunction(registerTornado);
+feesList.addAdaptersWithSetupFunction(registerUniswap);
+feesList.addAdaptersWithSetupFunction(registerXDai);
+feesList.addAdaptersWithSetupFunction(registerZilliqa);

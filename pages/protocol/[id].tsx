@@ -11,10 +11,11 @@ import Attribute from 'components/Attribute';
 import Chart from 'components/Chart';
 import ChartToolbar from 'components/ChartToolbar';
 import SocialTags from 'components/SocialTags';
-import { getIDs, getMetadata } from 'data/adapters';
 import { getDateRangeData, getMarketData } from 'data/queries';
-import { formatDate } from 'data/lib/time';
-import _icons from 'components/icons';
+import sdk from 'data/sdk';
+import { DateLib } from '@cryptostats/sdk/dist/libs/DateLib';
+
+const dateLib = new DateLib();
 
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
@@ -25,7 +26,7 @@ function getMissing(data: any, minDate: Date, maxDate: Date, id: string) {
   }
 
   for (let date = minDate; !isAfter(date, maxDate); date = addDays(date, 1)) {
-    const dateStr = formatDate(date);
+    const dateStr = dateLib.formatDate(date);
     if (!data[id][dateStr]) {
       missing.push(dateStr);
     }
@@ -34,11 +35,11 @@ function getMissing(data: any, minDate: Date, maxDate: Date, id: string) {
 }
 
 function getDateWithSmoothing(data: any, id: string, date: Date, smoothing: number) {
-  let fee = data[id][formatDate(date)].fee;
+  let fee = data[id][dateLib.formatDate(date)].fee;
 
   if (smoothing > 0) {
     for (let i = 1; i <= smoothing; i += 1) {
-      fee += data[id][formatDate(subDays(date, i))].fee;
+      fee += data[id][dateLib.formatDate(subDays(date, i))].fee;
     }
     fee /= smoothing + 1;
   }
@@ -377,23 +378,34 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     defaultFees[date] = data;
   }
 
-  const ids = getIDs().sort();
+  const list = sdk.getList('fees');
+
+  const adapters = list.getAdapters();
   const protocols: { [id: string]: string } = {};
   const icons: { [id: string]: string } = {};
-  for (const id of ids) {
-    const metadata = getMetadata(id);
-    protocols[id] = metadata.name;
-    icons[id] = metadata.icon || _icons[id];
-  }
+
+  await Promise.all(
+    adapters.map(async (adapter: any) => {
+      const metadata = await adapter.getMetadata();
+      protocols[adapter.id] = metadata.name;
+      icons[adapter.id] = metadata.icon;
+    })
+  );
 
   const sevenDayMA =
     defaultFeesArray.slice(-7).reduce((acc: number, day: any) => acc + day.fee, 0) / 7;
-  const marketData = await getMarketData(id, sevenDayMA, formatDate(subDays(new Date(), 1)));
+  const marketData = await getMarketData(
+    id,
+    sevenDayMA,
+    sdk.date.formatDate(subDays(new Date(), 1))
+  );
+
+  const adapter = list.getAdapter(id);
 
   return {
     props: {
       id,
-      metadata: getMetadata(id),
+      metadata: await adapter.getMetadata(),
       feeCache: {
         [id]: defaultFees,
       },
@@ -406,8 +418,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const list = sdk.getList('fees');
   return {
-    paths: getIDs().map((id: string) => ({ params: { id } })),
+    paths: list.getIDs().map((id: string) => ({ params: { id } })),
     fallback: false,
   };
 };

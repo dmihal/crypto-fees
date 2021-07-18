@@ -1,9 +1,8 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
 const LINK_ADDRESS = '0x514910771af9ca656af840dff83e8264ecf986ca';
 
-export async function getLinkswapData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getLinkswapData(date: string, sdk: Context): Promise<number> {
   const data = await sdk.graph.query(
     'yflink/linkswap-v1',
     `{
@@ -39,26 +38,25 @@ export async function getLinkswapData(date: string, sdk: CryptoStatsSDK): Promis
   return oneDay;
 }
 
-export default function registerLinkswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const sushiQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Linkswap doesn't support ${attribute}`);
-    }
-    return getLinkswapData(date, sdk);
-  };
-
-  register('linkswap', sushiQuery, {
-    name: 'Linkswap',
-    category: 'dex',
-    description: 'Linkswap is a LINK-centred decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'linkswap',
-    website: 'https://linkswap.app',
-    tokenTicker: 'YFL',
-    tokenCoingecko: 'yflink',
-    protocolLaunch: '2020-11-15',
-    tokenLaunch: '2020-08-09',
+export default function registerLinkswap(sdk: Context) {
+  sdk.register({
+    id: 'linkswap',
+    queries: {
+      fees: (date: string) => getLinkswapData(date, sdk),
+    },
+    metadata: {
+      name: 'Linkswap',
+      category: 'dex',
+      description: 'Linkswap is a LINK-centred decentralized exchange',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'linkswap',
+      website: 'https://linkswap.app',
+      tokenTicker: 'YFL',
+      tokenCoingecko: 'yflink',
+      protocolLaunch: '2020-11-15',
+      tokenLaunch: '2020-08-09',
+    },
   });
 }

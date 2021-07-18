@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-export async function getQuickswapData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getQuickswapData(date: string, sdk: Context): Promise<number> {
   const graphQuery = `query fees($date: Int!) {
     uniswapDayDatas(where: {date: $date}) {
       date
@@ -26,26 +25,25 @@ export async function getQuickswapData(date: string, sdk: CryptoStatsSDK): Promi
   return oneDay;
 }
 
-export default function registerUniswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const query = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Quickswap doesn't support ${attribute}`);
-    }
-    return getQuickswapData(date, sdk);
-  };
-
-  register('quickswap', query, {
-    name: 'Quickswap',
-    category: 'dex',
-    description: 'Quickswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://quickswap.exchange',
-    blockchain: 'Polygon',
-    source: 'The Graph Protocol',
-    adapter: 'quickswap',
-    tokenTicker: 'QUICK',
-    tokenCoingecko: 'quick',
-    protocolLaunch: '2020-11-03',
-    tokenLaunch: '2021-02-15',
+export default function registerQuickswap(sdk: Context) {
+  sdk.register({
+    id: 'quickswap',
+    queries: {
+      fees: (date: string) => getQuickswapData(date, sdk),
+    },
+    metadata: {
+      name: 'Quickswap',
+      category: 'dex',
+      description: 'Quickswap is a permissionless, decentralized exchange',
+      feeDescription: 'Trading fees are paid by traders to liquidity providers',
+      website: 'https://quickswap.exchange',
+      blockchain: 'Polygon',
+      source: 'The Graph Protocol',
+      adapter: 'quickswap',
+      tokenTicker: 'QUICK',
+      tokenCoingecko: 'quick',
+      protocolLaunch: '2020-11-03',
+      tokenLaunch: '2021-02-15',
+    },
   });
 }

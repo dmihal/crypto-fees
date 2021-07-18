@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-async function getMakerFees(date: string, sdk: CryptoStatsSDK) {
+async function getMakerFees(date: string, sdk: Context) {
   const data = await sdk.graph.query(
     'protofire/maker-protocol',
     `query fees($today: Int!, $yesterday: Int!){
@@ -39,25 +38,23 @@ async function getMakerFees(date: string, sdk: CryptoStatsSDK) {
   return totalFees;
 }
 
-export default function registerSynthetix(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  function makerQuery(attribute: string, date: string) {
-    if (attribute !== 'fee') {
-      throw new Error(`Maker doesn't support ${attribute}`);
-    }
-
-    return getMakerFees(date, sdk);
-  }
-
-  register('maker', makerQuery, {
-    category: 'lending',
-    name: 'MakerDAO',
-    description: 'MakerDAO is the protocol that issues the Dai stablecoin using loans.',
-    feeDescription: 'Stability fees are accrued by borrowers and are used to buy & burn MKR.',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'maker',
-    protocolLaunch: '2019-11-18',
-    tokenTicker: 'MKR',
-    tokenCoingecko: 'maker',
+export default function registerSynthetix(sdk: Context) {
+  sdk.register({
+    id: 'maker',
+    queries: {
+      fees: (date: string) => getMakerFees(date, sdk),
+    },
+    metadata: {
+      category: 'lending',
+      name: 'MakerDAO',
+      description: 'MakerDAO is the protocol that issues the Dai stablecoin using loans.',
+      feeDescription: 'Stability fees are accrued by borrowers and are used to buy & burn MKR.',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'maker',
+      protocolLaunch: '2019-11-18',
+      tokenTicker: 'MKR',
+      tokenCoingecko: 'maker',
+    },
   });
 }

@@ -1,9 +1,8 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
 const EIGHTEEN_DECIMALS = 10 ** 18;
 
-async function getSynthetixFees(date: string, sdk: CryptoStatsSDK) {
+async function getSynthetixFees(date: string, sdk: Context) {
   const data = await sdk.graph.query(
     'synthetixio-team/synthetix-exchanges',
     `query fees($today: Int!, $yesterday: Int!){
@@ -27,24 +26,24 @@ async function getSynthetixFees(date: string, sdk: CryptoStatsSDK) {
   return fees;
 }
 
-export default function registerSynthetix(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  function synthetixQuery(attribute: string, date: string) {
-    if (attribute !== 'fee') {
-      throw new Error(`Synthetix doesn't support ${attribute}`);
-    }
-
-    return getSynthetixFees(date, sdk);
-  }
-  register('synthetix', synthetixQuery, {
-    category: 'dex',
-    name: 'Synthetix',
-    description: 'The Synthetix Exchange is a decentralized exchange for trading synthetic assets',
-    feeDescription: 'Trading fees are paid by users to SNX stakers',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'synthetix',
-    protocolLaunch: '2018-12-07',
-    tokenTicker: 'SNX',
-    tokenCoingecko: 'havven',
+export default function registerSynthetix(sdk: Context) {
+  sdk.register({
+    id: 'synthetix',
+    queries: {
+      fees: (date: string) => getSynthetixFees(date, sdk),
+    },
+    metadata: {
+      category: 'dex',
+      name: 'Synthetix',
+      description:
+        'The Synthetix Exchange is a decentralized exchange for trading synthetic assets',
+      feeDescription: 'Trading fees are paid by users to SNX stakers',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'synthetix',
+      protocolLaunch: '2018-12-07',
+      tokenTicker: 'SNX',
+      tokenCoingecko: 'havven',
+    },
   });
 }

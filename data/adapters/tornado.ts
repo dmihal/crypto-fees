@@ -1,7 +1,6 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
-export async function getTornadoData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getTornadoData(date: string, sdk: Context): Promise<number> {
   const graphQuery = `query fees($today: Int!, $yesterday: Int!){
     now: tornado(id: "1", block: {number: $today}) {
       totalFeesUSD
@@ -23,25 +22,24 @@ export async function getTornadoData(date: string, sdk: CryptoStatsSDK): Promise
   return parseFloat(data.now.totalFeesUSD) - parseFloat(data.yesterday.totalFeesUSD);
 }
 
-export default function registerSushiswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const tornadoQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Tornado Cash doesn't support ${attribute}`);
-    }
-    return getTornadoData(date, sdk);
-  };
-
-  register('tornado', tornadoQuery, {
-    name: 'Tornado Cash',
-    category: 'other',
-    description: 'Tornado Cash is a privacy tool for trustless asset mixing.',
-    feeDescription: 'Relay fees are paid by withdrawers to relayers.',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'tornado',
-    protocolLaunch: '2019-12-16',
-    tokenTicker: 'TORN',
-    tokenCoingecko: 'tornado-cash',
-    tokenLaunch: '2021-02-09',
+export default function registerSushiswap(sdk: Context) {
+  sdk.register({
+    id: 'tornado',
+    queries: {
+      fees: (date: string) => getTornadoData(date, sdk),
+    },
+    metadata: {
+      name: 'Tornado Cash',
+      category: 'other',
+      description: 'Tornado Cash is a privacy tool for trustless asset mixing.',
+      feeDescription: 'Relay fees are paid by withdrawers to relayers.',
+      blockchain: 'Ethereum',
+      source: 'The Graph Protocol',
+      adapter: 'tornado',
+      protocolLaunch: '2019-12-16',
+      tokenTicker: 'TORN',
+      tokenCoingecko: 'tornado-cash',
+      tokenLaunch: '2021-02-09',
+    },
   });
 }

@@ -1,5 +1,4 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
 const l1s = [
   {
@@ -140,7 +139,7 @@ const l1s = [
 async function getCoinMetricsData(
   id: string,
   date: string,
-  sdk: CryptoStatsSDK,
+  sdk: Context,
   coinGecko?: string
 ): Promise<number> {
   const { metricData } = await sdk.http.get(
@@ -160,18 +159,17 @@ async function getCoinMetricsData(
   return parseFloat(metricData.series[0].values[0]);
 }
 
-export default function registerCoinMetrics(register: RegisterFunction, sdk: CryptoStatsSDK) {
+export default function registerCoinMetrics(sdk: Context) {
   l1s.map(({ id, ...metadata }: any) => {
-    const query = (attribute: string, date: string) => {
-      if (attribute !== 'fee') {
-        throw new Error(`Synthetix doesn't support ${attribute}`);
-      }
-      return getCoinMetricsData(id, date, sdk, metadata.tokenCoingecko);
-    };
-
-    register(id, query, {
-      ...metadata,
-      category: 'l1',
+    sdk.register({
+      id,
+      queries: {
+        fees: (date: string) => getCoinMetricsData(id, date, sdk, metadata.tokenCoingecko),
+      },
+      metadata: {
+        ...metadata,
+        category: 'l1',
+      },
     });
   });
 }

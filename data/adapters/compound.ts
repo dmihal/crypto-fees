@@ -1,9 +1,8 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction } from '../types';
+import { Context } from '@cryptostats/sdk';
 
 const sum = (a: number, b: number) => a + b;
 
-export async function getCompoundData(date: string, sdk: CryptoStatsSDK): Promise<number> {
+export async function getCompoundData(date: string, sdk: Context): Promise<number> {
   const startTimestamp = sdk.date.dateToTimestamp(date);
   const endTimestamp = startTimestamp + 86400;
 
@@ -35,26 +34,25 @@ export async function getCompoundData(date: string, sdk: CryptoStatsSDK): Promis
   return oneDay;
 }
 
-export default function registerCompound(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const compoundQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Uniswap doesn't support ${attribute}`);
-    }
-    return getCompoundData(date, sdk);
-  };
-
-  register('compound', compoundQuery, {
-    name: 'Compound',
-    category: 'lending',
-    description: 'Compound is an open borrowing & lending protocol.',
-    feeDescription: 'Interest fees are paid from borrowers to lenders.',
-    blockchain: 'Ethereum',
-    source: 'Compound API',
-    adapter: 'compound',
-    website: 'https://compound.finance',
-    protocolLaunch: '2019-05-23',
-    tokenTicker: 'COMP',
-    tokenCoingecko: 'compound-governance-token',
-    tokenLaunch: '2020-06-22',
+export default function registerCompound(sdk: Context) {
+  sdk.register({
+    id: 'compound',
+    queries: {
+      fees: (date: string) => getCompoundData(date, sdk),
+    },
+    metadata: {
+      name: 'Compound',
+      category: 'lending',
+      description: 'Compound is an open borrowing & lending protocol.',
+      feeDescription: 'Interest fees are paid from borrowers to lenders.',
+      blockchain: 'Ethereum',
+      source: 'Compound API',
+      adapter: 'compound',
+      website: 'https://compound.finance',
+      protocolLaunch: '2019-05-23',
+      tokenTicker: 'COMP',
+      tokenCoingecko: 'compound-governance-token',
+      tokenLaunch: '2020-06-22',
+    },
   });
 }

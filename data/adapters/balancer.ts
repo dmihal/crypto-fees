@@ -1,11 +1,11 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction, Category } from '../types';
+import { Context } from '@cryptostats/sdk';
+import { Category } from '../types';
 import icon from 'icons/balancer.svg';
 
 async function getBalancerData(
   date: string,
   subgraphName: string,
-  sdk: CryptoStatsSDK,
+  sdk: Context,
   chain = 'ethereum'
 ): Promise<number> {
   const todayBlock = await sdk.chainData.getBlockNumber(
@@ -29,28 +29,7 @@ async function getBalancerData(
   return parseFloat(data.now[0].totalSwapFee) - parseFloat(data.yesterday[0].totalSwapFee);
 }
 
-export default function registerBalancer(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const v1Query = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Balancer doesn't support ${attribute}`);
-    }
-    return getBalancerData(date, 'balancer', sdk);
-  };
-
-  const v2Query = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Balancer doesn't support ${attribute}`);
-    }
-    return getBalancerData(date, 'balancer-v2', sdk);
-  };
-
-  const polygonQuery = (attribute: string, date: string) => {
-    if (attribute !== 'fee') {
-      throw new Error(`Balancer doesn't support ${attribute}`);
-    }
-    return getBalancerData(date, 'balancer-polygon-v2', sdk, 'polygon');
-  };
-
+export default function registerBalancer(sdk: Context) {
   const metadata = {
     category: 'dex' as Category,
     description: 'Balancer is a decentralized exchange & asset pool balancer.',
@@ -64,24 +43,42 @@ export default function registerBalancer(register: RegisterFunction, sdk: Crypto
     icon,
   };
 
-  register('balancer', v1Query, {
-    ...metadata,
-    name: 'Balancer V1',
-    blockchain: 'Ethereum',
-    protocolLaunch: '2020-02-27',
+  sdk.register({
+    id: 'balancer',
+    queries: {
+      fees: (date: string) => getBalancerData(date, 'balancer', sdk),
+    },
+    metadata: {
+      ...metadata,
+      name: 'Balancer V1',
+      blockchain: 'Ethereum',
+      protocolLaunch: '2020-02-27',
+    },
   });
 
-  register('balancerv2', v2Query, {
-    ...metadata,
-    name: 'Balancer V2',
-    blockchain: 'Ethereum',
-    protocolLaunch: '2021-05-11',
+  sdk.register({
+    id: 'balancerv2',
+    queries: {
+      fees: (date: string) => getBalancerData(date, 'balancer-v2', sdk),
+    },
+    metadata: {
+      ...metadata,
+      name: 'Balancer V2',
+      blockchain: 'Ethereum',
+      protocolLaunch: '2021-05-11',
+    },
   });
 
-  register('balancerv2-polygon', polygonQuery, {
-    ...metadata,
-    name: 'Balancer V2 (Polygon)',
-    blockchain: 'Polygon',
-    protocolLaunch: '2021-07-01',
+  sdk.register({
+    id: 'balancerv2-polygon',
+    queries: {
+      fees: (date: string) => getBalancerData(date, 'balancer-polygon-v2', sdk, 'polygon'),
+    },
+    metadata: {
+      ...metadata,
+      name: 'Balancer V2 (Polygon)',
+      blockchain: 'Polygon',
+      protocolLaunch: '2021-07-01',
+    },
   });
 }

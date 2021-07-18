@@ -1,12 +1,8 @@
-import { CryptoStatsSDK } from '@cryptostats/sdk';
-import { RegisterFunction, Category } from '../types';
+import { Context } from '@cryptostats/sdk';
+import { Category } from '../types';
 import icon from 'icons/sushi.svg';
 
-async function getSushiswapData(
-  subgraph: string,
-  date: string,
-  sdk: CryptoStatsSDK
-): Promise<number> {
+async function getSushiswapData(subgraph: string, date: string, sdk: Context): Promise<number> {
   const graphQuery = `query fees($date: Int!) {
     dayDatas(where: { date: $date }) {
       volumeUSD
@@ -31,17 +27,7 @@ async function getSushiswapData(
   return oneDay;
 }
 
-export default function registerSushiswap(register: RegisterFunction, sdk: CryptoStatsSDK) {
-  const createQueryFn = (subgraph: string, sdk: CryptoStatsSDK) => (
-    attribute: string,
-    date: string
-  ) => {
-    if (attribute !== 'fee') {
-      throw new Error(`SushiSwap doesn't support ${attribute}`);
-    }
-    return getSushiswapData(subgraph, date, sdk);
-  };
-
+export default function registerSushiswap(sdk: Context) {
   const metadata = {
     category: 'dex' as Category,
     description: 'SushiSwap is a community-owned permissionless, decentralized exchange',
@@ -54,24 +40,42 @@ export default function registerSushiswap(register: RegisterFunction, sdk: Crypt
     icon,
   };
 
-  register('sushiswap', createQueryFn('sushiswap/exchange', sdk), {
-    ...metadata,
-    name: 'SushiSwap',
-    blockchain: 'Ethereum',
-    protocolLaunch: '2020-09-09',
+  sdk.register({
+    id: 'sushiswap',
+    queries: {
+      fees: (date: string) => getSushiswapData('sushiswap/exchange', date, sdk),
+    },
+    metadata: {
+      ...metadata,
+      name: 'SushiSwap',
+      blockchain: 'Ethereum',
+      protocolLaunch: '2020-09-09',
+    },
   });
 
-  register('sushiswap-polygon', createQueryFn('sushiswap/matic-exchange', sdk), {
-    ...metadata,
-    name: 'SushiSwap (Polygon)',
-    blockchain: 'Polygon',
-    protocolLaunch: '2021-02-26',
+  sdk.register({
+    id: 'sushiswap-polygon',
+    queries: {
+      fees: (date: string) => getSushiswapData('sushiswap/matic-exchange', date, sdk),
+    },
+    metadata: {
+      ...metadata,
+      name: 'SushiSwap (Polygon)',
+      blockchain: 'Polygon',
+      protocolLaunch: '2021-02-26',
+    },
   });
 
-  register('sushiswap-fantom', createQueryFn('sushiswap/fantom-exchange', sdk), {
-    ...metadata,
-    name: 'SushiSwap (Fantom)',
-    blockchain: 'Fantom',
-    protocolLaunch: '2021-02-26',
+  sdk.register({
+    id: 'sushiswap-fantom',
+    queries: {
+      fees: (date: string) => getSushiswapData('sushiswap/fantom-exchange', date, sdk),
+    },
+    metadata: {
+      ...metadata,
+      name: 'SushiSwap (Fantom)',
+      blockchain: 'Fantom',
+      protocolLaunch: '2021-02-26',
+    },
   });
 }
