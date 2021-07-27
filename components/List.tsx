@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { ProtocolData } from 'data/types';
+import { sortByDaily, sortByWeekly } from 'data/utils';
 import Row from './Row';
 
 interface ListProps {
   data: ProtocolData[];
 }
-
-const sortByDaily = (a: ProtocolData, b: ProtocolData) => b.oneDay - a.oneDay;
-const sortByWeekly = (a: ProtocolData, b: ProtocolData) => b.sevenDayMA - a.sevenDayMA;
 
 const List: React.FC<ListProps> = ({ data }) => {
   const [sort, setSort] = useState('daily');
@@ -27,7 +25,7 @@ const List: React.FC<ListProps> = ({ data }) => {
       </div>
 
       {sortedData.map((protocol: ProtocolData) => (
-        <Row protocol={protocol} key={protocol.id} />
+        <Row protocol={protocol} key={protocol.id} sort={sort} />
       ))}
 
       <style jsx>{`

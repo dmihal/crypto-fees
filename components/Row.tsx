@@ -9,13 +9,14 @@ import RowName from './RowName';
 
 interface RowProps {
   protocol: ProtocolData;
+  sort: string;
 }
 
 const toggle = (isOpen: boolean) => !isOpen;
 
-const cardHeight = 300;
+const cardHeight = 400;
 
-const Row: React.FC<RowProps> = ({ protocol }) => {
+const Row: React.FC<RowProps> = ({ protocol, sort }) => {
   const [open, setOpen] = useState(false);
 
   const icon = protocol.icon || icons[protocol.id];
@@ -58,7 +59,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
 
       <CSSTransition in={open} timeout={500} unmountOnExit>
         <div className="details-container">
-          <DetailsCard protocol={protocol} />
+          <DetailsCard protocol={protocol} sort={sort} />
         </div>
       </CSSTransition>
       <style jsx>{`
@@ -105,26 +106,26 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
 
         @keyframes slidein {
           from {
-            height: 0px;
+            max-height: 0px;
           }
 
           to {
-            height: ${cardHeight}px;
+            max-height: ${cardHeight}px;
           }
         }
 
         @keyframes slideout {
           from {
-            height: ${cardHeight}px;
+            max-height: ${cardHeight}px;
           }
 
           to {
-            height: 0px;
+            max-height: 0px;
           }
         }
 
         .details-container {
-          height: ${cardHeight}px;
+          max-height: ${cardHeight}px;
           animation: 0.5s 1 slidein;
           overflow: hidden;
 
@@ -135,7 +136,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
         }
 
         .details-container.exit {
-          height: 0;
+          max-height: 0;
           animation: 0.5s 1 slideout;
         }
 
