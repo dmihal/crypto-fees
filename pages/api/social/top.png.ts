@@ -2,10 +2,13 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import sharp from 'sharp';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
-import SocialCard from 'components/SocialCard';
-import { getData, getHistoricalData } from 'data/queries';
 import path from 'path';
+import SocialCard from 'components/SocialCard';
+import { getBundle } from 'data/adapters';
+import { getData, getHistoricalData } from 'data/queries';
+import { Metadata } from 'data/types';
 import { formatDate } from 'data/lib/time';
+import { bundleItems } from 'data/utils';
 
 // These statements causes Next to bundle these files
 path.resolve(process.cwd(), 'fonts', 'fonts.conf');
@@ -16,11 +19,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const data = date ? await getHistoricalData(date.toString()) : await getData();
 
-  const filteredData = data.filter((val: any) => !!val);
+  const bundles: { [id: string]: Metadata } = {};
+  const filteredData = data.filter((val: any) => {
+    // This is unrelated to filtering, but no need to loop twice
+    if (val && val.bundle) {
+      bundles[val.bundle] = getBundle(val.bundle);
+    }
+
+    return !!val;
+  });
+
+  const bundledData = bundleItems(filteredData, bundles);
 
   const svg = ReactDOMServer.renderToString(
     React.createElement(SocialCard, {
-      data: filteredData,
+      data: bundledData,
       date: date ? date.toString() : formatDate(new Date()),
     })
   );
