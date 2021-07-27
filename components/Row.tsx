@@ -5,6 +5,7 @@ import { CSSTransition } from 'react-transition-group';
 import ReactGA from 'react-ga';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import DetailsCard from './DetailsCard';
+import RowName from './RowName';
 
 interface RowProps {
   protocol: ProtocolData;
@@ -13,37 +14,6 @@ interface RowProps {
 const toggle = (isOpen: boolean) => !isOpen;
 
 const cardHeight = 300;
-
-const Name: React.FC<{ name: string; shortName: string }> = ({ name, shortName }) => {
-  return (
-    <div className="name">
-      <div className={shortName ? 'long-name' : ''}>{name}</div>
-      {shortName && <div className="short-name">{shortName}</div>}
-
-      <style jsx>{`
-        .name {
-          flex: 1;
-          padding-left: 32px;
-        }
-        .short-name {
-          display: none;
-        }
-        @media (max-width: 700px) {
-          .name {
-            font-size: 14px;
-            padding: 0;
-          }
-          .short-name {
-            display: block;
-          }
-          .long-name {
-            display: none;
-          }
-        }
-      `}</style>
-    </div>
-  );
-};
 
 const Row: React.FC<RowProps> = ({ protocol }) => {
   const [open, setOpen] = useState(false);
@@ -70,7 +40,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
           backgroundImage: icon ? `url('${icon}')` : undefined,
         }}
       >
-        <Name name={protocol.name} shortName={protocol.shortName} />
+        <RowName name={protocol.name} shortName={protocol.shortName} subtitle={protocol.subtitle} />
         <div className="amount">
           {protocol.oneDay?.toLocaleString('en-US', {
             style: 'currency',
