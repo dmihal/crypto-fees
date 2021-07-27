@@ -51,35 +51,39 @@ export default function registerBalancer(register: RegisterFunction) {
 
   const metadata = {
     category: 'dex' as Category,
+    name: 'Balancer',
+    bundle: 'balancer',
     description: 'Balancer is a decentralized exchange & asset pool balancer.',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     source: 'The Graph Protocol',
     adapter: 'balancer',
     website: 'https://balancer.fi',
+    blockchain: 'Ethereum',
     tokenLaunch: '2020-06-20',
     tokenTicker: 'BAL',
     tokenCoingecko: 'balancer',
     icon,
+    protocolLaunch: '2020-02-27',
   };
 
-  register('balancer', v1Query, {
+  register('balancer-v1', v1Query, {
     ...metadata,
-    name: 'Balancer V1',
-    blockchain: 'Ethereum',
+    subtitle: 'Version 1',
     protocolLaunch: '2020-02-27',
   });
 
   register('balancerv2', v2Query, {
     ...metadata,
-    name: 'Balancer V2',
-    blockchain: 'Ethereum',
+    subtitle: 'Version 2',
     protocolLaunch: '2021-05-11',
   });
 
   register('balancerv2-polygon', polygonQuery, {
     ...metadata,
-    name: 'Balancer V2 (Polygon)',
+    subtitle: 'Polygon',
     blockchain: 'Polygon',
     protocolLaunch: '2021-07-01',
   });
+
+  register.bundle('balancer', metadata);
 }

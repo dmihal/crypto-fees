@@ -67,24 +67,31 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
       }
 
       if (bundleItems.length > 1) {
-        _data.splice(_data.indexOf(item), 1);
-        let oneDay = item.oneDay;
-        let sevenDayMA = item.sevenDayMA;
+        const bundleMetadata = bundles[item.bundle as string];
+        let oneDay = 0;
+        let sevenDayMA = 0;
+        let price = null;
+        let marketCap = null;
 
         for (const bundleItem of bundleItems) {
           _data.splice(_data.indexOf(bundleItem), 1);
           oneDay += bundleItem.oneDay;
           sevenDayMA += bundleItem.sevenDayMA;
+
+          if (bundleMetadata.tokenCoingecko === bundleItem.tokenCoingecko) {
+            price = bundleItem.price;
+            marketCap = bundleItem.marketCap;
+          }
         }
         _data.push({
-          ...bundles[item.bundle as string],
+          ...bundleMetadata,
           id: item.bundle,
           oneDay,
           sevenDayMA,
           bundleData: bundleItems,
-          price: null,
-          marketCap: null,
-          psRatio: null,
+          price,
+          marketCap,
+          psRatio: marketCap ? marketCap / (sevenDayMA * 365) : null,
         });
       }
     }

@@ -113,6 +113,7 @@ export default function registerUniswap(register: RegisterFunction) {
     tokenTicker: 'UNI',
     tokenCoingecko: 'uniswap',
     tokenLaunch: '2020-09-14',
+    protocolLaunch: '2020-11-02',
   };
 
   register('uniswap-v1', query(getUniswapV1Data), {
@@ -141,11 +142,5 @@ export default function registerUniswap(register: RegisterFunction) {
     protocolLaunch: '2021-07-09',
   });
 
-  register.bundle('uniswap', {
-    icon,
-    name: 'Uniswap',
-    category: 'dex',
-    adapter: 'uniswap',
-    protocolLaunch: '2021-07-09',
-  });
+  register.bundle('uniswap', metadata);
 }

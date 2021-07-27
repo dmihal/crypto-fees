@@ -39,8 +39,8 @@ export default function registerSushiswap(register: RegisterFunction) {
   const metadata = {
     category: 'dex' as Category,
     name: 'SushiSwap',
-    subtitle: 'Ethereum',
     bundle: 'sushi',
+    blockchain: 'Ethereum',
     description: 'SushiSwap is a community-owned permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers and SUSHI stakers',
     source: 'The Graph Protocol',
@@ -49,13 +49,13 @@ export default function registerSushiswap(register: RegisterFunction) {
     tokenCoingecko: 'sushi',
     website: 'https://sushi.com',
     icon,
+    protocolLaunch: '2020-09-09',
   };
 
   register('sushiswap', createQueryFn('sushiswap/exchange'), {
     ...metadata,
     name: 'SushiSwap',
-    blockchain: 'Ethereum',
-    protocolLaunch: '2020-09-09',
+    subtitle: 'Ethereum',
   });
 
   register('sushiswap-polygon', createQueryFn('sushiswap/matic-exchange'), {
@@ -72,11 +72,5 @@ export default function registerSushiswap(register: RegisterFunction) {
     protocolLaunch: '2021-02-26',
   });
 
-  register.bundle('sushi', {
-    icon,
-    name: 'SushiSwap',
-    category: 'dex',
-    adapter: 'sushi',
-    protocolLaunch: '2020-09-09',
-  });
+  register.bundle('sushi', metadata);
 }
