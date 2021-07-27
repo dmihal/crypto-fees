@@ -115,6 +115,7 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
           margin: 0 0 16px;
           line-height: 1.15;
           font-size: 4rem;
+          font-weight: 700;
         }
 
         .title,
