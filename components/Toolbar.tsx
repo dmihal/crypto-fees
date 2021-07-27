@@ -2,9 +2,11 @@ import React, { forwardRef, useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import subDays from 'date-fns/subDays';
 import { useRouter } from 'next/router';
-import { Filter, Calendar, Share } from 'react-feather';
+import { Filter, Calendar, Share, CheckSquare, Square } from 'react-feather';
 import Button from './Button';
 import gtc from 'icons/gtc.svg';
+
+const showGitcoin = false;
 
 const DateButton = forwardRef<
   HTMLButtonElement,
@@ -61,6 +63,8 @@ interface ToolbarProps {
   onDateChange?: (date: string) => void;
   onFilterToggle?: () => void;
   numFilters?: number;
+  bundle: boolean;
+  onBundleChange: (bundle: boolean) => void;
   onShare?: () => void;
   tags: { id: string; label: string }[];
   onTagRemoved: (tag: string) => void;
@@ -71,6 +75,8 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onDateChange,
   onFilterToggle,
   numFilters,
+  bundle,
+  onBundleChange,
   onShare,
   tags,
   onTagRemoved,
@@ -111,16 +117,22 @@ const Toolbar: React.FC<ToolbarProps> = ({
       </div>
 
       <div className="buttons">
-        <Button
-          Icon={GTCIcon}
-          target="gitcoin"
-          href="https://gitcoin.co/grants/1624/cryptofeesinfo"
-        >
-          Support us on Gitcoin
-        </Button>
+        {showGitcoin && (
+          <Button
+            Icon={GTCIcon}
+            target="gitcoin"
+            href="https://gitcoin.co/grants/1624/cryptofeesinfo"
+          >
+            Support us on Gitcoin
+          </Button>
+        )}
 
         <Button onClick={onShare} Icon={Share}>
           Share
+        </Button>
+
+        <Button onClick={() => onBundleChange(!bundle)} Icon={bundle ? CheckSquare : Square}>
+          Bundle
         </Button>
 
         <Button onClick={onFilterToggle} Icon={Filter}>

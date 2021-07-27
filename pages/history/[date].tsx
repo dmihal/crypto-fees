@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { ProtocolData } from 'data/types';
+import { getBundle } from 'data/adapters';
+import { ProtocolData, Metadata } from 'data/types';
 import { getHistoricalData } from 'data/queries';
+import { filterCategories, filterChains, bundleItems } from 'data/utils';
 import { isBefore } from 'data/lib/time';
 import List from 'components/List';
 import Toolbar from 'components/Toolbar';
@@ -16,45 +18,42 @@ interface HistoricalDataPageProps {
   data: ProtocolData[];
   invalid?: boolean;
   date: string;
+  bundles: { [id: string]: Metadata };
 }
 
 const toggle = (_val: boolean) => !_val;
 
-const filterListToLabel = (list: any[], ids: string[]) =>
-  list
-    .filter((item: any) => ids.indexOf(item.id) !== -1)
-    .map((item: any) => item.name)
-    .join(', ');
-
-export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, invalid, date }) => {
+export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({
+  data,
+  invalid,
+  date,
+  bundles,
+}) => {
   const router = useRouter();
 
+  const [bundling, setBundling] = useState(true);
   const [filterCardOpen, setFilterCardOpen] = useState(false);
   const [filters, setFilters] = useState<Filters>({});
   const [shareOpen, setShareOpen] = useState(false);
 
-  let _data = data;
+  let _data = [...data];
   let numFilters = 0;
   const tags = [];
   if (filters.categories) {
     numFilters += 1;
-    _data = _data.filter((item: ProtocolData) => filters.categories.indexOf(item.category) !== -1);
-    tags.push({
-      id: 'categories',
-      label: filterListToLabel(allCategories, filters.categories),
-    });
+    let tag;
+    ({ data: _data, tag } = filterCategories(_data, filters.categories, allCategories));
+    tags.push(tag);
   }
   if (filters.chains) {
     numFilters += 1;
-    _data = _data.filter((item: ProtocolData) =>
-      item.blockchain
-        ? filters.chains.indexOf(item.blockchain) !== -1
-        : filters.chains.indexOf('other') !== -1
-    );
-    tags.push({
-      id: 'chains',
-      label: filterListToLabel(allChains, filters.chains),
-    });
+    let tag;
+    ({ data: _data, tag } = filterChains(_data, filters.chains, allChains));
+    tags.push(tag);
+  }
+
+  if (bundling) {
+    _data = bundleItems(_data, bundles);
   }
 
   if (invalid) {
@@ -88,6 +87,8 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({ data, in
         }
         onFilterToggle={() => setFilterCardOpen(toggle)}
         numFilters={numFilters}
+        bundle={bundling}
+        onBundleChange={setBundling}
         onShare={() => setShareOpen(true)}
         tags={tags}
         onTagRemoved={(tagId: string) => setFilters({ ...filters, [tagId]: undefined })}
@@ -165,7 +166,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   const data = await getHistoricalData(params.date.toString());
-  const filteredData = data.filter((val: any) => !!val);
+
+  const bundles: { [id: string]: Metadata } = {};
+
+  const filteredData = data.filter((val: any) => {
+    // This is unrelated to filtering, but no need to loop twice
+    if (val && val.bundle) {
+      bundles[val.bundle] = getBundle(val.bundle);
+    }
+
+    return !!val;
+  });
 
   return {
     props: {

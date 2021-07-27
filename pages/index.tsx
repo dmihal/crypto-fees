@@ -5,6 +5,7 @@ import { ProtocolData, Metadata } from 'data/types';
 import { getBundle } from 'data/adapters';
 import { getData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
+import { filterCategories, filterChains, bundleItems } from 'data/utils';
 import FilterCard, { Filters, allCategories, allChains } from 'components/FilterCard';
 import List from 'components/List';
 import ShareModal from 'components/ShareModal';
@@ -18,12 +19,6 @@ interface HomeProps {
 
 const toggle = (_val: boolean) => !_val;
 
-const filterListToLabel = (list: any[], ids: string[]) =>
-  list
-    .filter((item: any) => ids.indexOf(item.id) !== -1)
-    .map((item: any) => item.name)
-    .join(', ');
-
 export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
   const router = useRouter();
   const [filterCardOpen, setFilterCardOpen] = useState(false);
@@ -36,65 +31,19 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
   const tags = [];
   if (filters.categories) {
     numFilters += 1;
-    _data = _data.filter((item: ProtocolData) => filters.categories.indexOf(item.category) !== -1);
-    tags.push({
-      id: 'categories',
-      label: filterListToLabel(allCategories, filters.categories),
-    });
+    let tag;
+    ({ data: _data, tag } = filterCategories(_data, filters.categories, allCategories));
+    tags.push(tag);
   }
   if (filters.chains) {
     numFilters += 1;
-    _data = _data.filter((item: ProtocolData) =>
-      item.blockchain
-        ? filters.chains.indexOf(item.blockchain) !== -1
-        : filters.chains.indexOf('other') !== -1
-    );
-    tags.push({
-      id: 'chains',
-      label: filterListToLabel(allChains, filters.chains),
-    });
+    let tag;
+    ({ data: _data, tag } = filterChains(_data, filters.chains, allChains));
+    tags.push(tag);
   }
 
-  for (let i = 0; i < _data.length; i += 1) {
-    const item = _data[i];
-    if (bundling && item.bundle) {
-      const bundleItems = [item];
-
-      for (let j = i + 1; j < _data.length; j += 1) {
-        if (_data[j].bundle === item.bundle) {
-          bundleItems.push(_data[j]);
-        }
-      }
-
-      if (bundleItems.length > 1) {
-        const bundleMetadata = bundles[item.bundle as string];
-        let oneDay = 0;
-        let sevenDayMA = 0;
-        let price = null;
-        let marketCap = null;
-
-        for (const bundleItem of bundleItems) {
-          _data.splice(_data.indexOf(bundleItem), 1);
-          oneDay += bundleItem.oneDay;
-          sevenDayMA += bundleItem.sevenDayMA;
-
-          if (bundleMetadata.tokenCoingecko === bundleItem.tokenCoingecko) {
-            price = bundleItem.price;
-            marketCap = bundleItem.marketCap;
-          }
-        }
-        _data.push({
-          ...bundleMetadata,
-          id: item.bundle,
-          oneDay,
-          sevenDayMA,
-          bundleData: bundleItems,
-          price,
-          marketCap,
-          psRatio: marketCap ? marketCap / (sevenDayMA * 365) : null,
-        });
-      }
-    }
+  if (bundling) {
+    _data = bundleItems(_data, bundles);
   }
 
   return (
@@ -109,21 +58,14 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
         Which ones are people actually paying to use?
       </p>
 
-      <label>
-        <input
-          type="checkbox"
-          checked={bundling}
-          onChange={(e: any) => setBundling(e.target.checked)}
-        />
-        Bundling
-      </label>
-
       <Toolbar
         onDateChange={(newDate: string) =>
           router.push(`/history/${newDate}`, null, { scroll: false })
         }
         onFilterToggle={() => setFilterCardOpen(toggle)}
         numFilters={numFilters}
+        bundle={bundling}
+        onBundleChange={setBundling}
         onShare={() => setShareOpen(true)}
         tags={tags}
         onTagRemoved={(tagId: string) => setFilters({ ...filters, [tagId]: undefined })}
