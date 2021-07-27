@@ -154,15 +154,15 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({
   );
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<HistoricalDataPageProps> = async ({ params }) => {
   const date = params.date.toString();
 
   if (!/20\d{2}-\d{2}-\d{2}/.test(params.date.toString())) {
-    return { props: { data: [], invalid: true } };
+    return { props: { date: '', data: [], invalid: true, bundles: {} } };
   }
 
   if (!isBefore(date)) {
-    return { props: { data: [], invalid: true } };
+    return { props: { date, data: [], invalid: true, bundles: {} } };
   }
 
   const data = await getHistoricalData(params.date.toString());
@@ -182,6 +182,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       date,
       data: filteredData,
+      bundles,
     },
     revalidate: 60,
   };

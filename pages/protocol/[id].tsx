@@ -365,7 +365,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 
 export default ProtocolDetails;
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ params }) => {
   const id = params.id.toString();
   const defaultFeesArray = await getDateRangeData(
     id,

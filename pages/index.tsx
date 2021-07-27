@@ -137,7 +137,7 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const data = await getData();
 
   const bundles: { [id: string]: Metadata } = {};
