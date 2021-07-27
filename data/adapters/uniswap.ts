@@ -1,6 +1,6 @@
 import { dateToTimestamp } from '../lib/time';
 import { query } from '../lib/graph';
-import { RegisterFunction } from '../types';
+import { RegisterFunction, Category } from '../types';
 import icon from 'icons/uniswap.svg';
 import iconV1 from 'icons/uniswap-v1.png';
 
@@ -99,64 +99,53 @@ export default function registerUniswap(register: RegisterFunction) {
     return adapter(date);
   };
 
-  register('uniswap-v1', query(getUniswapV1Data), {
-    icon: iconV1,
-    name: 'Uniswap V1',
-    category: 'dex',
+  const metadata = {
+    icon,
+    name: 'Uniswap',
+    bundle: 'uniswap',
+    category: 'dex' as Category,
     description: 'Uniswap is a permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers',
     website: 'https://uniswap.com',
     blockchain: 'Ethereum',
     source: 'The Graph Protocol',
     adapter: 'uniswap',
+    tokenTicker: 'UNI',
+    tokenCoingecko: 'uniswap',
+    tokenLaunch: '2020-09-14',
+  };
+
+  register('uniswap-v1', query(getUniswapV1Data), {
+    ...metadata,
+    icon: iconV1,
+    subtitle: 'Version 1',
     protocolLaunch: '2020-11-02',
   });
 
   register('uniswap-v2', query(getUniswapV2Data), {
-    icon,
-    name: 'Uniswap V2',
-    category: 'dex',
-    description: 'Uniswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.org',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'uniswap',
-    tokenTicker: 'UNI',
-    tokenCoingecko: 'uniswap',
+    ...metadata,
+    subtitle: 'Version 2',
     protocolLaunch: '2020-05-04',
-    tokenLaunch: '2020-09-14',
   });
 
   register('uniswap-v3', query(uniV3Adapter('ianlapham/uniswap-v3-prod')), {
-    icon,
-    name: 'Uniswap V3',
-    category: 'dex',
-    description: 'Uniswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.org',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
-    adapter: 'uniswap',
-    tokenTicker: 'UNI',
-    tokenCoingecko: 'uniswap',
+    ...metadata,
+    subtitle: 'Version 3',
     protocolLaunch: '2021-05-05',
-    tokenLaunch: '2020-09-14',
   });
 
   register('uniswap-optimism', query(uniV3Adapter('ianlapham/uniswap-optimism')), {
-    icon,
-    name: 'Uniswap V3 (Optimism)',
-    category: 'dex',
-    description: 'Uniswap is a permissionless, decentralized exchange',
-    feeDescription: 'Trading fees are paid by traders to liquidity providers',
-    website: 'https://uniswap.org',
+    ...metadata,
+    subtitle: 'Optimism',
     blockchain: 'Optimism',
-    source: 'The Graph Protocol',
-    adapter: 'uniswap',
-    tokenTicker: 'UNI',
-    tokenCoingecko: 'uniswap',
     protocolLaunch: '2021-07-09',
-    tokenLaunch: '2020-09-14',
+  });
+
+  register.bundle('uniswap', {
+    icon,
+    name: 'Uniswap',
+    category: 'dex',
+    adapter: 'uniswap',
+    protocolLaunch: '2021-07-09',
   });
 }

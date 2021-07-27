@@ -38,6 +38,9 @@ export default function registerSushiswap(register: RegisterFunction) {
 
   const metadata = {
     category: 'dex' as Category,
+    name: 'SushiSwap',
+    subtitle: 'Ethereum',
+    bundle: 'sushi',
     description: 'SushiSwap is a community-owned permissionless, decentralized exchange',
     feeDescription: 'Trading fees are paid by traders to liquidity providers and SUSHI stakers',
     source: 'The Graph Protocol',
@@ -67,5 +70,13 @@ export default function registerSushiswap(register: RegisterFunction) {
     name: 'SushiSwap (Fantom)',
     blockchain: 'Fantom',
     protocolLaunch: '2021-02-26',
+  });
+
+  register.bundle('sushi', {
+    icon,
+    name: 'SushiSwap',
+    category: 'dex',
+    adapter: 'sushi',
+    protocolLaunch: '2020-09-09',
   });
 }

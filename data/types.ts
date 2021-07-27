@@ -3,6 +3,8 @@ export type Category = 'l1' | 'l2' | 'dex' | 'lending' | 'xchain' | 'other';
 export interface Metadata {
   name?: string;
   shortName?: string;
+  subtitle?: string;
+  bundle?: string;
   category: Category;
   description?: string;
   feeDescription?: string;
@@ -20,6 +22,7 @@ export interface Metadata {
 
 export interface ProtocolData extends Metadata {
   id: string;
+  bundleData?: ProtocolData[];
   price: number | null;
   marketCap: number | null;
   psRatio: number | null;
@@ -29,4 +32,7 @@ export interface ProtocolData extends Metadata {
 
 export type QueryFunction = (attribute: string, date: string) => Promise<number>;
 
-export type RegisterFunction = (name: string, fn: QueryFunction, metadata: Metadata) => void;
+export interface RegisterFunction {
+  (name: string, fn: QueryFunction, metadata: Metadata): void;
+  bundle(id: string, metadata: Metadata): void;
+}

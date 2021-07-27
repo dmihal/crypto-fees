@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
-import { ProtocolData } from 'data/types';
+import { ProtocolData, Metadata } from 'data/types';
+import { getBundle } from 'data/adapters';
 import { getData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 import FilterCard, { Filters, allCategories, allChains } from 'components/FilterCard';
@@ -12,6 +13,7 @@ import Toolbar from 'components/Toolbar';
 
 interface HomeProps {
   data: ProtocolData[];
+  bundles: { [id: string]: Metadata };
 }
 
 const toggle = (_val: boolean) => !_val;
@@ -22,13 +24,14 @@ const filterListToLabel = (list: any[], ids: string[]) =>
     .map((item: any) => item.name)
     .join(', ');
 
-export const Home: NextPage<HomeProps> = ({ data }) => {
+export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
   const router = useRouter();
   const [filterCardOpen, setFilterCardOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
+  const [bundling, setBundling] = useState(true);
   const [filters, setFilters] = useState<Filters>({});
 
-  let _data = data;
+  let _data = [...data];
   let numFilters = 0;
   const tags = [];
   if (filters.categories) {
@@ -52,6 +55,41 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
     });
   }
 
+  for (let i = 0; i < _data.length; i += 1) {
+    const item = _data[i];
+    if (bundling && item.bundle) {
+      const bundleItems = [item];
+
+      for (let j = i + 1; j < _data.length; j += 1) {
+        if (_data[j].bundle === item.bundle) {
+          bundleItems.push(_data[j]);
+        }
+      }
+
+      if (bundleItems.length > 1) {
+        _data.splice(_data.indexOf(item), 1);
+        let oneDay = item.oneDay;
+        let sevenDayMA = item.sevenDayMA;
+
+        for (const bundleItem of bundleItems) {
+          _data.splice(_data.indexOf(bundleItem), 1);
+          oneDay += bundleItem.oneDay;
+          sevenDayMA += bundleItem.sevenDayMA;
+        }
+        _data.push({
+          ...bundles[item.bundle as string],
+          id: item.bundle,
+          oneDay,
+          sevenDayMA,
+          bundleData: bundleItems,
+          price: null,
+          marketCap: null,
+          psRatio: null,
+        });
+      }
+    }
+  }
+
   return (
     <main>
       <SocialTags />
@@ -63,6 +101,15 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
         <br />
         Which ones are people actually paying to use?
       </p>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={bundling}
+          onChange={(e: any) => setBundling(e.target.checked)}
+        />
+        Bundling
+      </label>
 
       <Toolbar
         onDateChange={(newDate: string) =>
@@ -143,9 +190,18 @@ export const Home: NextPage<HomeProps> = ({ data }) => {
 
 export const getStaticProps: GetStaticProps = async () => {
   const data = await getData();
-  const filteredData = data.filter((val: any) => !!val);
 
-  return { props: { data: filteredData }, revalidate: 60 };
+  const bundles: { [id: string]: Metadata } = {};
+  const filteredData = data.filter((val: any) => {
+    // This is unrelated to filtering, but no need to loop twice
+    if (val && val.bundle) {
+      bundles[val.bundle] = getBundle(val.bundle);
+    }
+
+    return !!val;
+  });
+
+  return { props: { data: filteredData, bundles }, revalidate: 5 * 60 };
 };
 
 export default Home;

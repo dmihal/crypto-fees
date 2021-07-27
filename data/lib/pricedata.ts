@@ -58,6 +58,7 @@ export async function queryCoingecko(name: string, date: string, currency = 'usd
   const response = await request.json();
 
   if (!response.market_data) {
+    console.error(response);
     throw new Error(`Can't get price data for ${name}`);
   }
 

@@ -1,3 +1,5 @@
+import { Metadata } from '../types';
+
 import registerAave from './aave';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
@@ -35,14 +37,21 @@ interface Adapter {
 
 const adapters: { [id: string]: Adapter } = {};
 const ids: string[] = [];
+const bundles: { [id: string]: Metadata } = {};
 
-const register = (id: string, query: any, metadata: any) => {
+const registerFn = (id: string, query: any, metadata: Metadata) => {
   if (adapters[id]) {
     throw new Error(`Adapter ${id} already registered`);
   }
   ids.push(id);
   adapters[id] = { query, metadata };
 };
+
+const register = Object.assign(registerFn, {
+  bundle(id: string, metadata: Metadata) {
+    bundles[id] = metadata;
+  },
+});
 
 register0x(register);
 registerAave(register);
@@ -75,6 +84,13 @@ registerXDai(register);
 registerZilliqa(register);
 
 export const getIDs = () => ids;
+
+export function getBundle(id: string) {
+  if (!bundles[id]) {
+    throw new Error(`Unknown bundle ${id}`);
+  }
+  return bundles[id];
+}
 
 export function getMetadata(id: string) {
   if (!adapters[id]) {
