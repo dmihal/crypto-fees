@@ -376,6 +376,8 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
       <style jsx>{`
         main {
           margin-bottom: 18px;
+          width: 100%;
+          max-width: 800px;
         }
         .title {
           margin: 10px 0 4px;
@@ -431,7 +433,7 @@ export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ par
 
   for (const id of ids) {
     const metadata = getMetadata(id);
-    protocols[id] = metadata.name;
+    protocols[id] = metadata.subtitle ? `${metadata.name} (${metadata.subtitle})` : metadata.name;
     icons[id] = metadata.icon || _icons[id];
 
     if (metadata.bundle) {
