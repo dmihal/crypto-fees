@@ -287,7 +287,10 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 
       <h2 className="subtitle">
         <div className="icon" style={{ backgroundImage: `url('${icon}')` }} />
-        {metadata.name}
+        <div className="protocol-name">
+          <div>{metadata.name}</div>
+          {metadata.subtitle && <div className="protocol-subtitle">{metadata.subtitle}</div>}
+        </div>
       </h2>
 
       {metadata.legacy && <div className="legacy">Some historical data may be unavailable</div>}
@@ -381,6 +384,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         }
         .title {
           margin: 10px 0 4px;
+          font-weight: 700;
         }
         .chart-container {
           padding: 14px;
@@ -398,7 +402,18 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
         h2 {
           display: flex;
           align-items: center;
+          font-weight: 700;
         }
+        .protocol-name {
+          display: flex;
+          flex-direction: column;
+        }
+        .protocol-subtitle {
+          font-size: 14px;
+          color: #616161;
+          font-weight: 400;
+        }
+
         .icon {
           height: 24px;
           width: 24px;
