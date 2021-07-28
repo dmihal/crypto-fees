@@ -11,14 +11,17 @@ import Attribute from 'components/Attribute';
 import Chart from 'components/Chart';
 import ChartToolbar from 'components/ChartToolbar';
 import SocialTags from 'components/SocialTags';
-import { getIDs, getMetadata } from 'data/adapters';
+import { getIDs, getBundleIDs, getMetadata, getBundle } from 'data/adapters';
+import { Metadata } from 'data/types';
 import { getDateRangeData, getMarketData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
 import _icons from 'components/icons';
 
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
-function getMissing(data: any, minDate: Date, maxDate: Date, id: string) {
+type FeeCache = { [id: string]: { [date: string]: { fee: number } } };
+
+function getMissingDates(data: FeeCache, minDate: Date, maxDate: Date, id: string) {
   const missing = [];
   if (!data[id]) {
     data[id] = {};
@@ -33,7 +36,7 @@ function getMissing(data: any, minDate: Date, maxDate: Date, id: string) {
   return missing;
 }
 
-function getDateWithSmoothing(data: any, id: string, date: Date, smoothing: number) {
+function getDateWithSmoothing(data: FeeCache, id: string, date: Date, smoothing: number) {
   let fee = data[id][formatDate(date)].fee;
 
   if (smoothing > 0) {
@@ -46,18 +49,33 @@ function getDateWithSmoothing(data: any, id: string, date: Date, smoothing: numb
   return fee;
 }
 
+const sum = (acc: number, num: number) => acc + num;
+
 function formatData(
-  data: any,
+  data: FeeCache,
   minDate: Date,
   maxDate: Date,
   primaryId: string,
   secondaryId: string | null,
-  smoothing: number
+  smoothing: number,
+  protocolsByBundle: { [bundleId: string]: string[] }
 ) {
   const result = [];
   for (let date = minDate; !isAfter(date, maxDate); date = addDays(date, 1)) {
-    const primary = getDateWithSmoothing(data, primaryId, date, smoothing);
-    const secondary = secondaryId ? getDateWithSmoothing(data, secondaryId, date, smoothing) : 0;
+    const primary = protocolsByBundle[primaryId]
+      ? protocolsByBundle[primaryId]
+          .map((id: string) => getDateWithSmoothing(data, id, date, smoothing))
+          .reduce(sum, 0)
+      : getDateWithSmoothing(data, primaryId, date, smoothing);
+
+    let secondary = 0;
+    if (secondaryId) {
+      secondary = protocolsByBundle[secondaryId]
+        ? protocolsByBundle[secondaryId]
+            .map((id: string) => getDateWithSmoothing(data, id, date, smoothing))
+            .reduce(sum, 0)
+        : getDateWithSmoothing(data, secondaryId, date, smoothing);
+    }
 
     result.push({
       date: date.getTime() / 1000,
@@ -68,7 +86,7 @@ function formatData(
   return result;
 }
 
-function saveFeeData(response: any, storedFees: any) {
+function saveFeeData(response: any, storedFees: FeeCache) {
   for (const protocol of response) {
     if (!storedFees[protocol.id]) {
       storedFees[protocol.id] = {};
@@ -88,13 +106,21 @@ const emptyData = ({ start, end }: { start: Date; end: Date }) => {
   return data;
 };
 
-const useFees = (
-  initial: any,
-  dateRange: { start: Date; end: Date },
-  primary: string,
-  secondary: string | null,
-  smoothing: number
-) => {
+const useFees = ({
+  initial,
+  dateRange,
+  primary,
+  secondary,
+  smoothing,
+  protocolsByBundle,
+}: {
+  initial: FeeCache;
+  dateRange: { start: Date; end: Date };
+  primary: string;
+  secondary: string | null;
+  smoothing: number;
+  protocolsByBundle: { [id: string]: string[] };
+}) => {
   const fees = useRef(initial);
 
   const [value, setValue] = useState({
@@ -106,17 +132,35 @@ const useFees = (
     // We need to fetch extra data if using smoothing
     const actualStartDate = smoothing > 0 ? subDays(dateRange.start, smoothing) : dateRange.start;
 
-    const missingPrimary = getMissing(fees.current, actualStartDate, dateRange.end, primary);
-    const missingSecondary = secondary
-      ? getMissing(fees.current, actualStartDate, dateRange.end, secondary)
-      : [];
+    const missing: { [protocol: string]: string[] } = {};
 
-    if (missingPrimary.length > 0 || missingSecondary.length > 0) {
+    const getMissing = (id: string) => {
+      const missingDates = getMissingDates(fees.current, actualStartDate, dateRange.end, id);
+      if (missingDates.length > 0) {
+        missing[id] = missingDates;
+      }
+    };
+
+    if (protocolsByBundle[primary]) {
+      protocolsByBundle[primary].map(getMissing);
+    } else {
+      getMissing(primary);
+    }
+    if (secondary) {
+      if (protocolsByBundle[secondary]) {
+        protocolsByBundle[secondary].map(getMissing);
+      } else {
+        getMissing(secondary);
+      }
+    }
+
+    const missingArray = Object.entries(missing);
+    if (missingArray.length > 0) {
       setValue(({ data }) => ({ data, loading: true }));
 
-      const secondaryQuery =
-        missingSecondary.length > 0 ? `&${secondary}=${missingSecondary.join(',')}` : '';
-      fetch(`/api/v1/feesByDay?${primary}=${missingPrimary.join(',')}&${secondaryQuery}`)
+      const params = missingArray.map(([id, dates]) => `${id}=${dates.join(',')}`).join('&');
+
+      fetch(`/api/v1/feesByDay?${params}`)
         .then((response: any) => response.json())
         .then((response: any) => {
           if (!response.success) {
@@ -135,7 +179,8 @@ const useFees = (
               dateRange.end,
               primary,
               secondary,
-              smoothing
+              smoothing,
+              protocolsByBundle
             ),
           });
         });
@@ -148,7 +193,8 @@ const useFees = (
           dateRange.end,
           primary,
           secondary,
-          smoothing
+          smoothing,
+          protocolsByBundle
         ),
       });
     }
@@ -159,9 +205,10 @@ const useFees = (
 
 interface ProtocolDetailsProps {
   id: string;
-  metadata: any;
+  metadata: Metadata;
   feeCache: any;
   protocols: { [id: string]: string };
+  protocolsByBundle: { [id: string]: string[] };
   icons: { [id: string]: string };
   marketData: { marketCap?: number; price?: number; psRatio?: number };
 }
@@ -176,6 +223,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   metadata,
   feeCache,
   protocols,
+  protocolsByBundle,
   marketData,
   icons,
 }) => {
@@ -187,7 +235,14 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   const [smoothing, setSmoothing] = useState(0);
   const [secondary, setSecondary] = useState<string | null>(null);
 
-  const { loading, data } = useFees(feeCache, dateRange, id, secondary, smoothing);
+  const { loading, data } = useFees({
+    initial: feeCache,
+    dateRange,
+    primary: id,
+    secondary,
+    smoothing,
+    protocolsByBundle,
+  });
 
   const { [id]: filter, ...otherProtocols } = protocols; // eslint-disable-line @typescript-eslint/no-unused-vars
 
@@ -366,37 +421,84 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 export default ProtocolDetails;
 
 export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ params }) => {
-  const id = params.id.toString();
-  const defaultFeesArray = await getDateRangeData(
-    id,
-    subDays(new Date(), 90),
-    subDays(new Date(), 1)
-  );
-  const defaultFees: { [date: string]: any } = {};
-  for (const { date, ...data } of defaultFeesArray) {
-    defaultFees[date] = data;
-  }
-
   const ids = getIDs().sort();
+  const bundleIds = getBundleIDs().sort();
+  const protocolsByBundle: { [id: string]: string[] } = {};
   const protocols: { [id: string]: string } = {};
   const icons: { [id: string]: string } = {};
+
+  const feeCache: { [id: string]: { [date: string]: any } } = {};
+
   for (const id of ids) {
     const metadata = getMetadata(id);
     protocols[id] = metadata.name;
     icons[id] = metadata.icon || _icons[id];
+
+    if (metadata.bundle) {
+      protocolsByBundle[metadata.bundle] = [...(protocolsByBundle[metadata.bundle] || []), id];
+    }
   }
 
-  const sevenDayMA =
-    defaultFeesArray.slice(-7).reduce((acc: number, day: any) => acc + day.fee, 0) / 7;
-  const marketData = await getMarketData(id, sevenDayMA, formatDate(subDays(new Date(), 1)));
+  const id = params.id.toString();
+  const yesterday = formatDate(subDays(new Date(), 1));
+
+  const getFeesByDate = async (id: string) => {
+    const feesArray = await getDateRangeData(id, subDays(new Date(), 90), subDays(new Date(), 1));
+    const feesByDate: { [date: string]: any } = {};
+    for (const { date, ...data } of feesArray) {
+      feesByDate[date] = data;
+    }
+    return feesByDate;
+  };
+
+  let marketData: any;
+  let metadata: Metadata;
+
+  if (protocols[id]) {
+    // The page is a single protocol
+    const fees = await getFeesByDate(id);
+    feeCache[id] = fees;
+    const sevenDayMA =
+      Object.values(fees)
+        .slice(-7)
+        .reduce((acc: number, day: any) => acc + day.fee, 0) / 7;
+
+    marketData = await getMarketData(id, sevenDayMA, yesterday);
+    metadata = getMetadata(id);
+  } else if (protocolsByBundle[id]) {
+    // The page is a bundle
+    let sevenDayMA = 0;
+    await Promise.all(
+      protocolsByBundle[id].map(async (protocolId: string) => {
+        const fees = await getFeesByDate(protocolId);
+        feeCache[protocolId] = fees;
+        sevenDayMA +=
+          Object.values(fees)
+            .slice(-7)
+            .reduce((acc: number, day: any) => acc + day.fee, 0) / 7;
+      })
+    );
+
+    marketData = await getMarketData(protocolsByBundle[id][0], sevenDayMA, yesterday);
+    metadata = getBundle(id);
+  } else {
+    throw new Error(`Unknown protocol ${id}`);
+  }
+
+  // Do this at the end of the function so that the `protocols` var can be used for checking if an
+  // ID is a protocol or bundle in the `if (protocols[id])` statement.
+  for (const bundleId of bundleIds) {
+    const metadata = getBundle(bundleId);
+    protocols[bundleId] = metadata.name;
+    icons[bundleId] = metadata.icon;
+  }
 
   return {
     props: {
       id,
-      metadata: getMetadata(id),
-      feeCache: {
-        [id]: defaultFees,
-      },
+      protocolsByBundle,
+      metadata,
+      feeCache,
       protocols,
       icons,
       marketData,
@@ -407,7 +509,10 @@ export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ par
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: getIDs().map((id: string) => ({ params: { id } })),
+    paths: [
+      ...getIDs().map((id: string) => ({ params: { id } })),
+      ...getBundleIDs().map((id: string) => ({ params: { id } })),
+    ],
     fallback: false,
   };
 };

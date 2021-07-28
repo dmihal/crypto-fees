@@ -38,6 +38,7 @@ interface Adapter {
 const adapters: { [id: string]: Adapter } = {};
 const ids: string[] = [];
 const bundles: { [id: string]: Metadata } = {};
+const bundleIds: string[] = [];
 
 const registerFn = (id: string, query: any, metadata: Metadata) => {
   if (adapters[id]) {
@@ -50,6 +51,7 @@ const registerFn = (id: string, query: any, metadata: Metadata) => {
 const register = Object.assign(registerFn, {
   bundle(id: string, metadata: Metadata) {
     bundles[id] = metadata;
+    bundleIds.push(id);
   },
 });
 
@@ -84,6 +86,7 @@ registerXDai(register);
 registerZilliqa(register);
 
 export const getIDs = () => ids;
+export const getBundleIDs = () => bundleIds;
 
 export function getBundle(id: string) {
   if (!bundles[id]) {
