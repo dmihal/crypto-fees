@@ -14,7 +14,7 @@ interface RowProps {
 
 const toggle = (isOpen: boolean) => !isOpen;
 
-const cardHeight = 400;
+const cardHeight = 600;
 
 const Row: React.FC<RowProps> = ({ protocol, sort }) => {
   const [open, setOpen] = useState(false);

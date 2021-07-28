@@ -62,6 +62,23 @@ const BundleItemRow: React.FC<BundleItemRowProps> = ({ item }) => {
           height: 24px;
           opacity: 0.7;
         }
+
+        @media (max-width: 700px) {
+          .amount {
+            font-size: 14px;
+            min-width: 110px;
+            padding-left: 8px;
+          }
+
+          .item {
+            padding-left: 30px;
+            background-position: 6px center;
+          }
+
+          .arrow {
+            padding: 0 2px;
+          }
+        }
       `}</style>
     </Fragment>
   );
