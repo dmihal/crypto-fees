@@ -26,6 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
   );
 
+  res.setHeader('Cache-Control', `max-age=0, s-maxage=${60 * 10}`);
   res.json({
     success: true,
     data,

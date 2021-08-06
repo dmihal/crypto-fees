@@ -41,6 +41,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const buffer = Buffer.from(svg);
   const output = await sharp(buffer, { density: 300 }).toFormat('png').toBuffer();
 
+  res.setHeader('Cache-Control', 'max-age=0, s-maxage=240');
   res.setHeader('Content-Type', 'image/png');
   res.write(output, 'binary');
   res.end(null, 'binary');
