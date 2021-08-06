@@ -71,6 +71,8 @@ export const bundleItems = (data: ProtocolData[], bundles: { [id: string]: Metad
           marketCap,
           psRatio: marketCap ? marketCap / (sevenDayMA * 365) : null,
         });
+
+        i -= 1; // To compensate for the first item removed
       }
     }
   }
