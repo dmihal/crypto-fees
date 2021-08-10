@@ -5,7 +5,7 @@ const l1s = [
     id: 'eth',
     name: 'Ethereum',
     description: 'Ethereum is the first blockchain for turing-complete smart contracts.',
-    feeDescription: 'Transaction fees are paid by users to miners.',
+    feeDescription: 'Transaction fees are partially burnt and partially paid to miners.',
     tokenTicker: 'ETH',
     tokenCoingecko: 'ethereum',
     website: 'https://ethereum.org',
