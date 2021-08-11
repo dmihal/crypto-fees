@@ -1,13 +1,17 @@
-import { getYesterdayDate } from '../lib/time';
+import { Category, RegisterFunction } from 'data/types';
+import icon from 'icons/aave.svg';
 
-const fetcher = async (input: RequestInfo, init?: RequestInit) => {
-  const res = await fetch(input, init);
+const fetcher = async (date: string, version: string) => {
+  const res = await fetch('https://aave-api-v2.aave.com/data/daily-fees', {
+    method: 'GET',
+    body: JSON.stringify({ date, version }),
+  });
   if (res.status !== 200) throw new Error('aave did return an error');
   return res.json();
 };
 
-async function getAaveData(): Promise<number> {
-  const response = await fetcher('https://aave-api-v2.aave.com/data/fees-utc');
+async function getAaveV1Data(date: string): Promise<number> {
+  const response = await fetcher(date, 'v1');
 
   if (response.error) {
     throw new Error(response.error);
@@ -16,22 +20,42 @@ async function getAaveData(): Promise<number> {
   return parseFloat(response?.lastDayUTCFees);
 }
 
-export default function registerAave(register: any) {
-  const aaveQuery = (attribute: string, date: string) => {
+async function getAaveV2Data(date: string): Promise<number> {
+  const response = await fetcher(date, 'v2');
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return parseFloat(response?.lastDayUTCFees);
+}
+
+async function getAavePolygonData(date: string): Promise<number> {
+  const response = await fetcher(date, 'polygon');
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return parseFloat(response?.lastDayUTCFees);
+}
+
+export default function registerAave(register: RegisterFunction) {
+  const query = (adapter: (date: string) => Promise<number>) => (
+    attribute: string,
+    date: string
+  ) => {
     if (attribute !== 'fee') {
-      throw new Error(`Aave doesn't support ${attribute}`);
+      throw new Error(`Uniswap doesn't support ${attribute}`);
     }
-    if (date !== getYesterdayDate()) {
-      // Legacy adapter, only "today" supported
-      return null;
-    }
-    return getAaveData();
+    return adapter(date);
   };
 
-  register('aave', aaveQuery, {
-    id: 'aave',
+  const aaveMetadata = {
+    icon,
+    bundle: 'aave',
     name: 'Aave',
-    category: 'lending',
+    category: 'lending' as Category,
     description: 'Aave is an open borrowing & lending protocol.',
     feeDescription: 'Interest fees are paid from borrowers to lenders.',
     blockchain: 'Ethereum',
@@ -40,7 +64,26 @@ export default function registerAave(register: any) {
     website: 'https://aave.com',
     tokenTicker: 'AAVE',
     tokenCoingecko: 'aave',
-    legacy: true,
-    protocolLaunch: '2021-05-04', // We don't have data from before this date yet
+    tokenLaunch: '2020-09-14', // TODO: add real token launch data
+    protocolLaunch: '2020-01-08',
+  };
+
+  register('aave-v1', query(getAaveV1Data), {
+    ...aaveMetadata,
+    subtitle: 'Aave V1',
+    protocolLaunch: '2020-01-08',
   });
+  register('aave-v2', query(getAaveV2Data), {
+    ...aaveMetadata,
+    subtitle: 'Aave V2',
+    protocolLaunch: '2020-12-03',
+  });
+  register('aave-polygon', query(getAavePolygonData), {
+    ...aaveMetadata,
+    subtitle: 'Aave V2 Polygon',
+    protocolLaunch: '2021-03-31',
+    blockchain: 'Polygon',
+  });
+
+  register.bundle('aave', aaveMetadata);
 }
