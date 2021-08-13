@@ -24,7 +24,7 @@ const blockSubgraphQuery = async (subgraph: string, date: string) => {
     }`,
     {
       timestampFrom: time,
-      timestampTo: time + 60 * 60, // 1 hour window
+      timestampTo: time + 6 * 60 * 60, // 1 hour window
     }
   );
 
@@ -44,6 +44,11 @@ const blockNumLoaders: { [id: string]: (date: string) => Promise<number> } = {
 
   async avalanche(date: string) {
     const block = await blockSubgraphQuery('dasconnor/avalanche-blocks', date);
+    return block;
+  },
+
+  async 'arbitrum-one'(date: string) {
+    const block = await blockSubgraphQuery('dodoex/arbitrum-one-blocks', date);
     return block;
   },
 
