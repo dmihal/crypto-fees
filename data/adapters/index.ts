@@ -29,6 +29,7 @@ import registerTBTC from './tbtc';
 import registerTerra from './terra';
 import registerTornado from './tornado';
 import registerUniswap from './uniswap';
+import registerVisor from './visor';
 import registerXDai from './xdai';
 import registerZilliqa from './zilliqa';
 
@@ -86,6 +87,7 @@ registerTBTC(register);
 registerTerra(register);
 registerTornado(register);
 registerUniswap(register);
+registerVisor(register);
 registerXDai(register);
 registerZilliqa(register);
 
