@@ -10,7 +10,7 @@ export async function getArbitrumData(date: string): Promise<number> {
   const yesterdayBlock = await getBlockNumber(date, 'arbitrum-one');
 
   const data = await query(
-    'dmihal/arbitrum-fees',
+    'dmihal/arbitrum-fees-preindex',
     `query txFees($today: Int!, $yesterday: Int!){
       today: fee(id: "1", block: {number: $today}) {
         totalFeesETH
