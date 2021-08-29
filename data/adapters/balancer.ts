@@ -28,11 +28,11 @@ async function getBalancerData(
 }
 
 export default function registerBalancer(register: RegisterFunction) {
-  const createQueryFn = (subgraph: string) => (attribute: string, date: string) => {
+  const createQueryFn = (subgraph: string, chain?: string) => (attribute: string, date: string) => {
     if (attribute !== 'fee') {
       throw new Error(`Balancer doesn't support ${attribute}`);
     }
-    return getBalancerData(subgraph, date);
+    return getBalancerData(subgraph, date, chain);
   };
 
   const metadata = {
@@ -64,14 +64,14 @@ export default function registerBalancer(register: RegisterFunction) {
     protocolLaunch: '2021-05-11',
   });
 
-  register('balancerv2-polygon', createQueryFn('balancer-polygon-v2'), {
+  register('balancerv2-polygon', createQueryFn('balancer-polygon-v2', "polygon"), {
     ...metadata,
     subtitle: 'Polygon',
     blockchain: 'Polygon',
     protocolLaunch: '2021-07-01',
   });
 
-  register('balancerv2-arbitrum', createQueryFn('balancer-arbitrum-v2'), {
+  register('balancerv2-arbitrum', createQueryFn('balancer-arbitrum-v2', "arbitrum-one"), {
     ...metadata,
     subtitle: 'Arbitrum',
     blockchain: 'Arbitrum',
