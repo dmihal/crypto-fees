@@ -12,13 +12,13 @@ async function fetchJSON(url: string, data: any) {
 
 async function getSubstrateData(id: string, date: string, divisor: number): Promise<number> {
   const [fees, prices] = await Promise.all([
-    fetchJSON(`https://${id}.subscan.io/api/scan/daily`, {
+    fetchJSON(`https://${id}.api.subscan.io/api/scan/daily`, {
       start: date,
       end: date,
       format: 'day',
       category: 'Fee',
     }),
-    fetchJSON(`https://${id}.subscan.io/api/scan/price/history`, {
+    fetchJSON(`https://${id}.api.subscan.io/api/scan/price/history`, {
       start: date,
       end: date,
     }),
