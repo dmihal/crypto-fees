@@ -1,6 +1,5 @@
 import { dateToTimestamp } from 'data/lib/time';
 import { Category, RegisterFunction } from 'data/types';
-import icon from 'icons/aave.svg';
 
 const rootURI = 'https://info.aaw.fi';
 
@@ -74,7 +73,6 @@ export default function registerAave(register: RegisterFunction) {
   };
 
   const aaveMetadata = {
-    icon,
     bundle: 'aave',
     name: 'Aave',
     category: 'lending' as Category,
