@@ -2,8 +2,10 @@ import { dateToTimestamp } from 'data/lib/time';
 import { Category, RegisterFunction } from 'data/types';
 import icon from 'icons/aave.svg';
 
+// Simple caching wrapper around thegraph
+// https://github.com/sakulstra/info.aave/blob/main/app/fees/queries/getFees.ts#L91
 const fetcher = async (date: string, poolId: string) => {
-  const res = await fetch('http://localhost:3001/api/fees/queries/getFees', {
+  const res = await fetch('https://info.aaw.fi/api/fees/queries/getFees', {
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -72,9 +74,10 @@ export default function registerAave(register: RegisterFunction) {
     category: 'lending' as Category,
     description:
       'Aave is an open source and non-custodial liquidity protocol for earning interest on deposits and borrowing assets.',
-    feeDescription: 'Interest fees are paid from borrowers to lenders.',
+    feeDescription:
+      'Fees are accrued from the dynamics of providing liquidity and borrowing, going to liquidity suppliers and the Aave DAO treasury.',
     blockchain: 'Ethereum',
-    source: 'Aave',
+    source: 'The Graph Protocol',
     adapter: 'aave',
     website: 'https://aave.com',
     tokenTicker: 'AAVE',
