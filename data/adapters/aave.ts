@@ -2,19 +2,25 @@ import { dateToTimestamp } from 'data/lib/time';
 import { Category, RegisterFunction } from 'data/types';
 import icon from 'icons/aave.svg';
 
+const rootURI = 'https://info.aaw.fi';
+
 // Simple caching wrapper around thegraph
 // https://github.com/sakulstra/info.aave/blob/main/app/fees/queries/getFees.ts#L91
 const fetcher = async (date: string, poolId: string) => {
-  const res = await fetch('https://info.aaw.fi/api/fees/queries/getFees', {
+  const res = await fetch(`${rootURI}/api/fees/queries/getFees`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ params: { timestamp: dateToTimestamp(date), poolId } }),
+    body: JSON.stringify({
+      params: { timestamp: dateToTimestamp(date), poolId, forceRefresh: true },
+    }),
   });
   if (res.status !== 200) throw new Error('aave did return an error');
-  return (await res.json()).result;
+  const json = await res.json();
+  if (!json.result || json.error) throw new Error('aave api did return no result');
+  return json.result;
 };
 
 async function getAaveV1ProtoData(date: string): Promise<number> {
