@@ -49,6 +49,13 @@ export default function registerBalancer(register: RegisterFunction) {
     return getBalancerData(date, 'balancer-polygon-v2', 'polygon');
   };
 
+  const arbitrumQuery = (attribute: string, date: string) => {
+    if (attribute !== 'fee') {
+      throw new Error(`Balancer doesn't support ${attribute}`);
+    }
+    return getBalancerData(date, 'balancer-arbitrum-v2', 'arbitrum-one');
+  };
+
   const metadata = {
     category: 'dex' as Category,
     name: 'Balancer',
@@ -83,6 +90,13 @@ export default function registerBalancer(register: RegisterFunction) {
     subtitle: 'Polygon',
     blockchain: 'Polygon',
     protocolLaunch: '2021-07-01',
+  });
+
+  register('balancerv2-arbitrum', arbitrumQuery, {
+    ...metadata,
+    subtitle: 'Arbitrum',
+    blockchain: 'Arbitrum',
+    protocolLaunch: '2021-08-31',
   });
 
   register.bundle('balancer', metadata);
