@@ -18,9 +18,10 @@ export const allCategories: Item[] = [
 
 export const allChains: Item[] = [
   { name: 'Ethereum', id: 'Ethereum' },
+  { name: 'Arbitrum', id: 'Arbitrum' },
   { name: 'Optimism', id: 'Optimism' },
-  { name: 'xDai', id: 'xDai' },
   { name: 'Polygon', id: 'Polygon' },
+  { name: 'xDai', id: 'xDai' },
   { name: 'Fantom', id: 'Fantom' },
   { name: 'Other', id: 'other' },
 ];
