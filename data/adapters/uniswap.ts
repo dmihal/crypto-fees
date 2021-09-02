@@ -135,11 +135,18 @@ export default function registerUniswap(register: RegisterFunction) {
     protocolLaunch: '2021-05-05',
   });
 
-  register('uniswap-optimism', query(uniV3Adapter('ianlapham/uniswap-optimism')), {
+  register('uniswap-optimism', query(uniV3Adapter('ianlapham/uniswap-optimism-dev')), {
     ...metadata,
     subtitle: 'Optimism',
     blockchain: 'Optimism',
     protocolLaunch: '2021-07-09',
+  });
+
+  register('uniswap-arbitrum', query(uniV3Adapter('dmihal/uniswap-arbitrum-one')), {
+    ...metadata,
+    subtitle: 'Arbitrum',
+    blockchain: 'Arbitrum',
+    protocolLaunch: '2021-08-15',
   });
 
   register.bundle('uniswap', metadata);
