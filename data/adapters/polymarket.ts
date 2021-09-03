@@ -7,7 +7,7 @@ export async function getPolymarketData(date: string): Promise<number> {
   const yesterdayBlock = await getBlockNumber(date, 'polygon');
 
   const data = await query(
-    'tokenunion/polymarket-matic',
+    'polymarket/matic-markets-4',
     `query lpFeesOverPeriod($today: Int!, $yesterday: Int!){
       today: global(id: "", block: {number: $today}){
         scaledCollateralFees
