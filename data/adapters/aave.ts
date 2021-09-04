@@ -1,6 +1,6 @@
 import { dateToTimestamp } from 'data/lib/time';
 import { Category, RegisterFunction } from 'data/types';
-import icon from 'components/icons/aave.svg';
+import icon from 'icons/aave.svg';
 
 const rootURI = 'https://info.aaw.fi';
 

@@ -1,8 +1,20 @@
 import { cacheMarketData } from '../lib/pricedata';
+import ethIcon from 'icons/eth.svg';
+import btcIcon from 'icons/btc.svg';
+import ltcIcon from 'icons/ltc.svg';
+import adaIcon from 'icons/ada.svg';
+import xtzIcon from 'icons/xtz.svg';
+import bsvIcon from 'icons/bsv.svg';
+import bchIcon from 'icons/bch.svg';
+import xrpIcon from 'icons/xrp.svg';
+import dogeIcon from 'icons/doge.svg';
+import xmrIcon from 'icons/xmr.svg';
+import xlmIcon from 'icons/xlm.svg';
 
 const l1s = [
   {
     id: 'eth',
+    icon: ethIcon,
     name: 'Ethereum',
     description: 'Ethereum is the first blockchain for turing-complete smart contracts.',
     feeDescription: 'Transaction fees are partially burnt and partially paid to miners.',
@@ -15,6 +27,7 @@ const l1s = [
   },
   {
     id: 'btc',
+    icon: btcIcon,
     name: 'Bitcoin',
     description: 'Bitcoin is the first decentralized cryptocurrency.',
     feeDescription: 'Transaction fees are paid by users to miners.',
@@ -26,6 +39,7 @@ const l1s = [
   },
   {
     id: 'ltc',
+    icon: ltcIcon,
     name: 'Litecoin',
     description: 'Litecoin is cryptocurrency based on a fork of the Bitcoin Core codebase.',
     feeDescription: 'Transaction fees are paid by users to miners.',
@@ -37,6 +51,7 @@ const l1s = [
   },
   {
     id: 'ada',
+    icon: adaIcon,
     name: 'Cardano',
     description: 'Cardano is a PoS blockchain which will support smart contracts in the future.',
     feeDescription: 'Transaction fees are paid by users to validators.',
@@ -48,6 +63,7 @@ const l1s = [
   },
   {
     id: 'xtz',
+    icon: xtzIcon,
     name: 'Tezos',
     description: 'Tezos is a PoS blockchain that supports smart contracts',
     feeDescription: 'Transaction fees are paid by users to validators (bakers).',
@@ -59,6 +75,7 @@ const l1s = [
   },
   {
     id: 'bsv',
+    icon: bsvIcon,
     name: 'Bitcoin SV',
     description: 'Bitcoin SV is a fork of the Bitcoin Cash blockchain',
     feeDescription: 'Transaction fees are paid by users to miners.',
@@ -70,6 +87,7 @@ const l1s = [
   },
   {
     id: 'bch',
+    icon: bchIcon,
     name: 'Bitcoin Cash',
     description: 'Bitcoin Cash is a fork of the Bitcoin blockchain',
     feeDescription: 'Transaction fees are paid by users to miners.',
@@ -81,6 +99,7 @@ const l1s = [
   },
   {
     id: 'xrp',
+    icon: xrpIcon,
     name: 'Ripple',
     description: 'Ripple is a payment & settlment platform.',
     feeDescription: 'Transaction fees are paid by users and burned.',
@@ -92,6 +111,7 @@ const l1s = [
   },
   {
     id: 'doge',
+    icon: dogeIcon,
     name: 'Dogecoin',
     description: 'Dogecoin is a cryptocurrency based on the "Doge" meme.',
     feeDescription: 'Transaction fees are paid by users to miners.',
@@ -103,6 +123,7 @@ const l1s = [
   },
   {
     id: 'xmr',
+    icon: xmrIcon,
     name: 'Monero',
     description: 'Monero is a privacy-focused cryptocurrency.',
     feeDescription: 'Transaction fees are paid by users to miners.',
@@ -114,6 +135,7 @@ const l1s = [
   },
   {
     id: 'xlm',
+    icon: xlmIcon,
     name: 'Stellar',
     description: 'Stellar is global payment network.',
     feeDescription: 'Transaction fees are paid by users into a pool.',
