@@ -1,6 +1,7 @@
 import { Metadata } from '../types';
 
 import registerAave from './aave';
+import registerArbitrum from './arbitrum';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import registerBancor from './bancor';
@@ -59,6 +60,7 @@ const register = Object.assign(registerFn, {
 
 register0x(register);
 registerAave(register);
+registerArbitrum(register);
 registerAvalanche(register);
 registerBalancer(register);
 registerBancor(register);

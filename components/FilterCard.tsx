@@ -18,9 +18,10 @@ export const allCategories: Item[] = [
 
 export const allChains: Item[] = [
   { name: 'Ethereum', id: 'Ethereum' },
+  { name: 'Arbitrum One', id: 'Arbitrum One' },
   { name: 'Optimism', id: 'Optimism' },
-  { name: 'xDai', id: 'xDai' },
   { name: 'Polygon', id: 'Polygon' },
+  { name: 'xDai', id: 'xDai' },
   { name: 'Fantom', id: 'Fantom' },
   { name: 'Other', id: 'other' },
 ];
@@ -37,7 +38,7 @@ interface FilterCardProps {
   onFilterChange: (filters: Filters) => void;
 }
 
-const height = 220;
+const height = 245;
 
 const FilterCard: React.FC<FilterCardProps> = ({ open, /*onClose,*/ filters, onFilterChange }) => {
   return (
