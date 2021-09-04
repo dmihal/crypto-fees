@@ -20,7 +20,7 @@ const Row: React.FC<RowProps> = ({ protocol, index }) => {
     svgImg = svgImg.replace(/">/, '" width="24" height="24">');
   }
 
-  const background = protocol.category === 'l1' ? '#ffffff' : '#fad3f6';
+  const background = protocol.category === 'l1' || protocol.category === 'l2' ? '#ffffff' : '#fad3f6';
 
   return (
     <g transform={`translate(28, ${117 + 37 * index})`}>
@@ -41,6 +41,7 @@ const Row: React.FC<RowProps> = ({ protocol, index }) => {
 
         <text fontFamily={font} fontSize="16" fill="#091636" x="70" y="18">
           {protocol.name}
+          {protocol.subtitle && <tspan fill="#808080"> - {protocol.subtitle}</tspan>}
         </text>
 
         <text y="18" x="440" fontFamily={font} fontSize="16" textAnchor="end" fill="#091636">
