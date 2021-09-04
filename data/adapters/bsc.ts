@@ -1,4 +1,5 @@
 import { getHistoricalPrice } from '../lib/pricedata';
+import icon from 'icons/bsc.svg';
 
 async function getFeeDataFromEtherscan(): Promise<any[]> {
   const response = await fetch('https://bscscan.com/chart/transactionfee?output=csv');
@@ -62,6 +63,7 @@ function bscQuery(attribute: string, date: string) {
 
 export default function registerBSC(register: any) {
   register('bsc', bscQuery, {
+    icon,
     category: 'l1',
     name: 'Binance Smart Chain',
     shortName: 'BSC',

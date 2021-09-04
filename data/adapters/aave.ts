@@ -94,22 +94,22 @@ export default function registerAave(register: RegisterFunction) {
 
   register('aave-v1', query(getAaveV1ProtoData), {
     ...aaveMetadata,
-    subtitle: 'Aave V1',
+    subtitle: 'Version 1',
     protocolLaunch: '2020-01-08',
   });
   register('aave-v2', query(getAaveV2ProtoData), {
     ...aaveMetadata,
-    subtitle: 'Aave V2',
+    subtitle: 'Version 2',
     protocolLaunch: '2020-12-03',
   });
   register('aave-v2-amm', query(getAaveV2AmmData), {
     ...aaveMetadata,
-    subtitle: 'Aave V2 Amm',
+    subtitle: 'Version 2 - AMM',
     protocolLaunch: '2021-03-08',
   });
   register('aave-v2-polygon-proto', query(getAavePolygonData), {
     ...aaveMetadata,
-    subtitle: 'Aave V2 Polygon',
+    subtitle: 'Version 2 - Polygon',
     protocolLaunch: '2021-03-31',
     blockchain: 'Polygon',
   });
