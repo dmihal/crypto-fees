@@ -60,6 +60,10 @@ const ToggleList: React.FC<ToggleListProps> = ({ items, selected, onSelectedChan
           white-space: nowrap;
         }
 
+        .item:hover {
+          background: #f5f5f5;
+        }
+
         .item:before {
           content: '✓';
           display: inline-block;

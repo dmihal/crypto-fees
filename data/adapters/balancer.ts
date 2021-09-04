@@ -95,7 +95,7 @@ export default function registerBalancer(register: RegisterFunction) {
   register('balancerv2-arbitrum', arbitrumQuery, {
     ...metadata,
     subtitle: 'Arbitrum',
-    blockchain: 'Arbitrum',
+    blockchain: 'Arbitrum One',
     protocolLaunch: '2021-08-23',
   });
 

@@ -75,7 +75,7 @@ export default function registerSushiswap(register: RegisterFunction) {
   register('sushiswap-arbitrum', createQueryFn('sushiswap/arbitrum-exchange'), {
     ...metadata,
     subtitle: 'Arbitrum',
-    blockchain: 'Arbitrum',
+    blockchain: 'Arbitrum One',
     protocolLaunch: '2021-08-23',
   });
 

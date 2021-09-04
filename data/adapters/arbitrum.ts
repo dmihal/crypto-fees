@@ -32,7 +32,7 @@ export async function getArbitrumData(date: string): Promise<number> {
   return feesInETH * ethPrice;
 }
 
-export default function registerOptimism(register: RegisterFunction) {
+export default function registerArbitrum(register: RegisterFunction) {
   function arbitrumQuery(attribute: string, date: string) {
     if (attribute !== 'fee') {
       throw new Error(`Arbitrum doesn't support ${attribute}`);
@@ -51,6 +51,6 @@ export default function registerOptimism(register: RegisterFunction) {
     source: 'The Graph Protocol',
     adapter: 'arbitrum',
     website: 'https://arbitrum.io',
-    protocolLaunch: '2021-05-29',
+    protocolLaunch: '2021-06-31',
   });
 }

@@ -145,7 +145,7 @@ export default function registerUniswap(register: RegisterFunction) {
   register('uniswap-arbitrum', query(uniV3Adapter('dmihal/uniswap-arbitrum-one')), {
     ...metadata,
     subtitle: 'Arbitrum',
-    blockchain: 'Arbitrum',
+    blockchain: 'Arbitrum One',
     protocolLaunch: '2021-08-15',
   });
 
