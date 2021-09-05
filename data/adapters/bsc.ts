@@ -1,5 +1,5 @@
 import { getHistoricalPrice } from '../lib/pricedata';
-import icon from 'icons/bsc.svg';
+import icon from 'icons/bnb.svg';
 
 async function getFeeDataFromEtherscan(): Promise<any[]> {
   const response = await fetch('https://bscscan.com/chart/transactionfee?output=csv');
