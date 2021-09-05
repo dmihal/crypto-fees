@@ -58,6 +58,13 @@ export default function registerSwapr(register: RegisterFunction) {
     protocolLaunch: '2020-12-10',
   });
 
+  register('swapr-xdai', createQueryFn('luzzif/swapr-xdai'), {
+    ...metadata,
+    subtitle: 'xDai',
+    blockchain: 'xDai',
+    protocolLaunch: '2021-03-10',
+  });
+
   register('swapr-arbitrum', createQueryFn('luzzif/swapr-arbitrum-one'), {
     ...metadata,
     subtitle: 'Arbitrum',
