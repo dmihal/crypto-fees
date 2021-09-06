@@ -38,7 +38,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       <Component {...pageProps} />
 
       <footer>
-        <div>Data updates at midnight, UTC</div>
+        <div>Data updates at 2am, UTC</div>
         <div>
           Created by{' '}
           <a href="https://twitter.com/dmihal" target="twitter">

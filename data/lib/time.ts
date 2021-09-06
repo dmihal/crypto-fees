@@ -1,5 +1,6 @@
 import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
+import subHours from 'date-fns/subHours';
 
 export function dateToTimestamp(date: string | Date) {
   const _date = (date as string).length ? new Date(date) : (date as Date);
@@ -19,7 +20,9 @@ export function getYesterdayDate() {
 }
 
 export const last7Days = (date?: Date) =>
-  [...new Array(7)].map((_, num: number) => formatDate(subDays(date || new Date(), 7 - num)));
+  [...new Array(7)].map((_, num: number) =>
+    formatDate(subDays(date || subHours(new Date(), 2), 7 - num))
+  );
 
 export function isBefore(date?: string, comparrison?: string) {
   if (!date) {
