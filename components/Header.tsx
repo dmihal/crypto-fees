@@ -16,6 +16,9 @@ const Header = () => {
         <li className="header-link hideable">
           <a href="https://open-orgs.info/">open-orgs.info</a>
         </li>
+        <li className="header-link hideable">
+          <a href="https://l2fees.info/">l2fees.info</a>
+        </li>
         <li className="header-link">
           <a>More</a>
 
@@ -25,6 +28,9 @@ const Header = () => {
             </li>
             <li className="header-link showable">
               <a href="https://open-orgs.info/">open-orgs.info</a>
+            </li>
+            <li className="header-link showable">
+              <a href="https://l2fees.info/">l2fees.info</a>
             </li>
             <li className="header-link">
               <a href="https://stakers.info/">stakers.info</a>
