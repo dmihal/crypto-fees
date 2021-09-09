@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
+import { usePlausible } from 'next-plausible';
 import { getBundle } from 'data/adapters';
 import { ProtocolData, Metadata } from 'data/types';
 import { getHistoricalData } from 'data/queries';
@@ -29,6 +30,7 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({
   date,
   bundles,
 }) => {
+  const plausible = usePlausible();
   const router = useRouter();
 
   const [bundling, setBundling] = useState(true);
@@ -89,7 +91,10 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({
         numFilters={numFilters}
         bundle={bundling}
         onBundleChange={setBundling}
-        onShare={() => setShareOpen(true)}
+        onShare={() => {
+          setShareOpen(true);
+          plausible('open-share');
+        }}
         tags={tags}
         onTagRemoved={(tagId: string) => setFilters({ ...filters, [tagId]: undefined })}
       />

@@ -3,6 +3,7 @@ import { ProtocolData } from 'data/types';
 import icons from './icons';
 import { CSSTransition } from 'react-transition-group';
 import ReactGA from 'react-ga';
+import { usePlausible } from 'next-plausible';
 import { ChevronDown, ChevronUp } from 'react-feather';
 import DetailsCard from './DetailsCard';
 import RowName from './RowName';
@@ -17,6 +18,7 @@ const toggle = (isOpen: boolean) => !isOpen;
 const cardHeight = 600;
 
 const Row: React.FC<RowProps> = ({ protocol, sort }) => {
+  const plausible = usePlausible();
   const [open, setOpen] = useState(false);
 
   const icon = protocol.icon || icons[protocol.id];
@@ -34,6 +36,11 @@ const Row: React.FC<RowProps> = ({ protocol, sort }) => {
             category: 'Navigation',
             action: open ? 'Close details' : 'Open details',
             label: protocol.name,
+          });
+          plausible('open-details', {
+            props: {
+              label: protocol.name,
+            },
           });
         }}
         className={`item ${isApp ? 'app' : ''} ${open ? 'open' : ''}`}

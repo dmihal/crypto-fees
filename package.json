@@ -33,6 +33,7 @@
     "mongodb": "^3.6.6",
     "next": "latest",
     "next-images": "^1.4.1",
+    "next-plausible": "2.1.2-beta.0",
     "numeral": "^2.0.6",
     "pg": "^8.5.1",
     "react": "^16.13.1",

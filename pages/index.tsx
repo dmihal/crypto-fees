@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NextPage, GetStaticProps } from 'next';
 import { useRouter } from 'next/router';
+import { usePlausible } from 'next-plausible';
 import { ProtocolData, Metadata } from 'data/types';
 import { getBundle } from 'data/adapters';
 import { getData } from 'data/queries';
@@ -20,6 +21,7 @@ interface HomeProps {
 const toggle = (_val: boolean) => !_val;
 
 export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
+  const plausible = usePlausible();
   const router = useRouter();
   const [filterCardOpen, setFilterCardOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
@@ -66,7 +68,10 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
         numFilters={numFilters}
         bundle={bundling}
         onBundleChange={setBundling}
-        onShare={() => setShareOpen(true)}
+        onShare={() => {
+          setShareOpen(true);
+          plausible('open-share');
+        }}
         tags={tags}
         onTagRemoved={(tagId: string) => setFilters({ ...filters, [tagId]: undefined })}
       />

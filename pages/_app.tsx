@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
 import type { AppProps } from 'next/app';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
+import PlausibleProvider from 'next-plausible';
 import Header from 'components/Header';
+import Footer from 'components/Footer';
 
 ReactGA.initialize('UA-150445352-3');
 
@@ -31,53 +32,15 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&amp;display=swap"
           rel="stylesheet"
         />
-        <script
-          async
-          defer
-          data-domain="cryptofees.info"
-          src="https://analytics.cryptostats.community/js/plausible.js"
-        />
       </Head>
 
-      <Header />
+      <PlausibleProvider domain="cryptofees.info">
+        <Header />
 
-      <Component {...pageProps} />
+        <Component {...pageProps} />
 
-      <footer>
-        <div>Data updates at 2am, UTC</div>
-        <div>
-          Created by{' '}
-          <a href="https://twitter.com/dmihal" target="twitter">
-            David Mihal
-          </a>
-        </div>
-
-        <div>
-          <Link href="/faqs">
-            <a>FAQs</a>
-          </Link>
-          {' | '}
-          <Link href="/submit-project">
-            <a>Request Project</a>
-          </Link>
-          {' | '}
-          <Link href="/api-docs">
-            <a>API Documentation</a>
-          </Link>
-        </div>
-
-        <div>
-          <b>cryptofees.info</b>
-          {' | '}
-          <a href="https://ethereumnodes.com">ethereumnodes.com</a>
-          {' | '}
-          <a href="https://money-movers.info">money-movers.info</a>
-          {' | '}
-          <a href="https://stakers.info">stakers.info</a>
-          {' | '}
-          <a href="https://open-orgs.info">open-orgs.info</a>
-        </div>
-      </footer>
+        <Footer />
+      </PlausibleProvider>
 
       <style jsx>{`
         .container {
