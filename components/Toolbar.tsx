@@ -6,7 +6,7 @@ import { Filter, Calendar, Share, CheckSquare, Square } from 'react-feather';
 import Button from './Button';
 import gtc from 'icons/gtc.svg';
 
-const showGitcoin = false;
+const showGitcoin = true;
 
 const DateButton = forwardRef<
   HTMLButtonElement,
