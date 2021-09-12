@@ -11,7 +11,7 @@ import Attribute from 'components/Attribute';
 import Chart from 'components/Chart';
 import ChartToolbar from 'components/ChartToolbar';
 import SocialTags from 'components/SocialTags';
-import { getIDs, getBundleIDs, getMetadata, getBundle } from 'data/adapters';
+import { getIDs, getBundleIDs, getMetadata, getBundle, ensureListLoaded } from 'data/adapters';
 import { Metadata } from 'data/types';
 import { getDateRangeData, getMarketData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
@@ -438,6 +438,8 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
 export default ProtocolDetails;
 
 export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ params }) => {
+  await ensureListLoaded();
+
   const ids = getIDs().sort();
   const bundleIds = getBundleIDs().sort();
   const protocolsByBundle: { [id: string]: string[] } = {};
@@ -525,6 +527,8 @@ export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ par
 };
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  await ensureListLoaded();
+
   return {
     paths: [
       ...getIDs().map((id: string) => ({ params: { id } })),

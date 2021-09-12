@@ -1,7 +1,7 @@
+import { CryptoStatsSDK, Adapter as SDKAdapter } from '@cryptostats/sdk';
 import { Metadata } from '../types';
 
 import registerAave from './aave';
-import registerArbitrum from './arbitrum';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import registerBancor from './bancor';
@@ -61,7 +61,6 @@ const register = Object.assign(registerFn, {
 
 register0x(register);
 registerAave(register);
-registerArbitrum(register);
 registerAvalanche(register);
 registerBalancer(register);
 registerBancor(register);
@@ -93,6 +92,52 @@ registerUniswap(register);
 registerXDai(register);
 registerZilliqa(register);
 
+let loadListPromise: any = null;
+export async function ensureListLoaded() {
+  if (!loadListPromise) {
+    loadListPromise = loadList();
+  }
+  await loadListPromise;
+}
+
+async function loadList() {
+  const sdk = new CryptoStatsSDK({
+    mongoConnectionString: process.env.MONGO_CONNECTION_STRING,
+    redisConnectionString: process.env.REDIS_URL,
+    ipfsGateway: 'http://subgraph.ethburned.com:5001',
+  });
+
+  const list = sdk.getList('fees');
+  await list.fetchAdapters();
+
+  await Promise.all(
+    list.getAdapters().map(async (adapter: SDKAdapter) => {
+      const id = adapter.id;
+      if (adapters[id]) {
+        throw new Error(`Adapter ${id} already registered`);
+      }
+      ids.push(id);
+
+      const metadata = await adapter.getMetadata();
+
+      const query = (attribute: string, date: string) => {
+        if (attribute !== 'fee') {
+          throw new Error(`${id} doesn't support ${attribute}`);
+        }
+        return adapter.query('oneDayTotalFees', date);
+      };
+
+      adapters[id] = {
+        query,
+        metadata,
+      };
+
+      // eslint-disable-next-line no-console
+      console.log(`Downloaded & initialized ${id} adapter`);
+    })
+  );
+}
+
 export const getIDs = () => ids;
 export const getBundleIDs = () => bundleIds;
 
@@ -111,6 +156,8 @@ export function getMetadata(id: string) {
 }
 
 export async function queryAdapter(protocol: string, attribute: string, date: string) {
+  await ensureListLoaded();
+
   if (!adapters[protocol]) {
     throw new Error(`Unknown protocol ${protocol}`);
   }
