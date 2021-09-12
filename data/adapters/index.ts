@@ -104,7 +104,7 @@ async function loadList() {
   const sdk = new CryptoStatsSDK({
     mongoConnectionString: process.env.MONGO_CONNECTION_STRING,
     redisConnectionString: process.env.REDIS_URL,
-    ipfsGateway: 'http://subgraph.ethburned.com:5001',
+    ipfsGateway: 'https://ipfs.cryptostats.community',
   });
 
   const list = sdk.getList('fees');
