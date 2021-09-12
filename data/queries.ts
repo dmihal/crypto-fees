@@ -1,4 +1,4 @@
-import { queryAdapter, getIDs, getMetadata } from './adapters';
+import { queryAdapter, getIDs, getMetadata, ensureListLoaded } from './adapters';
 import { ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
 import { last7Days, isBefore, getDateRange } from './lib/time';
@@ -28,6 +28,7 @@ async function getValue(protocol: string, attribute: string, date: string) {
 }
 
 export async function getMarketData(id: string, sevenDayMA: number, date: string) {
+  await ensureListLoaded();
   const metadata = getMetadata(id);
 
   let price: null | number = null;
@@ -46,6 +47,7 @@ export async function getMarketData(id: string, sevenDayMA: number, date: string
 }
 
 export async function getData(): Promise<ProtocolData[]> {
+  await ensureListLoaded();
   const days = last7Days();
   const v2Data = await Promise.all(
     getIDs().map(
@@ -91,6 +93,7 @@ export async function getData(): Promise<ProtocolData[]> {
 }
 
 export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
+  await ensureListLoaded();
   const days = last7Days(new Date(date));
   const v2Data = await Promise.all(
     getIDs().map(async (id: string) => {
@@ -140,6 +143,7 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
 }
 
 export async function getLastWeek(): Promise<any[]> {
+  await ensureListLoaded();
   const days = last7Days().reverse();
   const v2Data = await Promise.all(
     getIDs().map(async (id: string) => {
@@ -168,6 +172,7 @@ export async function getLastWeek(): Promise<any[]> {
 }
 
 export async function getDateData(protocol: string, date: string) {
+  await ensureListLoaded();
   const { protocolLaunch } = getMetadata(protocol);
   if (protocolLaunch && isBefore(date, protocolLaunch)) {
     return { date, fee: null };
