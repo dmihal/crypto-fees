@@ -10,14 +10,16 @@ const db = process.env.MONGO_CONNECTION_STRING
     })
   : null;
 
+let dbPromise: any = null;
+
 if (db) {
-  db.connect();
+  dbPromise = db.connect();
 }
 
-export const get = db
-  ? (query: any) => db.db('cryptofees').collection('fee_cache').findOne(query)
+export const get = dbPromise
+  ? (query: any) => dbPromise.then(() => db.db('cryptofees').collection('fee_cache').findOne(query))
   : async (_: any) => [];
 
-export const set = db
-  ? (doc: any) => db.db('cryptofees').collection('fee_cache').insertOne(doc)
+export const set = dbPromise
+  ? (doc: any) => dbPromise.then(() => db.db('cryptofees').collection('fee_cache').insertOne(doc))
   : async (_: any) => null;
