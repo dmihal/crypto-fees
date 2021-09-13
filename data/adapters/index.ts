@@ -102,8 +102,8 @@ export async function ensureListLoaded() {
 
 async function loadList() {
   const sdk = new CryptoStatsSDK({
-    mongoConnectionString: process.env.MONGO_CONNECTION_STRING,
-    redisConnectionString: process.env.REDIS_URL,
+    // mongoConnectionString: process.env.MONGO_CONNECTION_STRING,
+    // redisConnectionString: process.env.REDIS_URL,
     ipfsGateway: 'https://ipfs.cryptostats.community',
   });
 
