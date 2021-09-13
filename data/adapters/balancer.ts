@@ -96,7 +96,7 @@ export default function registerBalancer(register: RegisterFunction) {
     ...metadata,
     subtitle: 'Arbitrum',
     blockchain: 'Arbitrum One',
-    protocolLaunch: '2021-08-23',
+    protocolLaunch: '2021-08-31',
   });
 
   register.bundle('balancer', metadata);

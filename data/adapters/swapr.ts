@@ -69,7 +69,7 @@ export default function registerSwapr(register: RegisterFunction) {
     ...metadata,
     subtitle: 'Arbitrum',
     blockchain: 'Arbitrum One',
-    protocolLaunch: '2021-08-24',
+    protocolLaunch: '2021-08-30',
   });
 
   register.bundle('swapr', metadata);

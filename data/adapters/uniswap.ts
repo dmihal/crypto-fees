@@ -28,9 +28,8 @@ const uniV3Adapter = (subgraph: string) => async (date: string): Promise<number>
     'fees'
   );
 
-  // Temporary, for while Optimism doesn't have 7 days of data
-  if (data.uniswapDayDatas.length == 0) {
-    return 0;
+  if (data.dayDatas.length === 0) {
+    throw new Error(`No Uniswap data found on ${date} from ${subgraph}`);
   }
 
   return parseFloat(data.uniswapDayDatas[data.uniswapDayDatas.length - 1].feesUSD);
@@ -146,7 +145,7 @@ export default function registerUniswap(register: RegisterFunction) {
     ...metadata,
     subtitle: 'Arbitrum',
     blockchain: 'Arbitrum One',
-    protocolLaunch: '2021-08-15',
+    protocolLaunch: '2021-08-31',
   });
 
   register.bundle('uniswap', metadata);

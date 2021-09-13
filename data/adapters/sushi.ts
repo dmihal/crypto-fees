@@ -20,8 +20,7 @@ async function getSushiswapData(subgraph: string, date: string): Promise<number>
   );
 
   if (data.dayDatas.length === 0) {
-    // throw new Error(`No Sushi data found on ${date} form ${subgraph}`);
-    return 0; // Temp, to allow arbitrum to show up
+    throw new Error(`No Sushi data found on ${date} from ${subgraph}`);
   }
 
   const oneDay = parseFloat(data.dayDatas[0].volumeUSD) * 0.003;
@@ -76,7 +75,7 @@ export default function registerSushiswap(register: RegisterFunction) {
     ...metadata,
     subtitle: 'Arbitrum',
     blockchain: 'Arbitrum One',
-    protocolLaunch: '2021-08-23',
+    protocolLaunch: '2021-08-31',
   });
 
   register.bundle('sushi', metadata);
