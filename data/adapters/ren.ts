@@ -7,8 +7,8 @@ const ONE_DAY = 86400;
 export default function registerRen(register: RegisterFunction) {
   async function getRenData(date: string): Promise<number> {
     const now = dateToTimestamp(date);
-    const tomorrow = now + ONE_DAY;
-    console.log({ now, tomorrow })
+    const oneDayAgo = now - ONE_DAY;
+    // console.log({ now, oneDayAgo })
 
     const req = await fetch('https://stats.renproject.io/', {
       headers: {
@@ -18,16 +18,21 @@ export default function registerRen(register: RegisterFunction) {
         operationName: null,
         variables: {},
         query: `{
-          now: Snapshot(timestamp: "${now}") {
-            timestampString
+          current: Snapshot(timestamp: "${now}") {
             fees {
-              amountInUsd
+              asset
+              amount
+            }
+            prices {
+              asset
+              priceInUsd
+              decimals
             }
           }
-          tomorrow: Snapshot(timestamp: "${tomorrow}") {
-            timestampString
+          dayAgo: Snapshot(timestamp: "${oneDayAgo}") {
             fees {
-              amountInUsd
+              asset
+              amount
             }
           }
         }`,
@@ -36,10 +41,28 @@ export default function registerRen(register: RegisterFunction) {
     });
     const { data } = await req.json();
 
-    const nowFees = data.now.fees.reduce((acc, fee) => acc + parseFloat(fee.amountInUsd), 0);
-    const tomorrowFees = data.tomorrow.fees.reduce((acc, fee) => acc + parseFloat(fee.amountInUsd), 0);
-    console.log(data, { nowFees, tomorrowFees });
-    return tomorrowFees - nowFees;
+    const dayAgo = data.dayAgo.fees.reduce(
+      (acc, fees) => ({ ...acc, [fees.asset]: fees.amount }),
+      {}
+    );
+
+    const current = data.current.fees.reduce(
+      (acc, fees) => ({ ...acc, [fees.asset]: fees.amount }),
+      {}
+    );
+
+    const prices = data.current.prices.reduce(
+      (acc, prices) => ({ ...acc, [prices.asset]: prices }),
+      {}
+    );
+
+    const assets = Object.keys(current);
+
+    return assets.reduce((acc, asset) => {
+      const difference = current[asset] - (dayAgo[asset] || 0);
+      const differentInUsd = (difference / 10 ** prices[asset].decimals) * prices[asset].priceInUsd;
+      return acc + (differentInUsd || 0);
+    }, 0);
   }
 
   const query = async (attribute: string, date: string) => {
