@@ -10,6 +10,7 @@ import {
 } from 'recharts';
 import format from 'date-fns/format';
 import Numeral from 'numeral';
+import { dateToTimestamp } from 'data/lib/time';
 
 const toK = (num: number | string) => Numeral(num).format('0.[00]a');
 
@@ -44,18 +45,29 @@ const toNiceDate = (date: string) => format(new Date(parseInt(date) * 1000), 'MM
 
 const toNiceDateYear = (date: string) => format(new Date(parseInt(date) * 1000), 'MMMM dd, yyyy');
 
-export interface ChartDay {
+export interface FeeItem {
   date: number;
-  fee: number;
+  primary: number | null;
+  secondary: number | null;
+}
+
+function findFee(days: FeeItem[], date: number) {
+  for (const day of days) {
+    if (day.date === date) {
+      return day.primary;
+    }
+  }
+  return 0;
 }
 
 interface SeriesChartProps {
-  data: ChartDay[];
+  data: FeeItem[];
   primary: string;
   secondary?: string | null;
   loading?: boolean;
   protocols: { [id: string]: string };
   server?: boolean;
+  events?: { date: string; description: string }[];
 }
 
 interface ActiveTooltip {
@@ -70,6 +82,7 @@ const Chart: React.FC<SeriesChartProps> = ({
   loading,
   protocols,
   server,
+  events,
 }) => {
   const [tooltip, setTooltip] = useState<null | ActiveTooltip>(null);
   const color = 'blue';
@@ -121,6 +134,8 @@ const Chart: React.FC<SeriesChartProps> = ({
             borderRadius: 10,
             borderColor: color,
             color: 'black',
+            maxWidth: 250,
+            whiteSpace: 'normal',
           }}
           wrapperStyle={{ top: -70, left: -10 }}
         />
@@ -133,19 +148,24 @@ const Chart: React.FC<SeriesChartProps> = ({
           yAxisId={0}
           stroke="#f2a900"
         />
-        <ReferenceDot
-          x={1629921600}
-          y={10000}
-          r={4}
-          fill="#b957af"
-          onMouseOver={(e: any) =>
-            setTooltip({
-              description: 'Test',
-              point: { x: e.cx + 10, y: e.cy - 10 },
-            })
-          }
-          onMouseOut={() => setTooltip(null)}
-        />
+
+        {events?.map((event) => (
+          <ReferenceDot
+            key={event.description}
+            x={dateToTimestamp(event.date)}
+            y={findFee(data, dateToTimestamp(event.date))}
+            r={4}
+            fill="#b957af"
+            onMouseOver={(e: any) =>
+              setTooltip({
+                description: event.description,
+                point: { x: e.cx + 10, y: e.cy - 10 },
+              })
+            }
+            onMouseOut={() => setTooltip(null)}
+          />
+        ))}
+
         {secondary && (
           <Line
             strokeWidth={2}

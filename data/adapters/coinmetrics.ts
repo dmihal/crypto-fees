@@ -24,6 +24,12 @@ const l1s = [
     blockchain: 'Ethereum',
     source: 'CoinMetrics',
     adapter: 'coinmetrics',
+    events: [
+      {
+        date: '2021-08-05',
+        description: 'London hard fork, including EIP-1559',
+      },
+    ],
   },
   {
     id: 'btc',
@@ -60,6 +66,12 @@ const l1s = [
     adapter: 'coinmetrics',
     tokenTicker: 'ADA',
     tokenCoingecko: 'cardano',
+    events: [
+      {
+        date: '2021-09-12',
+        description: 'Alonzo upgrade introduces smart contracts',
+      },
+    ],
   },
   {
     id: 'xtz',

@@ -18,6 +18,7 @@ export interface Metadata {
   protocolLaunch: string;
   tokenLaunch?: string;
   legacy?: boolean;
+  events?: { date: string; description: string }[];
 }
 
 export interface ProtocolData extends Metadata {

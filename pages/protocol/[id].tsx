@@ -8,7 +8,7 @@ import subDays from 'date-fns/subDays';
 import isAfter from 'date-fns/isAfter';
 import { ArrowLeft } from 'react-feather';
 import Attribute from 'components/Attribute';
-import Chart from 'components/Chart';
+import Chart, { FeeItem } from 'components/Chart';
 import ChartToolbar from 'components/ChartToolbar';
 import SocialTags from 'components/SocialTags';
 import { getIDs, getBundleIDs, getMetadata, getBundle, ensureListLoaded } from 'data/adapters';
@@ -59,7 +59,7 @@ function formatData(
   secondaryId: string | null,
   smoothing: number,
   protocolsByBundle: { [bundleId: string]: string[] }
-) {
+): FeeItem[] {
   const result = [];
   for (let date = minDate; !isAfter(date, maxDate); date = addDays(date, 1)) {
     const primary = protocolsByBundle[primaryId]
@@ -98,7 +98,7 @@ function saveFeeData(response: any, storedFees: FeeCache) {
   }
 }
 
-const emptyData = ({ start, end }: { start: Date; end: Date }) => {
+const emptyData = ({ start, end }: { start: Date; end: Date }): FeeItem[] => {
   const data = [];
   for (let date = start; !isAfter(date, end); date = addDays(date, 1)) {
     data.push({ date: date.getTime() / 1000, primary: null, secondary: null });
@@ -123,7 +123,7 @@ const useFees = ({
 }) => {
   const fees = useRef(initial);
 
-  const [value, setValue] = useState({
+  const [value, setValue] = useState<{ loading: boolean; data: FeeItem[] }>({
     loading: false,
     data: emptyData(dateRange),
   });
@@ -314,6 +314,7 @@ export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
           primary={id}
           secondary={secondary}
           protocols={protocols}
+          events={metadata.events}
         />
       </div>
 
