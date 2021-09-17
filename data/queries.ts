@@ -1,3 +1,4 @@
+import addDays from 'date-fns/addDays';
 import { queryAdapter, getIDs, getMetadata, ensureListLoaded } from './adapters';
 import { ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
@@ -94,7 +95,7 @@ export async function getData(): Promise<ProtocolData[]> {
 
 export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
   await ensureListLoaded();
-  const days = last7Days(new Date(date));
+  const days = last7Days(addDays(new Date(date), 1)); // Add 1 day, so that the "last 7 days" includes date
   const v2Data = await Promise.all(
     getIDs().map(async (id: string) => {
       const metadata = getMetadata(id);

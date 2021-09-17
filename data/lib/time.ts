@@ -19,10 +19,14 @@ export function getYesterdayDate() {
   return formatDate(date);
 }
 
-export const last7Days = (date?: Date) =>
-  [...new Array(7)].map((_, num: number) =>
-    formatDate(subDays(date || subHours(new Date(), 2), 7 - num))
-  );
+export const last7Days = (date?: Date) => {
+  const dates: string[] = [];
+  for (let i = 0; i < 7; i += 1) {
+    const _date = subDays(date || subHours(new Date(), 2), 7 - i);
+    dates.push(formatDate(_date));
+  }
+  return dates;
+};
 
 export function isBefore(date?: string, comparrison?: string) {
   if (!date) {
