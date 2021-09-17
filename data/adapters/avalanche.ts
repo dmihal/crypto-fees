@@ -97,5 +97,11 @@ export default function registerAvalanche(register: any) {
     tokenCoingecko: 'avalanche-2',
     protocolLaunch: '2020-09-22',
     tokenLaunch: '2020-09-22',
+    events: [
+      {
+        date: '2021-08-18',
+        description: '"Avalanche Rush" liquidity mining program announced',
+      },
+    ],
   });
 }
