@@ -1,5 +1,13 @@
-import React from 'react';
-import { Line, XAxis, YAxis, Tooltip, LineChart, ResponsiveContainer } from 'recharts';
+import React, { useState } from 'react';
+import {
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  LineChart,
+  ResponsiveContainer,
+  ReferenceDot,
+} from 'recharts';
 import format from 'date-fns/format';
 import Numeral from 'numeral';
 
@@ -50,6 +58,11 @@ interface SeriesChartProps {
   server?: boolean;
 }
 
+interface ActiveTooltip {
+  description: string;
+  point: { x: number; y: number };
+}
+
 const Chart: React.FC<SeriesChartProps> = ({
   data,
   primary,
@@ -58,6 +71,7 @@ const Chart: React.FC<SeriesChartProps> = ({
   protocols,
   server,
 }) => {
+  const [tooltip, setTooltip] = useState<null | ActiveTooltip>(null);
   const color = 'blue';
   const textColor = 'black';
 
@@ -97,9 +111,11 @@ const Chart: React.FC<SeriesChartProps> = ({
         />
         <Tooltip
           cursor={true}
-          formatter={(val: any) => formattedNum(val)}
+          separator={tooltip ? null : ' : '}
+          formatter={(val: any) => (tooltip ? [tooltip.description] : formattedNum(val))}
           labelFormatter={(label: any) => toNiceDateYear(label)}
           labelStyle={{ paddingTop: 4 }}
+          position={tooltip?.point}
           contentStyle={{
             padding: '10px 14px',
             borderRadius: 10,
@@ -116,6 +132,19 @@ const Chart: React.FC<SeriesChartProps> = ({
           dataKey="primary"
           yAxisId={0}
           stroke="#f2a900"
+        />
+        <ReferenceDot
+          x={1629921600}
+          y={10000}
+          r={4}
+          fill="#b957af"
+          onMouseOver={(e: any) =>
+            setTooltip({
+              description: 'Test',
+              point: { x: e.cx + 10, y: e.cy - 10 },
+            })
+          }
+          onMouseOut={() => setTooltip(null)}
         />
         {secondary && (
           <Line
