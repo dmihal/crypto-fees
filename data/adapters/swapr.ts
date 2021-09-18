@@ -65,7 +65,7 @@ export default function registerSwapr(register: RegisterFunction) {
     protocolLaunch: '2021-03-10',
   });
 
-  register('swapr-arbitrum', createQueryFn('luzzif/swapr-arbitrum-one'), {
+  register('swapr-arbitrum', createQueryFn('luzzif/swapr-arbitrum-one-v2'), {
     ...metadata,
     subtitle: 'Arbitrum',
     blockchain: 'Arbitrum One',
