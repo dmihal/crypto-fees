@@ -6,8 +6,8 @@ const ONE_DAY = 86400;
 
 export default function registerRen(register: RegisterFunction) {
   async function getRenData(date: string): Promise<number> {
-    const now = dateToTimestamp(date);
-    const oneDayAgo = now - ONE_DAY;
+    const snapshotTimestamp = dateToTimestamp(date);
+    const dayBeforeSnapshotTimestamp = snapshotTimestamp - ONE_DAY;
     // console.log({ now, oneDayAgo })
 
     const req = await fetch('https://stats.renproject.io/', {
@@ -18,7 +18,7 @@ export default function registerRen(register: RegisterFunction) {
         operationName: null,
         variables: {},
         query: `{
-          current: Snapshot(timestamp: "${now}") {
+          current: Snapshot(timestamp: "${snapshotTimestamp}") {
             fees {
               asset
               amount
@@ -29,7 +29,7 @@ export default function registerRen(register: RegisterFunction) {
               decimals
             }
           }
-          dayAgo: Snapshot(timestamp: "${oneDayAgo}") {
+          dayAgo: Snapshot(timestamp: "${dayBeforeSnapshotTimestamp}") {
             fees {
               asset
               amount
@@ -60,7 +60,12 @@ export default function registerRen(register: RegisterFunction) {
 
     return assets.reduce((acc, asset) => {
       const difference = current[asset] - (dayAgo[asset] || 0);
-      const differentInUsd = (difference / 10 ** prices[asset].decimals) * prices[asset].priceInUsd;
+      if (!prices[asset]) {
+        return acc;
+      }
+      const decimals = prices[asset].decimals;
+      const priceInUsd = prices[asset].priceInUsd;
+      const differentInUsd = (difference / 10 ** decimals) * priceInUsd;
       return acc + (differentInUsd || 0);
     }, 0);
   }
