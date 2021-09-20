@@ -5,7 +5,7 @@ import registerAave from './aave';
 import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import registerBancor from './bancor';
-import registerBSC from './bsc';
+// import registerBSC from './bsc';
 import registerCoinMetrics from './coinmetrics';
 import registerCompound from './compound';
 // import registerCurve from './curve';
@@ -64,7 +64,7 @@ registerAave(register);
 registerAvalanche(register);
 registerBalancer(register);
 registerBancor(register);
-registerBSC(register);
+// registerBSC(register);
 registerCoinMetrics(register);
 registerCompound(register);
 // registerCurve(register);
@@ -110,6 +110,7 @@ async function loadList() {
   const list = sdk.getList('fees');
   await list.fetchAdapters();
 
+  // list.bundles
   await Promise.all(
     list.getAdapters().map(async (adapter: SDKAdapter) => {
       const id = adapter.id;
@@ -119,6 +120,7 @@ async function loadList() {
       ids.push(id);
 
       const metadata = await adapter.getMetadata();
+      // metadata.bundle = adapter.bundle || null;
 
       const query = (attribute: string, date: string) => {
         if (attribute !== 'fee') {
