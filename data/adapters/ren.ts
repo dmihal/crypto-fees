@@ -1,80 +1,89 @@
-import { query } from '../lib/graph';
-import { offsetDaysFormatted } from '../lib/time';
-import { getBlockNumber } from '../lib/chain';
 import { RegisterFunction } from '../types';
+import { dateToTimestamp } from '../lib/time';
+import icon from 'icons/ren.svg';
 
-export async function getRenData(date: string): Promise<number> {
-  const todayBlock = await getBlockNumber(offsetDaysFormatted(date, 1));
-  const yesterdayBlock = await getBlockNumber(date);
-
-  const data = await query(
-    'renproject/renvm',
-    `
-    query feesOverPeriod($today: Int!, $yesterday: Int!){
-      today: renVM(id:1, block: {number: $today}) {
-        fees {
-          symbol
-          amount
-          amountInEth
-          amountInUsd
-        }
-      }
-      yesterday: renVM(id:1, block: {number: $yesterday}){
-        fees {
-          symbol
-          amount
-          amountInEth
-          amountInUsd
-        }
-      }
-    }`,
-    {
-      today: todayBlock,
-      yesterday: yesterdayBlock,
-    },
-    'feesOverPeriod'
-  );
-
-  const assets: {
-    [id: string]: { today?: number; yesterday?: number };
-  } = {};
-
-  for (const asset of data.today.fees) {
-    assets[asset.symbol] = { today: parseFloat(asset.amountInUsd) };
-  }
-  for (const asset of data.yesterday.fees) {
-    assets[asset.symbol] = {
-      ...assets[asset.symbol],
-      yesterday: parseFloat(asset.amountInUsd),
-    };
-  }
-
-  let oneDay = 0;
-
-  for (const id in assets) {
-    if (assets[id].yesterday) {
-      oneDay += assets[id].today - assets[id].yesterday;
-    }
-  }
-
-  return oneDay;
-}
+const ONE_DAY = 86400;
 
 export default function registerRen(register: RegisterFunction) {
-  const renQuery = (attribute: string, date: string) => {
+  async function getRenData(date: string): Promise<number> {
+    const snapshotTimestamp = dateToTimestamp(date);
+    const dayBeforeSnapshotTimestamp = snapshotTimestamp - ONE_DAY;
+    // console.log({ now, oneDayAgo })
+
+    const req = await fetch('https://stats.renproject.io/', {
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        operationName: null,
+        variables: {},
+        query: `{
+          current: Snapshot(timestamp: "${snapshotTimestamp}") {
+            fees {
+              asset
+              amount
+            }
+            prices {
+              asset
+              priceInUsd
+              decimals
+            }
+          }
+          dayAgo: Snapshot(timestamp: "${dayBeforeSnapshotTimestamp}") {
+            fees {
+              asset
+              amount
+            }
+          }
+        }`,
+      }),
+      method: 'POST',
+    });
+    const { data } = await req.json();
+
+    const dayAgo = data.dayAgo.fees.reduce(
+      (acc, fees) => ({ ...acc, [fees.asset]: fees.amount }),
+      {}
+    );
+
+    const current = data.current.fees.reduce(
+      (acc, fees) => ({ ...acc, [fees.asset]: fees.amount }),
+      {}
+    );
+
+    const prices = data.current.prices.reduce(
+      (acc, prices) => ({ ...acc, [prices.asset]: prices }),
+      {}
+    );
+
+    const assets = Object.keys(current);
+
+    return assets.reduce((acc, asset) => {
+      const difference = current[asset] - (dayAgo[asset] || 0);
+      if (!prices[asset]) {
+        return acc;
+      }
+      const decimals = prices[asset].decimals;
+      const priceInUsd = prices[asset].priceInUsd;
+      const differentInUsd = (difference / 10 ** decimals) * priceInUsd;
+      return acc + (differentInUsd || 0);
+    }, 0);
+  }
+
+  const query = async (attribute: string, date: string) => {
     if (attribute !== 'fee') {
-      throw new Error(`Uniswap doesn't support ${attribute}`);
+      throw new Error(`Ren doesn't support ${attribute}`);
     }
     return getRenData(date);
   };
 
-  register('ren', renQuery, {
+  register('ren', query, {
+    icon,
     name: 'Ren Protocol',
     category: 'xchain',
     description: 'Ren Protocol is a protocol for cross-chain asset transfers.',
     feeDescription: 'Transfer fees are paid by users to node operators (Darknodes).',
-    blockchain: 'Ethereum',
-    source: 'The Graph Protocol',
+    source: 'RenVM Tracker',
     adapter: 'ren',
     website: 'https://renproject.io',
     tokenTicker: 'REN',
