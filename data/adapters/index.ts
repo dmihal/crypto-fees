@@ -118,7 +118,7 @@ async function loadList() {
       ids.push(id);
 
       const metadata = await adapter.getMetadata();
-      // metadata.bundle = adapter.bundle || null;
+      metadata.bundle = adapter.bundle || null;
 
       const query = (attribute: string, date: string) => {
         if (attribute !== 'fee') {
@@ -136,6 +136,11 @@ async function loadList() {
       console.log(`Downloaded & initialized ${id} adapter`);
     })
   );
+
+  for (const id of list.bundleIds) {
+    bundleIds.push(id);
+    bundles[id] = (await list.getBundle(id)) as any;
+  }
 }
 
 export const getIDs = () => ids;
