@@ -62,6 +62,16 @@ async function getAavePolygonData(date: string): Promise<number> {
   return parseFloat(response?.last24hFees);
 }
 
+async function getAaveAvalancheData(date: string): Promise<number> {
+  const response = await fetcher(date, '0xb6a86025f0fe1862b372cb0ca18ce3ede02a318f');
+
+  if (response.error) {
+    throw new Error(response.error);
+  }
+
+  return parseFloat(response?.last24hFees);
+}
+
 export default function registerAave(register: RegisterFunction) {
   const query = (adapter: (date: string) => Promise<number>) => (
     attribute: string,
@@ -112,6 +122,12 @@ export default function registerAave(register: RegisterFunction) {
     subtitle: 'Version 2 - Polygon',
     protocolLaunch: '2021-03-31',
     blockchain: 'Polygon',
+  });
+  register('aave-v2-avalanche-proto', query(getAaveAvalancheData), {
+    ...aaveMetadata,
+    subtitle: 'Version 2 - Avalanche',
+    protocolLaunch: '2021-10-04',
+    blockchain: 'Avalanche',
   });
 
   register.bundle('aave', aaveMetadata);
