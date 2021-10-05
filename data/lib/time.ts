@@ -22,7 +22,7 @@ export function getYesterdayDate() {
 export const last7Days = (date?: Date) => {
   const dates: string[] = [];
   for (let i = 0; i < 7; i += 1) {
-    const _date = subDays(date || subHours(new Date(), 2), 7 - i);
+    const _date = subDays(date || subHours(new Date(), 2), 6 - i);
     dates.push(formatDate(_date));
   }
   return dates;
