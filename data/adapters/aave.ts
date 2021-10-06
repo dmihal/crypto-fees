@@ -14,7 +14,7 @@ const fetcher = async (date: string, poolId: string) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      params: { timestamp: dateToTimestamp(date), poolId, forceRefresh: true },
+      params: { timestamp: dateToTimestamp(date) + 86400, poolId, forceRefresh: true },
     }),
   });
   if (res.status !== 200) throw new Error('aave did return an error');
