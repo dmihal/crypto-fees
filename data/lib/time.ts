@@ -2,6 +2,7 @@ import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import subHours from 'date-fns/subHours';
 
+// returns timestamp for start of the day
 export function dateToTimestamp(date: string | Date) {
   const _date = (date as string).length ? new Date(date) : (date as Date);
   return Math.floor(_date.getTime() / 1000 / 86400) * 86400;
