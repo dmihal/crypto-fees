@@ -7,7 +7,7 @@ const rootURI = 'https://info.aaw.fi';
 // Simple caching wrapper around thegraph
 // https://github.com/sakulstra/info.aave/blob/main/app/fees/queries/getFees.ts#L91
 const fetcher = async (date: string, poolId: string) => {
-  const res = await fetch(`${rootURI}/api/fees/queries/getFees`, {
+  const res = await fetch(`${rootURI}/api/rpc/getFees`, {
     method: 'POST',
     headers: {
       Accept: 'application/json',
