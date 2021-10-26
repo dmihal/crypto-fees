@@ -12,7 +12,6 @@ import polkadot from './polkadot.svg';
 import polygon from './polygon.svg';
 import polymarket from './polymarket.svg';
 import quickswap from './quickswap.png';
-import ren from './ren.svg';
 import tbtc from './tbtc.svg';
 import terra from './terra.svg';
 import tornado from './tornado.svg';
@@ -28,7 +27,6 @@ const icons: { [id: string]: string } = {
   curve,
   hegic,
   honeyswap,
-  ren,
   kusama,
   maker,
   mstable,

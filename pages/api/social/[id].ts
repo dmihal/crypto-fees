@@ -3,7 +3,7 @@ import sharp from 'sharp';
 import ReactDOMServer from 'react-dom/server';
 import React from 'react';
 import SingleProtocolCard from 'components/SocialCard/SingleProtocolCard';
-import { getMetadata } from 'data/adapters';
+import { getMetadata, ensureListLoaded } from 'data/adapters';
 import path from 'path';
 import { formatDate } from 'data/lib/time';
 import { getDateRangeData } from 'data/queries';
@@ -14,6 +14,8 @@ path.resolve(process.cwd(), 'fonts', 'fonts.conf');
 path.resolve(process.cwd(), 'fonts', 'SofiaProRegular.ttf');
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  await ensureListLoaded();
+
   const id = req.query.id.toString().replace('.png', '');
   const metadata = getMetadata(id);
   if (!metadata) {
