@@ -28,7 +28,7 @@ const uniV3Adapter = (subgraph: string) => async (date: string): Promise<number>
     'fees'
   );
 
-  if (data.dayDatas.length === 0) {
+  if (data.uniswapDayDatas.length === 0) {
     throw new Error(`No Uniswap data found on ${date} from ${subgraph}`);
   }
 
@@ -141,7 +141,7 @@ export default function registerUniswap(register: RegisterFunction) {
     protocolLaunch: '2021-07-09',
   });
 
-  register('uniswap-arbitrum', query(uniV3Adapter('dmihal/uniswap-arbitrum-one')), {
+  register('uniswap-arbitrum', query(uniV3Adapter('ianlapham/arbitrum-minimal')), {
     ...metadata,
     subtitle: 'Arbitrum',
     blockchain: 'Arbitrum One',
