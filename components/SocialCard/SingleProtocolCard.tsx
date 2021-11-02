@@ -6,7 +6,14 @@ const extractSVGRegex = /<div [\w\d=" -]+><div [\w\d=" -:;]+>(.+<\/svg>)/;
 
 const font = 'SofiaProRegular, Sofia Pro, sofia-pro';
 
-const SingleProtocolCard = ({ data, date, name }) => {
+interface SingleProtocolCardProps {
+  data: any;
+  date: string;
+  name: string;
+  icon: string;
+}
+
+const SingleProtocolCard: React.FC<SingleProtocolCardProps> = ({ data, date, name, icon }) => {
   const chart = ReactDOMServer.renderToString(
     React.createElement(Chart, {
       data,
@@ -21,6 +28,13 @@ const SingleProtocolCard = ({ data, date, name }) => {
 
   const avg = data.slice(-7).reduce((acc: number, item: any) => acc + item.primary, 0) / 7;
 
+  let svgImg;
+  if (icon?.indexOf('data:image/svg+xml;base64,') === 0) {
+    const buffer = new Buffer(icon.substr(26), 'base64');
+    svgImg = buffer.toString('ascii');
+    svgImg = svgImg.replace(/">/, '" width="36" height="36">');
+  }
+
   return (
     <svg
       viewBox="0 0 688 344"
@@ -29,30 +43,24 @@ const SingleProtocolCard = ({ data, date, name }) => {
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
       <rect fill="#F9FAFC" x="0" y="0" width="688" height="344" />
-      <text fontFamily={font} fontSize="24" fill="#091636" x="27" y="44">
-        CryptoFees.info
-      </text>
-      <text
-        opacity="1"
-        fontFamily={font}
-        fontSize="20"
-        fill="#091636"
-        x="655"
-        y="35"
-        textAnchor="end"
-      >
+
+      <g transform="translate(27,17)">
+        {svgImg ? (
+          <g dangerouslySetInnerHTML={{ __html: svgImg }} />
+        ) : (
+          <image x="0" y="0" width="36" height="36" href={icon} />
+        )}
+      </g>
+
+      <text opacity="1" fontFamily={font} fontSize="24" fill="#091636" x="70" y="35">
         {name}
       </text>
-      <text
-        opacity="0.4"
-        fontFamily={font}
-        fontSize="16"
-        fill="#091636"
-        x="655"
-        y="55"
-        textAnchor="end"
-      >
+      <text opacity="0.4" fontFamily={font} fontSize="16" fill="#091636" x="70" y="55">
         {date}
+      </text>
+
+      <text fontFamily={font} fontSize="20" fill="#091636" y="44" x="655" textAnchor="end">
+        CryptoFees.info
       </text>
 
       <rect

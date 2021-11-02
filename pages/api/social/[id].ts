@@ -8,6 +8,7 @@ import path from 'path';
 import { formatDate } from 'data/lib/time';
 import { getDateRangeData } from 'data/queries';
 import subDays from 'date-fns/subDays';
+import icons from 'components/icons';
 
 // These statements causes Next to bundle these files
 path.resolve(process.cwd(), 'fonts', 'fonts.conf');
@@ -33,6 +34,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data,
       date: formatDate(subDays(new Date(), 1), '/'),
       name: metadata.name,
+      icon: metadata.icon || icons[id],
     })
   );
 
