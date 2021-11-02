@@ -57,12 +57,12 @@ export default function registerSushiswap(register: RegisterFunction) {
     subtitle: 'Ethereum',
   });
 
-  // register('sushiswap-polygon', createQueryFn('sushiswap/matic-exchange'), {
-  //   ...metadata,
-  //   subtitle: 'Polygon',
-  //   blockchain: 'Polygon',
-  //   protocolLaunch: '2021-02-26',
-  // });
+  register('sushiswap-polygon', createQueryFn('sushiswap/matic-exchange'), {
+    ...metadata,
+    subtitle: 'Polygon',
+    blockchain: 'Polygon',
+    protocolLaunch: '2021-02-26',
+  });
 
   register('sushiswap-fantom', createQueryFn('sushiswap/fantom-exchange'), {
     ...metadata,
