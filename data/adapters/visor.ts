@@ -1,3 +1,4 @@
+import { dateToTimestamp } from '../lib/time';
 import { query } from '../lib/graph';
 import { RegisterFunction } from '../types';
 import icon from 'icons/visor.svg';
@@ -13,7 +14,7 @@ export async function getVisorData(date: string): Promise<number> {
     'visorfinance/visor',
     graphQuery,
     {
-      date: new Date(date).setHours(3, 0, 0, 0) / 1000,
+      date: dateToTimestamp(date),
     },
     'fees'
   );
