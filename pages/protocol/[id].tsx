@@ -51,6 +51,11 @@ function getDateWithSmoothing(data: FeeCache, id: string, date: Date, smoothing:
 
 const sum = (acc: number, num: number) => acc + num;
 
+const dateFloor = (date: Date) => {
+  date.setUTCHours(0, 0, 0, 0);
+  return date;
+};
+
 function formatData(
   data: FeeCache,
   minDate: Date,
@@ -61,7 +66,7 @@ function formatData(
   protocolsByBundle: { [bundleId: string]: string[] }
 ): FeeItem[] {
   const result = [];
-  for (let date = minDate; !isAfter(date, maxDate); date = addDays(date, 1)) {
+  for (let date = minDate; !isAfter(date, maxDate); date = dateFloor(addDays(date, 1))) {
     const primary = protocolsByBundle[primaryId]
       ? protocolsByBundle[primaryId]
           .map((id: string) => getDateWithSmoothing(data, id, date, smoothing))
@@ -212,11 +217,6 @@ interface ProtocolDetailsProps {
   icons: { [id: string]: string };
   marketData: { marketCap?: number; price?: number; psRatio?: number };
 }
-
-const dateFloor = (date: Date) => {
-  date.setUTCHours(0, 0, 0, 0);
-  return date;
-};
 
 export const ProtocolDetails: NextPage<ProtocolDetailsProps> = ({
   id,
