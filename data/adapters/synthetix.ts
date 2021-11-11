@@ -4,9 +4,7 @@ import { getBlockNumber } from '../lib/chain';
 import { query } from '../lib/graph';
 import icon from 'icons/synthetix.svg';
 
-const EIGHTEEN_DECIMALS = 10 ** 18;
-
-async function getSynthetixFees(date: string, subgraph: string, chain: string, divide?: boolean) {
+async function getSynthetixFees(date: string, subgraph: string, chain: string) {
   const data = await query(
     subgraph,
     `query fees($today: Int!, $yesterday: Int!){
@@ -23,20 +21,16 @@ async function getSynthetixFees(date: string, subgraph: string, chain: string, d
     },
     'fees'
   );
-  let fees =
-    parseInt(data.now.totalFeesGeneratedInUSD) - parseInt(data.yesterday.totalFeesGeneratedInUSD);
-  if (divide) {
-    fees = fees / EIGHTEEN_DECIMALS;
-  }
+  const fees =
+    parseFloat(data.now.totalFeesGeneratedInUSD) -
+    parseFloat(data.yesterday.totalFeesGeneratedInUSD);
+
   return fees;
 }
 
 export default function registerSynthetix(register: RegisterFunction) {
-  const getQuery = (subgraph: string, chain: string, divide?: boolean) => (
-    attribute: string,
-    date: string
-  ) => {
-    return getSynthetixFees(date, subgraph, chain, divide);
+  const getQuery = (subgraph: string, chain: string) => (attribute: string, date: string) => {
+    return getSynthetixFees(date, subgraph, chain);
   };
 
   const metadata = {
@@ -54,14 +48,10 @@ export default function registerSynthetix(register: RegisterFunction) {
     protocolLaunch: '2018-06-08',
   };
 
-  register(
-    'synthetix-mainnet',
-    getQuery('synthetixio-team/synthetix-exchanges', 'ethereum', true),
-    {
-      ...metadata,
-      subtitle: 'Ethereum',
-    }
-  );
+  register('synthetix-mainnet', getQuery('synthetixio-team/synthetix-exchanges', 'ethereum'), {
+    ...metadata,
+    subtitle: 'Ethereum',
+  });
 
   register('synthetix-optimism', getQuery('synthetixio-team/optimism-exchanges', 'optimism'), {
     ...metadata,
