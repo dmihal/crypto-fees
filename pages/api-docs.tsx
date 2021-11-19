@@ -68,7 +68,7 @@ export const getStaticProps: GetStaticProps = async () => {
   };
   const protocols = getIDs().map((id: string) => ({ id, ...getMetadata(id) }));
 
-  return { props: { lastWeek, protocols }, revalidate: 60 };
+  return { props: { lastWeek, protocols }, revalidate: 60 * 10 };
 };
 
 export default APIDocsPage;

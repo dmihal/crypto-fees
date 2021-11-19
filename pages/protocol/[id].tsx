@@ -27,7 +27,7 @@ function getMissingDates(data: FeeCache, minDate: Date, maxDate: Date, id: strin
     data[id] = {};
   }
 
-  for (let date = minDate; !isAfter(date, maxDate); date = addDays(date, 1)) {
+  for (let date = minDate; !isAfter(date, maxDate); date = dateFloor(addDays(date, 1))) {
     const dateStr = formatDate(date);
     if (!data[id][dateStr]) {
       missing.push(dateStr);
@@ -105,7 +105,7 @@ function saveFeeData(response: any, storedFees: FeeCache) {
 
 const emptyData = ({ start, end }: { start: Date; end: Date }): FeeItem[] => {
   const data = [];
-  for (let date = start; !isAfter(date, end); date = addDays(date, 1)) {
+  for (let date = start; !isAfter(date, end); date = dateFloor(addDays(date, 1))) {
     data.push({ date: date.getTime() / 1000, primary: null, secondary: null });
   }
   return data;
