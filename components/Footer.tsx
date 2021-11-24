@@ -24,6 +24,8 @@ const Footer: React.FC = () => {
         <Link href="/api-docs">
           <a>API Documentation</a>
         </Link>
+        {' | '}
+        <a href="https://t.me/cryptofees">Join our Telegram</a>
       </div>
 
       <div>
@@ -37,6 +39,12 @@ const Footer: React.FC = () => {
         {' | '}
         <a href="https://open-orgs.info">open-orgs.info</a>
       </div>
+
+      <style jsx>{`
+        footer {
+          text-align: center;
+        }
+      `}</style>
     </footer>
   );
 };
