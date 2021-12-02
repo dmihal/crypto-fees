@@ -101,17 +101,6 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
           align-items: center;
         }
 
-        .title a {
-          color: #0070f3;
-          text-decoration: none;
-        }
-
-        .title a:hover,
-        .title a:focus,
-        .title a:active {
-          text-decoration: underline;
-        }
-
         .title {
           margin: 0 0 16px;
           line-height: 1.15;
@@ -129,13 +118,6 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
           line-height: 1.5;
           font-size: 1.5rem;
           margin: 4px 0 20px;
-        }
-
-        @media (max-width: 600px) {
-          .grid {
-            width: 100%;
-            flex-direction: column;
-          }
         }
       `}</style>
     </main>

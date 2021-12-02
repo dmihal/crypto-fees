@@ -25,7 +25,7 @@ const Footer: React.FC = () => {
           <a>API Documentation</a>
         </Link>
         {' | '}
-        <a href="https://t.me/cryptofees">Join our Telegram</a>
+        <a href="https://t.me/+VNTjwOvI-W40Y2E5">Join our Telegram</a>
       </div>
 
       <div>
