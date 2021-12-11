@@ -124,6 +124,12 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
   );
 };
 
+/*
+ * Looking for the data source?
+ *
+ * This site pulls data from the CryptoStats protocol
+ * Visit https://cryptostats.community/discover/fees to see the code for these adapters
+ */
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
   const data = await getData();
 

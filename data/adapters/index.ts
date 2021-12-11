@@ -1,3 +1,11 @@
+/*
+ * This code is being depricated!
+ *
+ * CryptoFees.info is transitioning to pull all data from the CryptoStats protocol
+ * Visit https://cryptostats.community/discover/fees to see the code for adapters not included here,
+ * and to write new adapters.
+ */
+
 import { CryptoStatsSDK, Adapter as SDKAdapter } from '@cryptostats/sdk';
 import { Metadata } from '../types';
 
@@ -96,6 +104,10 @@ export async function ensureListLoaded() {
   await loadListPromise;
 }
 
+/*
+ * This code loads adapters from CryptoStats's fee list, and adapts them to function like legacy adapters
+ * See https://cryptostats.community/discover/fees
+ */
 async function loadList() {
   const sdk = new CryptoStatsSDK({
     // mongoConnectionString: process.env.MONGO_CONNECTION_STRING,
