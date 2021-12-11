@@ -2,7 +2,6 @@ import { CryptoStatsSDK, Adapter as SDKAdapter } from '@cryptostats/sdk';
 import { Metadata } from '../types';
 
 import registerAave from './aave';
-import registerAvalanche from './avalanche';
 import registerBalancer from './balancer';
 import registerBancor from './bancor';
 import registerCoinMetrics from './coinmetrics';
@@ -13,7 +12,6 @@ import registerFTM from './fantom';
 import registerQuickswap from './quickswap';
 // import registerHegic from './hegic';
 import registerHoneyswap from './honeyswap';
-import registerLiquity from './liquity';
 import registerLinkswap from './linkswap';
 import registerMaker from './maker';
 import register0x from './zerox';
@@ -61,7 +59,6 @@ const register = Object.assign(registerFn, {
 
 register0x(register);
 registerAave(register);
-registerAvalanche(register);
 registerBalancer(register);
 registerBancor(register);
 registerCoinMetrics(register);
@@ -71,7 +68,6 @@ registerDfyn(register);
 registerFTM(register);
 // registerHegic(register);
 registerHoneyswap(register);
-registerLiquity(register);
 registerLinkswap(register);
 registerMaker(register);
 registerMstable(register);
@@ -105,6 +101,7 @@ async function loadList() {
     // mongoConnectionString: process.env.MONGO_CONNECTION_STRING,
     // redisConnectionString: process.env.REDIS_URL,
     ipfsGateway: 'https://ipfs.cryptostats.community',
+    adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
   });
 
   const list = sdk.getList('fees');
