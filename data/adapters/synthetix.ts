@@ -53,12 +53,12 @@ export default function registerSynthetix(register: RegisterFunction) {
     subtitle: 'Ethereum',
   });
 
-  register('synthetix-optimism', getQuery('synthetixio-team/optimism-exchanges', 'optimism'), {
-    ...metadata,
-    subtitle: 'Optimism',
-    blockchain: 'Optimism',
-    protocolLaunch: '2021-07-30',
-  });
+  // register('synthetix-optimism', getQuery('synthetixio-team/optimism-exchanges', 'optimism'), {
+  //   ...metadata,
+  //   subtitle: 'Optimism',
+  //   blockchain: 'Optimism',
+  //   protocolLaunch: '2021-07-30',
+  // });
 
   register.bundle('synthetix', metadata);
 }
