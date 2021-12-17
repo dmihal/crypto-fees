@@ -8,13 +8,13 @@ const Header = () => {
           <div>cryptofees.info</div>
         </li>
         <li className="header-link">
+          <a href="https://openorgs.info/">openorgs.info</a>
+        </li>
+        <li className="header-link hideable">
+          <a href="https://moneyprinter.info/">moneyprinter.info</a>
+        </li>
+        <li className="header-link hideable">
           <a href="https://ethburned.info/">ethburned.info</a>
-        </li>
-        <li className="header-link hideable">
-          <a href="https://money-movers.info/">money-movers.info</a>
-        </li>
-        <li className="header-link hideable">
-          <a href="https://open-orgs.info/">open-orgs.info</a>
         </li>
         <li className="header-link hideable">
           <a href="https://l2fees.info/">l2fees.info</a>
@@ -24,13 +24,16 @@ const Header = () => {
 
           <ul className="dropdown">
             <li className="header-link showable">
-              <a href="https://money-movers.info/">money-movers.info</a>
+              <a href="https://openorgs.info/">openorgs.info</a>
             </li>
             <li className="header-link showable">
-              <a href="https://open-orgs.info/">open-orgs.info</a>
+              <a href="https://moneyprinter.info/">moneyprinter.info</a>
             </li>
             <li className="header-link showable">
               <a href="https://l2fees.info/">l2fees.info</a>
+            </li>
+            <li className="header-link">
+              <a href="https://money-movers.info/">money-movers.info</a>
             </li>
             <li className="header-link">
               <a href="https://stakers.info/">stakers.info</a>
