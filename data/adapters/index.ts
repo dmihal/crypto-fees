@@ -6,7 +6,7 @@
  * and to write new adapters.
  */
 
-import { CryptoStatsSDK, Adapter as SDKAdapter } from '@cryptostats/sdk';
+import type { Adapter as SDKAdapter } from '@cryptostats/sdk';
 import { Metadata } from '../types';
 
 import registerAave from './aave';
@@ -38,6 +38,7 @@ import registerUniswap from './uniswap';
 import registerVisor from './visor';
 import registerXDai from './xdai';
 import registerZilliqa from './zilliqa';
+import sdk from 'data/sdk';
 
 interface Adapter {
   query: any;
@@ -107,14 +108,10 @@ export async function ensureListLoaded() {
  * See https://cryptostats.community/discover/fees
  */
 async function loadList() {
-  const sdk = new CryptoStatsSDK({
-    // mongoConnectionString: process.env.MONGO_CONNECTION_STRING,
-    // redisConnectionString: process.env.REDIS_URL,
-    ipfsGateway: 'https://ipfs.cryptostats.community',
-    adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
-  });
-
   const list = sdk.getList('fees');
+  list.setCacheKeyResolver((_id: string, query: string, params: string[]) =>
+    query === 'oneDayTotalFees' ? params[0] : null
+  );
   await list.fetchAdapters();
 
   // list.bundles
