@@ -17,14 +17,14 @@ import registerFTM from './fantom';
 // import registerHegic from './hegic';
 import registerHoneyswap from './honeyswap';
 import registerLinkswap from './linkswap';
-import register0x from './zerox';
+// import register0x from './zerox';
 import registerMstable from './mStable';
 // import registerOptimism from './optimism';
 import registerPolygon from './polygon';
 import registerPolymarket from './polymarket';
 import registerRen from './ren';
 import registerSwapr from './swapr';
-import registerTBTC from './tbtc';
+// import registerTBTC from './tbtc';
 import registerVisor from './visor';
 import registerZilliqa from './zilliqa';
 import sdk from 'data/sdk';
@@ -54,7 +54,7 @@ const register = Object.assign(registerFn, {
   },
 });
 
-register0x(register);
+// register0x(register);
 registerAave(register);
 registerBancor(register);
 registerDfyn(register);
@@ -66,7 +66,7 @@ registerPolygon(register);
 registerPolymarket(register);
 registerRen(register);
 registerSwapr(register);
-registerTBTC(register);
+// registerTBTC(register);
 registerVisor(register);
 registerZilliqa(register);
 
