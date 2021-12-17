@@ -10,10 +10,8 @@ import type { Adapter as SDKAdapter } from '@cryptostats/sdk';
 import { Metadata } from '../types';
 
 import registerAave from './aave';
-import registerBalancer from './balancer';
 import registerBancor from './bancor';
 import registerCoinMetrics from './coinmetrics';
-import registerCompound from './compound';
 // import registerCurve from './curve';
 import registerDfyn from './dfyn';
 import registerFTM from './fantom';
@@ -34,7 +32,6 @@ import registerSynthetix from './synthetix';
 import registerTBTC from './tbtc';
 import registerTerra from './terra';
 import registerTornado from './tornado';
-import registerUniswap from './uniswap';
 import registerVisor from './visor';
 import registerXDai from './xdai';
 import registerZilliqa from './zilliqa';
@@ -67,10 +64,8 @@ const register = Object.assign(registerFn, {
 
 register0x(register);
 registerAave(register);
-registerBalancer(register);
 registerBancor(register);
 registerCoinMetrics(register);
-registerCompound(register);
 // registerCurve(register);
 registerDfyn(register);
 registerFTM(register);
@@ -90,7 +85,6 @@ registerSynthetix(register);
 registerTBTC(register);
 registerTerra(register);
 registerTornado(register);
-registerUniswap(register);
 registerVisor(register);
 registerXDai(register);
 registerZilliqa(register);

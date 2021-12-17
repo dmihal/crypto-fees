@@ -1,6 +1,4 @@
-import avalanche from './avalanche.svg';
 import bancor from './bancor.png';
-import compound from './compound.svg';
 import curve from './curve.png';
 import hegic from './hegic.png';
 import honeyswap from './honeyswap.png';
@@ -21,9 +19,7 @@ import zilliqa from './zilliqa.svg';
 
 // Legacy, don't add new icons here
 const icons: { [id: string]: string } = {
-  avalanche,
   bancor,
-  compound,
   curve,
   hegic,
   honeyswap,
