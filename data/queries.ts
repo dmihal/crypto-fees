@@ -9,7 +9,7 @@ const SANITY_CHECK = 1000000000; // Values over this will be automatically hidde
 
 async function getValue(protocol: string, attribute: string, date: string) {
   const cachedValue = await getDBValue(protocol, attribute, date);
-  if (cachedValue > 40 && cachedValue !== null && cachedValue < SANITY_CHECK) {
+  if (cachedValue !== null && cachedValue < SANITY_CHECK) {
     return cachedValue;
   }
   // eslint-disable-next-line no-console
