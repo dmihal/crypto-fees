@@ -21,7 +21,7 @@ const Footer: React.FC = () => {
           <a>Request Project</a>
         </Link>
         {' | '}
-        <Link href="/api-docs">
+        <Link href="/api-docs" prefetch={false}>
           <a>API Documentation</a>
         </Link>
         {' | '}
