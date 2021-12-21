@@ -30,7 +30,18 @@ const APIDocsPage: NextPage<APIDocsProps> = ({ lastWeek, protocols }) => {
       <h1 className="title">CryptoFees.info API</h1>
 
       <p>CryptoFees.info provides a public API for easy access to fee data.</p>
-      <p>Data from the CryptoFees.info API may be freely used in non-commercial projects.</p>
+
+      <div className="alert">
+        CryptoFees is transitioning to using the{' '}
+        <a href="https://cryptostats.community">CryptoStats protocol</a>
+        {} as a data source.
+        <br />
+        For a more comprehensive API, check out {}
+        <a href="https://cryptostats.community/discover/fees">
+          the &quot;fees&quot; collection on CryptoStats
+        </a>
+        .
+      </div>
 
       <h2>
         <pre>/api/v1/fees</pre>
@@ -54,6 +65,12 @@ const APIDocsPage: NextPage<APIDocsProps> = ({ lastWeek, protocols }) => {
         }
         h3 {
           font-size: 16px;
+        }
+        .alert {
+          background: #ffb6b6;
+          padding: 12px;
+          border-radius: 8px;
+          font-style: italic;
         }
       `}</style>
     </main>
