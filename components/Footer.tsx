@@ -6,10 +6,7 @@ const Footer: React.FC = () => {
     <footer>
       <div>Data updates at 2am, UTC</div>
       <div>
-        Created by{' '}
-        <a href="https://twitter.com/dmihal" target="twitter">
-          David Mihal
-        </a>
+        Powered by <a href="https://cryptostats.community">CryptoStats</a>
       </div>
 
       <div>
