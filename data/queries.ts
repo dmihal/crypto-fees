@@ -61,7 +61,14 @@ export async function getData(): Promise<ProtocolData[]> {
 
         let feeForDay;
         try {
-          feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+          feeForDay = await Promise.all(
+            days.map((day: string) => {
+              if (metadata.protocolLaunch && isBefore(day, metadata.protocolLaunch)) {
+                return 0;
+              }
+              return getValue(id, 'fee', day);
+            })
+          );
         } catch (e) {
           console.warn(e);
           return null;
