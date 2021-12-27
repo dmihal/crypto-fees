@@ -25,7 +25,6 @@ import registerPolymarket from './polymarket';
 import registerRen from './ren';
 import registerSwapr from './swapr';
 // import registerTBTC from './tbtc';
-import registerVisor from './visor';
 import registerZilliqa from './zilliqa';
 import sdk from 'data/sdk';
 
@@ -67,7 +66,6 @@ registerPolymarket(register);
 registerRen(register);
 registerSwapr(register);
 // registerTBTC(register);
-registerVisor(register);
 registerZilliqa(register);
 
 let loadListPromise: any = null;
