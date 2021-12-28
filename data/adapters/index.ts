@@ -12,7 +12,6 @@ import { Metadata } from '../types';
 import registerBancor from './bancor';
 // import registerCurve from './curve';
 import registerDfyn from './dfyn';
-import registerFTM from './fantom';
 // import registerHegic from './hegic';
 import registerHoneyswap from './honeyswap';
 import registerLinkswap from './linkswap';
@@ -54,7 +53,6 @@ const register = Object.assign(registerFn, {
 // register0x(register);
 registerBancor(register);
 registerDfyn(register);
-registerFTM(register);
 registerHoneyswap(register);
 registerLinkswap(register);
 registerMstable(register);
