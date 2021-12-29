@@ -337,10 +337,10 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@cryptostats/sdk@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.2.0.tgz#2746b52d3dac2503e4bda2abbd53aac976d50949"
-  integrity sha512-qsO2eomifTHP9WKaDOuxbYywnHZc3bBuxc5/yxlWwS0jpdEtS+cRXGoc9nJuc38j7XcKBjENcldsRhJVGIDVOw==
+"@cryptostats/sdk@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.2.1.tgz#e9c1cf58aa84cca90af7d03c25f338578866fb8b"
+  integrity sha512-6d59b6dk7bTGafqbDsjAa/UkBcJ/qF3+51AEU+haU+C381N9NramtguiZbvz/zbQje6S8ZtWaN1bmo/syANiPA==
   dependencies:
     date-fns "^2.22.1"
     ethers "^5.4.4"
