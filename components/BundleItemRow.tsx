@@ -5,9 +5,10 @@ import { ChevronRight } from 'react-feather';
 
 interface BundleItemRowProps {
   item: ProtocolData;
+  yearly?: boolean;
 }
 
-const BundleItemRow: React.FC<BundleItemRowProps> = ({ item }) => {
+const BundleItemRow: React.FC<BundleItemRowProps> = ({ item, yearly }) => {
   return (
     <Fragment>
       <Link href={`/protocol/${item.id}`}>
@@ -24,12 +25,14 @@ const BundleItemRow: React.FC<BundleItemRowProps> = ({ item }) => {
               currency: 'USD',
             })}
           </div>
-          <div className="amount">
-            {item.sevenDayMA?.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            })}
-          </div>
+          {!yearly && (
+            <div className="amount">
+              {item.sevenDayMA?.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              })}
+            </div>
+          )}
           <div className="arrow">
             <ChevronRight />
           </div>

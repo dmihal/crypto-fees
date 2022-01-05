@@ -9,11 +9,12 @@ import BundleItemRow from './BundleItemRow';
 interface DetailsCardProps {
   protocol: ProtocolData;
   sort: string;
+  yearly?: boolean;
 }
 
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
-const DetailsCard: React.FC<DetailsCardProps> = ({ protocol, sort }) => {
+const DetailsCard: React.FC<DetailsCardProps> = ({ protocol, sort, yearly }) => {
   return (
     <div className="details-card">
       {protocol.bundleData && (
@@ -21,7 +22,7 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol, sort }) => {
           {protocol.bundleData
             .sort(sort === 'weekly' ? sortByWeekly : sortByDaily)
             .map((bundleItem: ProtocolData) => (
-              <BundleItemRow item={bundleItem} key={bundleItem.id} />
+              <BundleItemRow item={bundleItem} key={bundleItem.id} yearly={yearly} />
             ))}
         </div>
       )}
