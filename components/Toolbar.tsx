@@ -127,9 +127,11 @@ const Toolbar: React.FC<ToolbarProps> = ({
           </Button>
         )}
 
-        <Button onClick={onShare} Icon={Share}>
-          Share
-        </Button>
+        {onShare && (
+          <Button onClick={onShare} Icon={Share}>
+            Share
+          </Button>
+        )}
 
         <Button onClick={() => onBundleChange(!bundle)} Icon={bundle ? CheckSquare : Square}>
           Bundle

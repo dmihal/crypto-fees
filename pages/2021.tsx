@@ -11,6 +11,8 @@ import Toolbar from 'components/Toolbar';
 import { ensureListLoaded, getBundle, getMetadata } from 'data/adapters';
 import Chart, { FeeItem } from 'components/Chart';
 import sdk from 'data/sdk';
+import { ArrowLeft } from 'react-feather';
+import Link from 'next/link';
 
 interface HomeProps {
   data: ProtocolData[];
@@ -47,11 +49,19 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
 
   return (
     <main>
-      <SocialTags />
+      <SocialTags title="2021 in Fees" image="/2021.png" />
 
-      <h1 className="title">Crypto Fees</h1>
+      <h1 className="title">2021 in Fees</h1>
 
       <p className="description">What did people pay to use in 2021?</p>
+
+      <div className="back-container">
+        <Link href="/">
+          <a>
+            <ArrowLeft size={14} /> Back to list
+          </a>
+        </Link>
+      </div>
 
       <div className="toolbar-container">
         <Toolbar
@@ -83,12 +93,13 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
 
       <h2>Ethereum fees take off</h2>
       <p>
-        We can&amp;t talk about fees in 2021 without mentioning Ethereum&amp;s massive revenue
-        numbers. Ethereum&amp;s fees peaked out on May 11th with over $117m, before slumping down
+        We can&apos;t talk about fees in 2021 without mentioning Ethereum&apos;s massive revenue
+        numbers. Ethereum&apos;s fees peaked out on May 11th with over $117m, before slumping down
         for the summer.
       </p>
 
       <Chart data={charts.eth} primary="eth" protocols={{ eth: 'Ethereum' }} />
+      <div className="label">Ethereum</div>
 
       <h2>Native-asset yield farming</h2>
       <p>
@@ -119,7 +130,7 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
           },
         ]}
       />
-      <div>Avalanche</div>
+      <div className="label">Avalanche</div>
 
       <Chart
         data={charts.fantom.slice(180, 300)}
@@ -132,7 +143,7 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
           },
         ]}
       />
-      <div>Fantom</div>
+      <div className="label">Fantom</div>
 
       <h2>Tokens drive usage, even without incentives</h2>
       <p>
@@ -159,6 +170,7 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
           },
         ]}
       />
+      <div className="label">ENS</div>
 
       <style jsx>{`
         main {
@@ -197,12 +209,34 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
           flex-direction: column;
         }
 
+        h2 {
+          margin-top: 50px;
+        }
+
         p {
           max-width: 720px;
+          font-size: 20px;
+          color: #414046;
         }
 
         main :global(.recharts-responsive-container) {
           max-width: 900px;
+        }
+
+        main :global(.list) {
+          margin-bottom: 20px;
+        }
+
+        .label {
+          background: #fad3f6;
+          padding: 8px 16px;
+          margin: 18px;
+          font-size: 14px;
+        }
+
+        .back-container {
+          max-width: 600px;
+          width: 100%;
         }
       `}</style>
     </main>

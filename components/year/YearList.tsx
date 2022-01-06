@@ -10,7 +10,7 @@ const YearList: React.FC<ListProps> = ({ data }) => {
   const [showAll, setShowAll] = useState(false);
   const sortedData = data
     .sort((a: any, b: any) => b.oneDay - a.oneDay)
-    .slice(0, showAll ? undefined : 25);
+    .slice(0, showAll ? undefined : 5);
 
   return (
     <div className="list">
