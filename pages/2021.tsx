@@ -74,36 +74,38 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
 
       <p>
         2021 has been an explosive year for cryptocurrencies and blockchain technologies. As assets
-        began {}
-        crossing all-time-highs, new users began rushing in to try out DeFi, NFTs, and more.
+        began crossing all-time-highs, new users began rushing in to try out DeFi, NFTs, and more.
       </p>
       <p>
         As we prepare for another crazy year in crypto, let&apos;s take a look back at some
-        interesting trends that {}
-        we can see in the 2021 fee data.
+        interesting trends that we can see in the 2021 fee data.
       </p>
 
       <h2>Ethereum fees take off</h2>
-      <p>Test</p>
+      <p>
+        We can&amp;t talk about fees in 2021 without mentioning Ethereum&amp;s massive revenue
+        numbers. Ethereum&amp;s fees peaked out on May 11th with over $117m, before slumping down
+        for the summer.
+      </p>
 
       <Chart data={charts.eth} primary="eth" protocols={{ eth: 'Ethereum' }} />
 
       <h2>Native-asset yield farming</h2>
       <p>
         In 2020, the period now known as &quot;DeFi Summer&quot; saw explosive growth in DeFi
-        applications. {}
-        Key to this growth was &quot;yield farming&quot;, also known as &quot;liquidity
-        mining&quot;, where DeFi protocols {}
-        would use token issuance to incentivize liquidity and other capital lockups.
+        applications. Key to this growth was &quot;yield farming&quot;, also known as &quot;
+        liquidity mining&quot;, where DeFi protocols would use token issuance to incentivize
+        liquidity and other capital lockups.
       </p>
       <p>
         While yield farming remains an important primitive of the DeFi ecosystem, 2021 saw these
-        farms {}
-        augmented with native assets. Polygon, Avalanche and Fantom all allocated substantial
-        amounts {}
-        of their token supply towards rewards for providing liquidity on decentralized exchanges,
-        lending {}
-        markets, and more.
+        farms augmented with native assets. Polygon, Avalanche and Fantom all allocated substantial
+        amounts of their token supply towards rewards for providing liquidity on decentralized
+        exchanges, lending markets, and more.
+      </p>
+      <p>
+        The following charts show fees on Avalanche and Fantom, with the beginning of their
+        liquidity incentives denoted by purple dots.
       </p>
 
       <Chart
@@ -132,13 +134,30 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
       />
       <div>Fantom</div>
 
-      <h2>Low individual fees, high total fees</h2>
-      <p>Test</p>
+      <h2>Tokens drive usage, even without incentives</h2>
+      <p>
+        While it seems intuitive that tokens drive usage of projects, the launch of the ENS token
+        provides an interesting case study. The Ethereum Name Service (ENS) launched in 2017, and
+        earns fees from the sale of .eth domain names. While the protocol showed considerable growth
+        throughout 2021, the revenue spiked after the launch of the ENS governance token.
+      </p>
+      <p>
+        In the month prior to the token launch, the protocol earned an average of $60k per day in
+        fees. Even after the spike of usage had cooled off, the protocol still earned an average of
+        $194k per day (over 3x growth). And unlike many other protocols, this token is not issued to
+        incentivize growth.
+      </p>
 
       <Chart
-        data={charts.bsc.slice(0, 140)}
-        primary="bsc"
-        protocols={{ bsc: 'Binance Smart Chain' }}
+        data={charts.ens.slice(250, 360)}
+        primary="ens"
+        protocols={{ ens: 'ENS' }}
+        events={[
+          {
+            date: '2021-11-09',
+            description: 'ENS DAO & token launched',
+          },
+        ]}
       />
 
       <style jsx>{`
@@ -177,6 +196,14 @@ export const Home: NextPage<HomeProps> = ({ data, bundles, charts }) => {
           display: flex;
           flex-direction: column;
         }
+
+        p {
+          max-width: 720px;
+        }
+
+        main :global(.recharts-responsive-container) {
+          max-width: 900px;
+        }
       `}</style>
     </main>
   );
@@ -205,9 +232,10 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     bsc: [],
     eth: [],
     'avalanche-c-chain': [],
-    'uniswap-v3': [],
-    'uniswap-v2': [],
+    // 'uniswap-v3': [],
+    // 'uniswap-v2': [],
     fantom: [],
+    ens: [],
   };
 
   for await (const line of rl) {

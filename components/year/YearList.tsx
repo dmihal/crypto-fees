@@ -1,5 +1,5 @@
 import { ProtocolData } from 'data/types';
-import React from 'react';
+import React, { useState } from 'react';
 import YearRow from './YearRow';
 
 interface ListProps {
@@ -7,7 +7,10 @@ interface ListProps {
 }
 
 const YearList: React.FC<ListProps> = ({ data }) => {
-  const sortedData = data.sort((a: any, b: any) => b.oneDay - a.oneDay);
+  const [showAll, setShowAll] = useState(false);
+  const sortedData = data
+    .sort((a: any, b: any) => b.oneDay - a.oneDay)
+    .slice(0, showAll ? undefined : 25);
 
   return (
     <div className="list">
@@ -19,6 +22,12 @@ const YearList: React.FC<ListProps> = ({ data }) => {
       {sortedData.map((protocol: any) => (
         <YearRow protocol={protocol} key={protocol.id} />
       ))}
+
+      {!showAll && (
+        <button className="show-all" onClick={() => setShowAll(true)}>
+          Show All...
+        </button>
+      )}
 
       <style jsx>{`
         .list {
@@ -70,6 +79,21 @@ const YearList: React.FC<ListProps> = ({ data }) => {
         .amount {
           min-width: 200px;
           text-align: right;
+        }
+
+        .show-all {
+          display: block;
+          width: 100%;
+          background: #eeeeee;
+          border: none;
+          padding: 10px;
+          color: #666666;
+          font-size: 14px;
+          cursor: pointer;
+        }
+
+        .show-all:hover {
+          background: #dddddd;
         }
 
         @media (max-width: 700px) {
