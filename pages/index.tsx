@@ -141,10 +141,15 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
           top: 0;
           left: 0;
           right: 0;
+          color: #4b0c56;
+        }
+
+        .cta:hover {
+          background: #edbce8;
         }
 
         :global(body) {
-          margin-top: 50px;
+          margin-top: 56px !important;
         }
       `}</style>
     </main>
