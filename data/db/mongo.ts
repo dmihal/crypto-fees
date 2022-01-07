@@ -21,5 +21,9 @@ export const get = dbPromise
   : async (_: any) => [];
 
 export const set = dbPromise
-  ? (doc: any) => dbPromise.then(() => db.db('cryptofees').collection('fee_cache').insertOne(doc))
+  ? (doc: any) => dbPromise.then(() => db.db('cryptofees').collection('fee_cache').updateOne({
+    protocol: doc.protocol,
+    attribute: doc.attribute,
+    date: doc.date,
+  }, { $set: doc }, { upsert: true }))
   : async (_: any) => null;

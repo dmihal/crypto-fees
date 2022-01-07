@@ -3,7 +3,6 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
-import addDays from 'date-fns/addDays';
 import subDays from 'date-fns/subDays';
 import isAfter from 'date-fns/isAfter';
 import { ArrowLeft } from 'react-feather';
@@ -27,7 +26,7 @@ function getMissingDates(data: FeeCache, minDate: Date, maxDate: Date, id: strin
     data[id] = {};
   }
 
-  for (let date = minDate; !isAfter(date, maxDate); date = dateFloor(addDays(date, 1))) {
+  for (let date = minDate; !isAfter(date, maxDate); date = nextDay(date)) {
     const dateStr = formatDate(date);
     if (!data[id][dateStr]) {
       missing.push(dateStr);
@@ -56,6 +55,14 @@ const dateFloor = (date: Date) => {
   return date;
 };
 
+const nextDay = (date: Date) => {
+  const d = new Date(date);
+  d.setUTCHours(0, 0, 0, 0);
+  d.setUTCDate(d.getUTCDate() + 1);
+  d.setUTCHours(0, 0, 0, 0);
+  return d;
+}
+
 function formatData(
   data: FeeCache,
   minDate: Date,
@@ -66,7 +73,7 @@ function formatData(
   protocolsByBundle: { [bundleId: string]: string[] }
 ): FeeItem[] {
   const result = [];
-  for (let date = minDate; !isAfter(date, maxDate); date = dateFloor(addDays(date, 1))) {
+  for (let date = minDate; !isAfter(date, maxDate); date = nextDay(date)) {
     const primary = protocolsByBundle[primaryId]
       ? protocolsByBundle[primaryId]
           .map((id: string) => getDateWithSmoothing(data, id, date, smoothing))
@@ -105,7 +112,7 @@ function saveFeeData(response: any, storedFees: FeeCache) {
 
 const emptyData = ({ start, end }: { start: Date; end: Date }): FeeItem[] => {
   const data = [];
-  for (let date = start; !isAfter(date, end); date = dateFloor(addDays(date, 1))) {
+  for (let date = start; !isAfter(date, end); date = nextDay(date)) {
     data.push({ date: date.getTime() / 1000, primary: null, secondary: null });
   }
   return data;

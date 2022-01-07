@@ -26,7 +26,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       metadata = getBundle(id);
       bundle = true;
-    } catch (e) {}
+    } catch (e) {
+      e // Avoid eslint bugs
+    }
   }
   if (!metadata) {
     return res.json({ error: `Unknown ${id}` });
