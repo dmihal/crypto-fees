@@ -8,4 +8,8 @@ const sdk = new CryptoStatsSDK({
   adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
 });
 
+if (process.env.NEXT_PUBLIC_OPTIMISM_RPC) {
+  sdk.ethers.addProvider('optimism', process.env.NEXT_PUBLIC_OPTIMISM_RPC, { archive: true })
+}
+
 export default sdk;
