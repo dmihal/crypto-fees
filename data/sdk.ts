@@ -6,6 +6,7 @@ const sdk = new CryptoStatsSDK({
   ipfsGateway: 'https://ipfs.cryptostats.community',
   executionTimeout: 1000,
   adapterListSubgraph: 'dmihal/cryptostats-adapter-registry-test',
+  moralisKey: process.env.MORALIS_KEY,
 });
 
 if (process.env.NEXT_PUBLIC_OPTIMISM_RPC) {
