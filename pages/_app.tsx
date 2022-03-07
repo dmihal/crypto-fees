@@ -4,8 +4,30 @@ import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import ReactGA from 'react-ga';
 import PlausibleProvider from 'next-plausible';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from 'i18next-browser-languagedetector';
+
 import Header from 'components/Header';
 import Footer from 'components/Footer';
+import i18nReources from 'i18n.json'
+
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next) // passes i18n down to react-i18next
+  .init({
+    resources: i18nReources as any,
+    // lng: "en",
+    debug: true,
+    detection: {
+      caches: [],
+    },
+
+    interpolation: {
+      escapeValue: false // react already safes from xss
+    }
+  });
+
 
 ReactGA.initialize('UA-150445352-3');
 

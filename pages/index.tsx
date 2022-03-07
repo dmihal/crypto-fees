@@ -14,6 +14,7 @@ import SocialTags from 'components/SocialTags';
 import Toolbar from 'components/Toolbar';
 import Link from 'next/link';
 import { ChevronRight } from 'react-feather';
+import { useTranslation } from 'react-i18next';
 
 interface HomeProps {
   data: ProtocolData[];
@@ -25,6 +26,7 @@ const toggle = (_val: boolean) => !_val;
 export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
   const plausible = usePlausible();
   const router = useRouter();
+  const { t } = useTranslation();
   const [filterCardOpen, setFilterCardOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [bundling, setBundling] = useState(true);
@@ -57,9 +59,9 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
       <h1 className="title">Crypto Fees</h1>
 
       <p className="description">
-        There&apos;s tons of crypto projects.
+        {t("There's tons of crypto projects.")}
         <br />
-        Which ones are people actually paying to use?
+        {t("Which ones are people actually paying to use?")}
       </p>
 
       <Link href="/2021">

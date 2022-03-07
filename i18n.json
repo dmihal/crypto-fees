@@ -1,0 +1,27 @@
+{
+  "en": {
+    "translation": {
+      "There's tons of crypto projects.": "There's tons of crypto projects.",
+      "Which ones are people actually paying to use?": "Which ones are people actually paying to use?",
+      "Filters": "Filters",
+      "Share": "Share",
+      "Yesterday": "Yesterday"
+    }
+  },
+  "es": {
+    "translation": {
+      "There's tons of crypto projects.": "Hay toneladas de criptoproyectos.",
+      "Which ones are people actually paying to use?": "¿Cuáles son las personas que realmente pagan por usar?",
+      "Filters": "Filtros",
+      "Share": "Compartir",
+      "Yesterday": "Ayer"
+    }
+  },
+  "ru": {
+    "translation": {
+      "Filters": "Фильтры",
+      "Share": "Делиться",
+      "Yesterday": "Вчера"
+    }
+  }
+}

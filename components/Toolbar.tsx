@@ -5,44 +5,48 @@ import { useRouter } from 'next/router';
 import { Filter, Calendar, Share, CheckSquare, Square } from 'react-feather';
 import Button from './Button';
 import gtc from 'icons/gtc.svg';
+import { useTranslation } from 'react-i18next';
 
 const showGitcoin = false;
 
 const DateButton = forwardRef<
   HTMLButtonElement,
   { onClick?: any; value?: string; loading?: boolean }
->(({ onClick, value, loading }, ref) => (
-  <Button ref={ref} onClick={onClick} Icon={Calendar}>
-    {loading ? <div className="loader" /> : value || 'Yesterday'}
+>(({ onClick, value, loading }, ref) => {
+  const { t } = useTranslation();
+  return (
+    <Button ref={ref} onClick={onClick} Icon={Calendar}>
+      {loading ? <div className="loader" /> : value || t('Yesterday')}
 
-    <style jsx>{`
-      .loader {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        margin: 0 10px;
-      }
-      .loader:after {
-        content: ' ';
-        display: block;
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-        border: 2px solid #333;
-        border-color: #333 transparent #333 transparent;
-        animation: lds-dual-ring 1.2s linear infinite;
-      }
-      @keyframes lds-dual-ring {
-        0% {
-          transform: rotate(0deg);
+      <style jsx>{`
+        .loader {
+          display: inline-block;
+          width: 20px;
+          height: 20px;
+          margin: 0 10px;
         }
-        100% {
-          transform: rotate(360deg);
+        .loader:after {
+          content: ' ';
+          display: block;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          border: 2px solid #333;
+          border-color: #333 transparent #333 transparent;
+          animation: lds-dual-ring 1.2s linear infinite;
         }
-      }
-    `}</style>
-  </Button>
-));
+        @keyframes lds-dual-ring {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
+    </Button>
+  );
+});
 
 const GTCIcon: React.FC = () => (
   <div className="gtc">
@@ -82,6 +86,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onTagRemoved,
 }) => {
   const router = useRouter();
+  const { t } = useTranslation()
   const [changed, setChanged] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -129,7 +134,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
 
         {onShare && (
           <Button onClick={onShare} Icon={Share}>
-            Share
+            {t('Share')}
           </Button>
         )}
 
@@ -138,7 +143,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
         </Button>
 
         <Button onClick={onFilterToggle} Icon={Filter}>
-          Filters
+          {t('Filters')}
           {numFilters > 0 && <span className="chip">{numFilters}</span>}
         </Button>
 
