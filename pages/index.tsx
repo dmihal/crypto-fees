@@ -12,8 +12,6 @@ import List from 'components/List';
 import ShareModal from 'components/ShareModal';
 import SocialTags from 'components/SocialTags';
 import Toolbar from 'components/Toolbar';
-import Link from 'next/link';
-import { ChevronRight } from 'react-feather';
 import { useTranslation } from 'react-i18next';
 
 interface HomeProps {
@@ -63,14 +61,6 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
         <br />
         {t("Which ones are people actually paying to use?")}
       </p>
-
-      <Link href="/2021">
-        <a className="cta">
-          <div style={{ fontWeight: 'bold', marginRight: '8px' }}>2021 in Fees 🎉🗓</div>
-          <div>Check out the total fees spent in 2021, and what trends we can see from them</div>
-          <ChevronRight />
-        </a>
-      </Link>
 
       <Toolbar
         onDateChange={(newDate: string) =>
@@ -130,28 +120,6 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
           line-height: 1.5;
           font-size: 1.5rem;
           margin: 4px 0 20px;
-        }
-
-        .cta {
-          text-decoration: none;
-          background: #fad3f6;
-          padding: 16px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          color: #4b0c56;
-        }
-
-        .cta:hover {
-          background: #edbce8;
-        }
-
-        :global(body) {
-          margin-top: 56px !important;
         }
       `}</style>
     </main>
