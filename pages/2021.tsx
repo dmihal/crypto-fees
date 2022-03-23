@@ -281,7 +281,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
         yearTotals[id] = {
           id: id,
           oneDay: parseFloat(fee),
-          ...getMetadata(id),
+          ...(id === 'terra' ? getBundle('terra') : getMetadata(id)),
         };
 
         if (yearTotals[id].bundle) {
