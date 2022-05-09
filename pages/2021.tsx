@@ -278,14 +278,18 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
       if (yearTotals[id]) {
         yearTotals[id].oneDay += parseFloat(fee);
       } else {
-        yearTotals[id] = {
-          id: id,
-          oneDay: parseFloat(fee),
-          ...(id === 'terra' ? getBundle('terra') : getMetadata(id)),
-        };
+        try {
+          yearTotals[id] = {
+            id: id,
+            oneDay: parseFloat(fee),
+            ...(id === 'terra' ? getBundle('terra') : getMetadata(id)),
+          };
 
-        if (yearTotals[id].bundle) {
-          bundles[yearTotals[id].bundle] = getBundle(yearTotals[id].bundle);
+          if (yearTotals[id].bundle) {
+            bundles[yearTotals[id].bundle] = getBundle(yearTotals[id].bundle);
+          }
+        } catch (e) {
+          console.warn(`Failed to get metadata for ${id}`)
         }
       }
 
