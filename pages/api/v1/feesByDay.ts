@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getDateData } from 'data/queries';
+import { wrapHandler } from 'utils/api';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = [];
@@ -33,4 +34,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 };
 
-export default handler;
+export default wrapHandler(handler);

@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getLastWeek } from 'data/queries';
+import { wrapHandler } from 'utils/api';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = await getLastWeek();
@@ -11,4 +12,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   });
 };
 
-export default handler;
+export default wrapHandler(handler);
