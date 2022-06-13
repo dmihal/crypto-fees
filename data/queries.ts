@@ -2,7 +2,7 @@ import addDays from 'date-fns/addDays';
 import { queryAdapter, getIDs, getMetadata, ensureListLoaded } from './adapters';
 import { ProtocolData } from './types';
 import { getValue as getDBValue, setValue as setDBValue } from './db';
-import { last7Days, isBefore, getDateRange } from './lib/time';
+import { last7Days, isBefore, getDateRange, isAfter } from './lib/time';
 import { getHistoricalMarketData } from './lib/pricedata';
 
 const SANITY_CHECK = 1000000000; // Values over this will be automatically hidden
@@ -17,7 +17,7 @@ async function getValue(protocol: string, attribute: string, date: string) {
 
   const value = await queryAdapter(protocol, attribute, date);
 
-  if (value > SANITY_CHECK) {
+  if (value > SANITY_CHECK || value < 0) {
     console.warn(`Query for ${protocol} on ${date} returned ${value}, exceeded sanity check`);
     return null;
   }
@@ -55,7 +55,10 @@ export async function getData(): Promise<ProtocolData[]> {
       async (id: string): Promise<ProtocolData | null> => {
         const metadata = getMetadata(id);
 
-        if (!isBefore(metadata.protocolLaunch)) {
+        if (
+          (metadata.protocolLaunch && isAfter(metadata.protocolLaunch)) ||
+          (metadata.protocolShutdown && isBefore(metadata.protocolShutdown))
+        ) {
           return null;
         }
 
@@ -64,6 +67,9 @@ export async function getData(): Promise<ProtocolData[]> {
           feeForDay = await Promise.all(
             days.map((day: string) => {
               if (metadata.protocolLaunch && isBefore(day, metadata.protocolLaunch)) {
+                return 0;
+              }
+              if (metadata.protocolShutdown && isAfter(day, metadata.protocolShutdown)) {
                 return 0;
               }
               return getValue(id, 'fee', day);
@@ -107,7 +113,10 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
     getIDs().map(async (id: string) => {
       const metadata = getMetadata(id);
 
-      if (!isBefore(metadata.protocolLaunch, date)) {
+      if (
+        (metadata.protocolLaunch && isAfter(metadata.protocolLaunch)) ||
+        (metadata.protocolShutdown && isBefore(metadata.protocolShutdown))
+      ) {
         return null;
       }
 
@@ -181,8 +190,11 @@ export async function getLastWeek(): Promise<any[]> {
 
 export async function getDateData(protocol: string, date: string) {
   await ensureListLoaded();
-  const { protocolLaunch } = getMetadata(protocol);
-  if (protocolLaunch && isBefore(date, protocolLaunch)) {
+  const { protocolLaunch, protocolShutdown } = getMetadata(protocol);
+  if (
+    (protocolLaunch && isAfter(protocolLaunch)) ||
+    (protocolShutdown && isBefore(protocolShutdown))
+  ) {
     return { date, fee: null };
   }
 

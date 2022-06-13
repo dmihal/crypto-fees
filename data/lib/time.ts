@@ -37,6 +37,14 @@ export function isBefore(date?: string, comparrison?: string) {
   return new Date(date) < new Date(_comparrison);
 }
 
+export function isAfter(date?: string, comparrison?: string) {
+  if (!date) {
+    return true;
+  }
+  const _comparrison = comparrison || formatDate(new Date());
+  return new Date(date) > new Date(_comparrison);
+}
+
 export function getDateRange(dateStart: string | Date, dateEnd: string | Date) {
   const _dateStart = dateStart instanceof Date ? dateStart : new Date(dateStart);
   const _dateEnd = dateEnd instanceof Date ? dateEnd : new Date(dateEnd);
