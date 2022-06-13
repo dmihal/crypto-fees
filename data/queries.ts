@@ -66,10 +66,10 @@ export async function getData(): Promise<ProtocolData[]> {
         try {
           feeForDay = await Promise.all(
             days.map((day: string) => {
-              if (metadata.protocolLaunch && isBefore(day, metadata.protocolLaunch)) {
-                return 0;
-              }
-              if (metadata.protocolShutdown && isAfter(day, metadata.protocolShutdown)) {
+              if (
+                (metadata.protocolLaunch && isBefore(day, metadata.protocolLaunch)) ||
+                (metadata.protocolShutdown && isAfter(day, metadata.protocolShutdown))
+              ) {
                 return 0;
               }
               return getValue(id, 'fee', day);
@@ -114,15 +114,25 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
       const metadata = getMetadata(id);
 
       if (
-        (metadata.protocolLaunch && isAfter(metadata.protocolLaunch)) ||
-        (metadata.protocolShutdown && isBefore(metadata.protocolShutdown))
+        (metadata.protocolLaunch && isAfter(metadata.protocolLaunch, date)) ||
+        (metadata.protocolShutdown && isBefore(metadata.protocolShutdown, date))
       ) {
         return null;
       }
 
       let feeForDay;
       try {
-        feeForDay = await Promise.all(days.map((day: string) => getValue(id, 'fee', day)));
+        feeForDay = await Promise.all(
+          days.map((day: string) => {
+            if (
+              (metadata.protocolLaunch && isBefore(day, metadata.protocolLaunch)) ||
+              (metadata.protocolShutdown && isAfter(day, metadata.protocolShutdown))
+            ) {
+              return 0;
+            }
+            return getValue(id, 'fee', day);
+          })
+        );
       } catch (e) {
         console.warn(e);
         return null;
@@ -162,19 +172,31 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
 export async function getLastWeek(): Promise<any[]> {
   await ensureListLoaded();
   const days = last7Days().reverse();
+
   const v2Data = await Promise.all(
     getIDs().map(async (id: string) => {
       try {
+        const metadata = getMetadata(id);
+
         const fees = await Promise.all(
-          days.map(async (day: string) => ({
-            date: day,
-            fee: await getValue(id, 'fee', day),
-          }))
+          days.map(async (day: string) => {
+            if (
+              (metadata.protocolLaunch && isBefore(day, metadata.protocolLaunch)) ||
+              (metadata.protocolShutdown && isAfter(day, metadata.protocolShutdown))
+            ) {
+              return { date: day, fee: 0 };
+            }
+
+            return {
+              date: day,
+              fee: await getValue(id, 'fee', day).catch(() => ({ failed: true })),
+            };
+          })
         );
 
         return {
           id,
-          ...getMetadata(id),
+          ...metadata,
           fees,
         };
       } catch (e) {

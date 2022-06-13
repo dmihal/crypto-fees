@@ -289,7 +289,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
             bundles[yearTotals[id].bundle] = getBundle(yearTotals[id].bundle);
           }
         } catch (e) {
-          console.warn(`Failed to get metadata for ${id}`)
+          console.warn(`Failed to get metadata for ${id}`);
         }
       }
 
