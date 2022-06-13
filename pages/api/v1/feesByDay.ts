@@ -27,7 +27,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     })
   );
 
-  res.setHeader('Cache-Control', `max-age=0, s-maxage=${60 * 10}`);
+  res.setHeader(
+    'Cache-Control',
+    `max-age=0, s-maxage=${60 * 10}, stale-while-revalidate=${60 * 5}`
+  );
   res.json({
     success: true,
     data,
