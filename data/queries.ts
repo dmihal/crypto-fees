@@ -214,8 +214,8 @@ export async function getDateData(protocol: string, date: string) {
   await ensureListLoaded();
   const { protocolLaunch, protocolShutdown } = getMetadata(protocol);
   if (
-    (protocolLaunch && isAfter(protocolLaunch)) ||
-    (protocolShutdown && isBefore(protocolShutdown))
+    (protocolLaunch && isBefore(date, protocolLaunch)) ||
+    (protocolShutdown && isAfter(date, protocolShutdown))
   ) {
     return { date, fee: null };
   }
