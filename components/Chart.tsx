@@ -8,7 +8,6 @@ import {
   ResponsiveContainer,
   ReferenceDot,
 } from 'recharts';
-import format from 'date-fns/format';
 import Numeral from 'numeral';
 import { dateToTimestamp } from 'data/lib/time';
 
@@ -41,9 +40,14 @@ const formattedNum = (number: number | string) => {
   return '$' + Number(num.toFixed(0)).toLocaleString();
 };
 
-const toNiceDate = (date: string) => format(new Date(parseInt(date) * 1000), 'MMM dd');
-
-const toNiceDateYear = (date: string) => format(new Date(parseInt(date) * 1000), 'MMMM dd, yyyy');
+const toNiceDate = (timestamp: number, year?: boolean) => {
+  return (new Date(timestamp * 1000)).toLocaleString([], {
+    month: 'long',
+    day: 'numeric',
+    year: year ? 'numeric' : undefined,
+    timeZone: 'UTC',
+  });
+}
 
 export interface FeeItem {
   date: number;
@@ -105,7 +109,7 @@ const Chart: React.FC<SeriesChartProps> = ({
           interval="preserveStartEnd"
           tickMargin={14}
           minTickGap={0}
-          tickFormatter={(tick: any) => toNiceDate(tick)}
+          tickFormatter={(tick: any) => toNiceDate(parseInt(tick))}
           dataKey="date"
           tick={{ fill: textColor }}
           type={'number'}
@@ -126,7 +130,7 @@ const Chart: React.FC<SeriesChartProps> = ({
           cursor={true}
           separator={tooltip ? null : ' : '}
           formatter={(val: any) => (tooltip ? [tooltip.description] : formattedNum(val))}
-          labelFormatter={(label: any) => toNiceDateYear(label)}
+          labelFormatter={(label: any) => toNiceDate(parseInt(label), true)}
           labelStyle={{ paddingTop: 4 }}
           position={tooltip?.point}
           contentStyle={{
