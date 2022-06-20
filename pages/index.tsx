@@ -59,7 +59,7 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
       <p className="description">
         {t("There's tons of crypto projects.")}
         <br />
-        {t("Which ones are people actually paying to use?")}
+        {t('Which ones are people actually paying to use?')}
       </p>
 
       <Toolbar

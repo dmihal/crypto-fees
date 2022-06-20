@@ -86,7 +86,7 @@ const Toolbar: React.FC<ToolbarProps> = ({
   onTagRemoved,
 }) => {
   const router = useRouter();
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const [changed, setChanged] = useState(false);
   const [loading, setLoading] = useState(false);
 
