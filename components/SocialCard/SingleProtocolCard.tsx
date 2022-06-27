@@ -118,7 +118,7 @@ const SingleProtocolCard: React.FC<SingleProtocolCardProps> = ({ data, date, nam
           y="50"
           textAnchor="middle"
         >
-          {data[data.length - 1].primary.toLocaleString('en-US', {
+          {data[data.length - 1].primary?.toLocaleString('en-US', {
             style: 'currency',
             currency: 'USD',
           })}
