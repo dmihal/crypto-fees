@@ -6,8 +6,8 @@ const ONE_DAY = 86400;
 
 export default function registerRen(register: RegisterFunction) {
   async function getRenData(date: string): Promise<number> {
-    const snapshotTimestamp = dateToTimestamp(date);
-    const dayBeforeSnapshotTimestamp = snapshotTimestamp - ONE_DAY;
+    const snapshotTimestamp = dateToTimestamp(date) + ONE_DAY;
+    const dayBeforeSnapshotTimestamp = snapshotTimestamp;
     // console.log({ now, oneDayAgo })
 
     const req = await fetch('https://stats.renproject.io/', {
