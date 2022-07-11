@@ -23,5 +23,14 @@
       "Share": "Делиться",
       "Yesterday": "Вчера"
     }
+  },
+  "it": {
+    "translation": {
+      "There's tons of crypto projects.": "Ci sono tonnellate di progetti crypto.",
+      "Which ones are people actually paying to use?": "Quali sono quelli che la gente paga per usare?",
+      "Filters": "Filtri",
+      "Share": "Condividi",
+      "Yesterday": "Ieri"
+    }
   }
 }
