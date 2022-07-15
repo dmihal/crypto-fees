@@ -466,7 +466,7 @@ export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ par
     }
   }
 
-  const id = params.id.toString();
+  const id = params.id as string;
   const yesterday = formatDate(subDays(new Date(), 1));
 
   const getFeesByDate = async (id: string) => {
@@ -509,7 +509,11 @@ export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ par
     marketData = await getMarketData(protocolsByBundle[id][0], sevenDayMA, yesterday);
     metadata = getBundle(id);
   } else {
-    throw new Error(`Unknown protocol ${id}`);
+    console.warn(`Unknown protocol ${id}`);
+    return {
+      props: {},
+      notFound: true,
+    };
   }
 
   // Do this at the end of the function so that the `protocols` var can be used for checking if an
@@ -542,6 +546,6 @@ export const getStaticPaths: GetStaticPaths = async () => {
       ...getIDs().map((id: string) => ({ params: { id } })),
       ...getBundleIDs().map((id: string) => ({ params: { id } })),
     ],
-    fallback: false,
+    fallback: 'blocking',
   };
 };
