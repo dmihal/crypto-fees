@@ -159,15 +159,20 @@ export const HistoricalDataPage: NextPage<HistoricalDataPageProps> = ({
   );
 };
 
+const DATE_REGEX = /20\d{2}-\d{2}-\d{2}/;
+
 export const getStaticProps: GetStaticProps<HistoricalDataPageProps> = async ({ params }) => {
   const date = params.date.toString();
 
-  if (!/20\d{2}-\d{2}-\d{2}/.test(params.date.toString())) {
+  if (!DATE_REGEX.test(params.date.toString())) {
     return { props: { date: '', data: [], invalid: true, bundles: {} } };
   }
 
   if (!isBefore(date)) {
-    return { props: { date, data: [], invalid: true, bundles: {} } };
+    return {
+      props: { date, data: [], invalid: true, bundles: {} },
+      revalidate: 60 * 60,
+    };
   }
 
   const data = await getHistoricalData(params.date.toString());
