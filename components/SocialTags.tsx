@@ -19,7 +19,7 @@ const SocialTags: React.FC<SocialTagsProps> = ({ title, image, query }) => {
   return (
     <Head>
       <meta property="og:title" content={_title} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={_image} />
       <meta
         property="og:description"
         content="There's tons of crypto projects. Which ones are people actually paying to use?"
