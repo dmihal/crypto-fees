@@ -7,13 +7,17 @@ const fetcher = async (input: RequestInfo, init?: RequestInit) => {
 };
 
 async function getBancorData(): Promise<number> {
-  const response = await fetcher('https://api-v2.bancor.network/stats');
-
-  if (response.error) {
-    throw new Error(response.error);
+  const responseV2 = await fetcher('https://api-v2.bancor.network/stats');
+  if (responseV2.error) {
+    throw new Error(responseV2.error);
   }
 
-  return parseFloat(response?.data.fees_24h.usd);
+  const responseV3 = await fetcher('https://api-v3.bancor.network/stats');
+  if (responseV3.error) {
+    throw new Error(responseV3.error);
+  }
+
+  return parseFloat(responseV2?.data.fees_24h.usd) + parseFloat(responseV3?.data.totalFees24h.usd);
 }
 
 export default function registerBancor(register: any) {
