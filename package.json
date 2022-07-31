@@ -26,7 +26,7 @@
     ]
   },
   "dependencies": {
-    "@cryptostats/sdk": "^0.2.11",
+    "@cryptostats/sdk": "^0.2.13",
     "@popperjs/core": "^2.9.2",
     "@types/react-transition-group": "^4.4.0",
     "@types/redis": "^2.8.28",
