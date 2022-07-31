@@ -10,19 +10,14 @@ import type { Adapter as SDKAdapter } from '@cryptostats/sdk';
 import { Metadata } from '../types';
 
 import registerBancor from './bancor';
-// import registerCurve from './curve';
 import registerDfyn from './dfyn';
-// import registerHegic from './hegic';
 import registerHoneyswap from './honeyswap';
-import registerLinkswap from './linkswap';
 // import register0x from './zerox';
 import registerMstable from './mStable';
-// import registerOptimism from './optimism';
 import registerPolymarket from './polymarket';
 import registerRen from './ren';
 import registerSwapr from './swapr';
 // import registerTBTC from './tbtc';
-import registerZilliqa from './zilliqa';
 import sdk from 'data/sdk';
 
 interface Adapter {
@@ -54,13 +49,11 @@ const register = Object.assign(registerFn, {
 registerBancor(register);
 registerDfyn(register);
 registerHoneyswap(register);
-registerLinkswap(register);
 registerMstable(register);
 registerPolymarket(register);
 registerRen(register);
 registerSwapr(register);
 // registerTBTC(register);
-registerZilliqa(register);
 
 let loadListPromise: any = null;
 export async function ensureListLoaded() {
