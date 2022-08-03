@@ -41,13 +41,13 @@ const formattedNum = (number: number | string) => {
 };
 
 const toNiceDate = (timestamp: number, year?: boolean) => {
-  return (new Date(timestamp * 1000)).toLocaleString([], {
+  return new Date(timestamp * 1000).toLocaleString([], {
     month: 'long',
     day: 'numeric',
     year: year ? 'numeric' : undefined,
     timeZone: 'UTC',
   });
-}
+};
 
 export interface FeeItem {
   date: number;

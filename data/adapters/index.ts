@@ -9,15 +9,6 @@
 import type { Adapter as SDKAdapter } from '@cryptostats/sdk';
 import { Metadata } from '../types';
 
-import registerBancor from './bancor';
-import registerDfyn from './dfyn';
-import registerHoneyswap from './honeyswap';
-// import register0x from './zerox';
-import registerMstable from './mStable';
-import registerPolymarket from './polymarket';
-import registerRen from './ren';
-import registerSwapr from './swapr';
-// import registerTBTC from './tbtc';
 import sdk from 'data/sdk';
 
 interface Adapter {
@@ -29,31 +20,6 @@ const adapters: { [id: string]: Adapter } = {};
 const ids: string[] = [];
 const bundles: { [id: string]: Metadata } = {};
 const bundleIds: string[] = [];
-
-const registerFn = (id: string, query: any, metadata: Metadata) => {
-  if (adapters[id]) {
-    throw new Error(`Adapter ${id} already registered`);
-  }
-  ids.push(id);
-  adapters[id] = { query, metadata };
-};
-
-const register = Object.assign(registerFn, {
-  bundle(id: string, metadata: Metadata) {
-    bundles[id] = metadata;
-    bundleIds.push(id);
-  },
-});
-
-// register0x(register);
-registerBancor(register);
-registerDfyn(register);
-registerHoneyswap(register);
-registerMstable(register);
-registerPolymarket(register);
-registerRen(register);
-registerSwapr(register);
-// registerTBTC(register);
 
 let loadListPromise: any = null;
 export async function ensureListLoaded() {
@@ -68,7 +34,7 @@ export async function ensureListLoaded() {
  * See https://cryptostats.community/discover/fees
  */
 async function loadList() {
-  const list = sdk.getList('fees');
+  const list = sdk.getCollection('fees');
   list.setCacheKeyResolver((_id: string, query: string, params: string[]) =>
     query === 'oneDayTotalFees' ? params[0] : null
   );
