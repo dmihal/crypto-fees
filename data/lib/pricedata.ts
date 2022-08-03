@@ -1,7 +1,7 @@
 import { getValue as getDBValue, setValue as setDBValue } from '../db';
 
 const priceCache: { [symbol: string]: number } = { usd: 1 };
-const cache: { [key: string]: { price: number; marketCap: number } } = {};
+const cache: { [key: string]: { price: number; marketCap: number; fdv: number | null } } = {};
 
 export const getCurrentPrice = async (name: string): Promise<number> => {
   if (!priceCache[name]) {
@@ -62,9 +62,16 @@ export async function queryCoingecko(name: string, date: string, currency = 'usd
     throw new Error(`Can't get price data for ${name}`);
   }
 
+  const infoResponse = await fetch(`https://api.coingecko.com/api/v3/coins/${name}`);
+  const infoData = await infoResponse.json();
+  const fdv = infoData.market_data.max_supply
+    ? infoData.market_data.max_supply * response.market_data.current_price[currency]
+    : null;
+
   return {
     price: response.market_data.current_price[currency],
     marketCap: response.market_data.market_cap[currency],
+    fdv,
   };
 }
 
@@ -81,14 +88,18 @@ export async function getHistoricalMarketData(name: string, date: string) {
   const cacheName = `${name}-${date}`;
 
   if (!cache[cacheName]) {
-    let price = await getDBValue(name, 'price', date);
-    let marketCap = await getDBValue(name, 'market-cap', date);
+    let [price, marketCap, fdv] = await Promise.all([
+      getDBValue(name, 'price', date),
+      getDBValue(name, 'market-cap', date),
+      getDBValue(name, 'fdv', date),
+    ]);
 
-    if (!price || !marketCap) {
+    if (!price || !marketCap || !fdv) {
       const storedPrice = price;
       const storedMarketCap = marketCap;
+      const storedFdv = fdv;
 
-      ({ price, marketCap } = await queryCoingecko(name, date));
+      ({ price, marketCap, fdv } = await queryCoingecko(name, date));
       if (!storedPrice) {
         await setDBValue(name, 'price', date, price);
       }
@@ -96,9 +107,13 @@ export async function getHistoricalMarketData(name: string, date: string) {
       if (!storedMarketCap) {
         await setDBValue(name, 'market-cap', date, marketCap);
       }
+
+      if (!storedFdv) {
+        await setDBValue(name, 'fdv', date, fdv);
+      }
     }
 
-    cache[cacheName] = { price, marketCap };
+    cache[cacheName] = { price, marketCap, fdv };
   }
 
   return cache[cacheName];

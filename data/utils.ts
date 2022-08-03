@@ -50,6 +50,7 @@ export const bundleItems = (data: ProtocolData[], bundles: { [id: string]: Metad
         let sevenDayMA = 0;
         let price = null;
         let marketCap = null;
+        let fdv = null;
 
         for (const bundleItem of bundleItems) {
           _data.splice(_data.indexOf(bundleItem), 1);
@@ -59,6 +60,7 @@ export const bundleItems = (data: ProtocolData[], bundles: { [id: string]: Metad
           if (bundleMetadata.tokenCoingecko === bundleItem.tokenCoingecko) {
             price = bundleItem.price;
             marketCap = bundleItem.marketCap;
+            fdv = bundleItem.fdv;
           }
         }
         _data.push({
@@ -69,7 +71,9 @@ export const bundleItems = (data: ProtocolData[], bundles: { [id: string]: Metad
           bundleData: bundleItems,
           price,
           marketCap,
+          fdv,
           psRatio: marketCap ? marketCap / (sevenDayMA * 365) : null,
+          psRatioFDV: fdv ? fdv / (sevenDayMA * 365) : null,
         });
 
         i -= 1; // To compensate for the first item removed

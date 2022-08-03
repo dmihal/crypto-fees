@@ -26,7 +26,9 @@ export interface ProtocolData extends Metadata {
   bundleData?: ProtocolData[];
   price: number | null;
   marketCap: number | null;
+  fdv: number | null;
   psRatio: number | null;
+  psRatioFDV: number | null;
   sevenDayMA: number;
   oneDay: number;
 }

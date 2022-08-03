@@ -34,17 +34,20 @@ export async function getMarketData(id: string, sevenDayMA: number, date: string
 
   let price: null | number = null;
   let marketCap: null | number = null;
+  let fdv: null | number = null;
   let psRatio: null | number = null;
+  let psRatioFDV: null | number = null;
   if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch, date)) {
     try {
-      ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
+      ({ price, marketCap, fdv } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
       psRatio = marketCap / (sevenDayMA * 365);
+      psRatioFDV = fdv ? fdv / (sevenDayMA * 365) : null;
     } catch (e) {
       console.error(e);
     }
   }
 
-  return { price, marketCap, psRatio };
+  return { price, marketCap, fdv, psRatio, psRatioFDV };
 }
 
 export async function getData(): Promise<ProtocolData[]> {
@@ -85,7 +88,11 @@ export async function getData(): Promise<ProtocolData[]> {
           return null;
         }
 
-        const { price, marketCap, psRatio } = await getMarketData(id, sevenDayMA, days[6]);
+        const { price, marketCap, fdv, psRatio, psRatioFDV } = await getMarketData(
+          id,
+          sevenDayMA,
+          days[6]
+        );
 
         return {
           id,
@@ -95,7 +102,9 @@ export async function getData(): Promise<ProtocolData[]> {
 
           price,
           marketCap,
+          fdv,
           psRatio,
+          psRatioFDV,
         };
       }
     )
@@ -141,11 +150,17 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
 
       let price: null | number = null;
       let marketCap: null | number = null;
+      let fdv: null | number = null;
       let psRatio: null | number = null;
+      let psRatioFDV: null | number = null;
       if (metadata.tokenCoingecko && isBefore(metadata.tokenLaunch, date)) {
         try {
-          ({ price, marketCap } = await getHistoricalMarketData(metadata.tokenCoingecko, date));
+          ({ price, marketCap, fdv } = await getHistoricalMarketData(
+            metadata.tokenCoingecko,
+            date
+          ));
           psRatio = marketCap / (sevenDayMA * 365);
+          psRatioFDV = fdv ? fdv / (sevenDayMA * 365) : null;
         } catch (e) {
           console.error(e);
         }
@@ -159,7 +174,9 @@ export async function getHistoricalData(date: string): Promise<ProtocolData[]> {
 
         price,
         marketCap,
+        fdv,
         psRatio,
+        psRatioFDV,
       };
     })
   );

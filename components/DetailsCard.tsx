@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { ProtocolData } from 'data/types';
 import { sortByDaily, sortByWeekly } from 'data/utils';
 import Attribute from './Attribute';
 import Button from './Button';
 import BundleItemRow from './BundleItemRow';
+import { Repeat } from 'react-feather';
 
 interface DetailsCardProps {
   protocol: ProtocolData;
@@ -15,6 +16,11 @@ interface DetailsCardProps {
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
 const DetailsCard: React.FC<DetailsCardProps> = ({ protocol, sort, yearly }) => {
+  const [useFDV, setUseFDV] = useState(false);
+
+  const mCap = useFDV ? protocol.fdv : protocol.marketCap;
+  const psRatio = useFDV ? protocol.psRatioFDV : protocol.psRatio;
+
   return (
     <div className="details-card">
       {protocol.bundleData && (
@@ -72,16 +78,25 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol, sort, yearly }) => 
                 currency: 'USD',
               })}
             </Attribute>
-            <Attribute title="Market Cap">
-              {protocol.marketCap?.toLocaleString('en-US', {
+
+            <Attribute title={useFDV ? 'FDV' : 'Market Cap'}>
+              {protocol.fdv && (
+                <button className="fdv-btn" onClick={() => setUseFDV(!useFDV)}>
+                  <Repeat size={12} />
+                </button>
+              )}
+              {mCap?.toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'USD',
                 minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
               })}
             </Attribute>
-            <Attribute title="P/S Ratio" tooltip="Based on 7 day average fees, annualized">
-              {protocol.psRatio?.toFixed(2)}
+            <Attribute
+              title={useFDV ? 'P/S Ratio (FDV)' : 'P/S Ratio'}
+              tooltip="Based on 7 day average fees, annualized"
+            >
+              {psRatio?.toFixed(2)}
             </Attribute>
           </div>
         )}
@@ -116,6 +131,16 @@ const DetailsCard: React.FC<DetailsCardProps> = ({ protocol, sort, yearly }) => 
         .row > :global(div) {
           flex: 1;
         }
+        .fdv-btn {
+          border: none;
+          background: none;
+          padding: 2px;
+        }
+        .fdv-btn:hover {
+          color: lightgray;
+          cursor: pointer;
+        }
+
         .spacer {
           flex: 1;
         }
