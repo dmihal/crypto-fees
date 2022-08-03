@@ -1,6 +1,5 @@
 import React from 'react';
 import { ProtocolData } from 'data/types';
-import icons from '../icons';
 
 interface RowProps {
   protocol: ProtocolData;
@@ -12,7 +11,7 @@ const font = 'SofiaProRegular, Sofia Pro, sofia-pro';
 const Row: React.FC<RowProps> = ({ protocol, index }) => {
   let svgImg;
 
-  const icon = protocol.icon || icons[protocol.id];
+  const icon = protocol.icon || null;
 
   if (icon?.indexOf('data:image/svg+xml;base64,') === 0) {
     const buffer = new Buffer(icon.substr(26), 'base64');
@@ -20,7 +19,8 @@ const Row: React.FC<RowProps> = ({ protocol, index }) => {
     svgImg = svgImg.replace(/">/, '" width="24" height="24">');
   }
 
-  const background = protocol.category === 'l1' || protocol.category === 'l2' ? '#ffffff' : '#fad3f6';
+  const background =
+    protocol.category === 'l1' || protocol.category === 'l2' ? '#ffffff' : '#fad3f6';
 
   return (
     <g transform={`translate(28, ${117 + 37 * index})`}>

@@ -14,7 +14,6 @@ import { getIDs, getBundleIDs, getMetadata, getBundle, ensureListLoaded } from '
 import { Metadata } from 'data/types';
 import { getDateRangeData, getMarketData } from 'data/queries';
 import { formatDate } from 'data/lib/time';
-import _icons from 'components/icons';
 
 const GITHUB_URL = 'https://github.com/dmihal/crypto-fees/blob/master/data/adapters/';
 
@@ -61,7 +60,7 @@ const nextDay = (date: Date) => {
   d.setUTCDate(d.getUTCDate() + 1);
   d.setUTCHours(0, 0, 0, 0);
   return d;
-}
+};
 
 function formatData(
   data: FeeCache,
@@ -459,7 +458,7 @@ export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ par
   for (const id of ids) {
     const metadata = getMetadata(id);
     protocols[id] = metadata.subtitle ? `${metadata.name} (${metadata.subtitle})` : metadata.name;
-    icons[id] = metadata.icon || _icons[id];
+    icons[id] = metadata.icon || null;
 
     if (metadata.bundle) {
       protocolsByBundle[metadata.bundle] = [...(protocolsByBundle[metadata.bundle] || []), id];
@@ -521,7 +520,7 @@ export const getStaticProps: GetStaticProps<ProtocolDetailsProps> = async ({ par
   for (const bundleId of bundleIds) {
     const metadata = getBundle(bundleId);
     protocols[bundleId] = metadata.name;
-    icons[bundleId] = metadata.icon;
+    icons[bundleId] = metadata.icon || null;
   }
 
   return {

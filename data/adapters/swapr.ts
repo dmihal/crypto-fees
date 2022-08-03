@@ -1,7 +1,6 @@
 import { dateToTimestamp } from '../lib/time';
 import { query } from '../lib/graph';
 import { RegisterFunction, Category } from '../types';
-import icon from 'icons/swapr.svg';
 
 async function getSwaprData(subgraph: string, date: string): Promise<number> {
   const graphQuery = `query fees($date: Int!) {
@@ -48,7 +47,6 @@ export default function registerSwapr(register: RegisterFunction) {
     adapter: 'swpar',
     tokenTicker: 'SWPR',
     website: 'https://swapr.eth.link',
-    icon,
     protocolLaunch: '2020-12-10',
   };
 

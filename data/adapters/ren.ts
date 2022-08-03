@@ -1,6 +1,5 @@
 import { RegisterFunction } from '../types';
 import { dateToTimestamp } from '../lib/time';
-import icon from 'icons/ren.svg';
 
 const ONE_DAY = 86400;
 
@@ -78,7 +77,6 @@ export default function registerRen(register: RegisterFunction) {
   };
 
   register('ren', query, {
-    icon,
     name: 'Ren Protocol',
     category: 'xchain',
     description: 'Ren Protocol is a protocol for cross-chain asset transfers.',

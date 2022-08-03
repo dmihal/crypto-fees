@@ -8,7 +8,6 @@ import path from 'path';
 import { formatDate } from 'data/lib/time';
 import { getDateRangeData } from 'data/queries';
 import subDays from 'date-fns/subDays';
-import icons from 'components/icons';
 
 // These statements causes Next to bundle these files
 path.resolve(process.cwd(), 'fonts', 'fonts.conf');
@@ -27,14 +26,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       metadata = getBundle(id);
       bundle = true;
     } catch (e) {
-      e // Avoid eslint bugs
+      e; // Avoid eslint bugs
     }
   }
   if (!metadata) {
     return res.json({ error: `Unknown ${id}` });
   }
 
-  let data: { date: number, primary: number }[] = []
+  let data: { date: number; primary: number }[] = [];
 
   const startDate = subDays(new Date(), 30);
   const endDate = subDays(new Date(), 1);
@@ -43,13 +42,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const adapterIds = getIDs().filter((adapterId: string) => {
       const metadata = getMetadata(adapterId);
       return metadata.bundle === id;
-    })
+    });
 
-    const feeData = await Promise.all(adapterIds.map((id: string) => getDateRangeData(id, startDate, endDate)))
+    const feeData = await Promise.all(
+      adapterIds.map((id: string) => getDateRangeData(id, startDate, endDate))
+    );
 
     for (let i = 0; i < feeData[0].length; i += 1) {
-      const date = Math.floor(new Date(feeData[0][i].date).getTime() / 1000)
-      const primary = feeData.reduce((total: number, protocol: any) => total + protocol[i].fee, 0)
+      const date = Math.floor(new Date(feeData[0][i].date).getTime() / 1000);
+      const primary = feeData.reduce((total: number, protocol: any) => total + protocol[i].fee, 0);
       data.push({ date, primary });
     }
   } else {
@@ -65,7 +66,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       data,
       date: formatDate(subDays(new Date(), 1), '/'),
       name: metadata.name,
-      icon: metadata.icon || icons[id],
+      icon: metadata.icon || null,
     })
   );
 

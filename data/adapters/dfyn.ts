@@ -1,7 +1,6 @@
 import { dateToTimestamp } from '../lib/time';
 import { query } from '../lib/graph';
 import { RegisterFunction } from '../types';
-import icon from 'icons/dfyn.svg';
 
 export async function getDfynData(date: string): Promise<number> {
   const graphQuery = `query fees($date: Int!) {
@@ -37,7 +36,6 @@ export default function registerUniswap(register: RegisterFunction) {
   };
 
   register('dfyn', query, {
-    icon,
     name: 'Dfyn',
     category: 'dex',
     description: 'A multi-chain AMM decentralized exchange',

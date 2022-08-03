@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from 'react';
 import { ProtocolData } from 'data/types';
-import icons from '../icons';
 import { CSSTransition } from 'react-transition-group';
 import { usePlausible } from 'next-plausible';
 import { ChevronDown, ChevronUp } from 'react-feather';
@@ -19,7 +18,7 @@ const Row: React.FC<RowProps> = ({ protocol }) => {
   const plausible = usePlausible();
   const [open, setOpen] = useState(false);
 
-  const icon = protocol.icon || icons[protocol.id];
+  const icon = protocol.icon || null;
 
   const isApp = protocol.category !== 'l1' && protocol.category !== 'l2';
 
