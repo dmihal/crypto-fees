@@ -94,7 +94,8 @@ export async function getHistoricalMarketData(name: string, date: string) {
       getDBValue(name, 'fdv', date),
     ]);
 
-    if (!price || !marketCap || !fdv) {
+    if (!price || !marketCap) {
+      // We don't check FDV since FDV might not exist
       const storedPrice = price;
       const storedMarketCap = marketCap;
       const storedFdv = fdv;
