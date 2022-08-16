@@ -14,8 +14,10 @@ const Row: React.FC<RowProps> = ({ protocol, index }) => {
   const icon = protocol.icon || null;
 
   if (icon?.indexOf('data:image/svg+xml;base64,') === 0) {
-    const buffer = new Buffer(icon.substr(26), 'base64');
+    const buffer = Buffer.from(icon.substring(26), 'base64');
     svgImg = buffer.toString('ascii');
+    svgImg = svgImg.replace('<?xml version="1.0" encoding="utf-8"?>', '')
+    svgImg = svgImg.replace(/<svg([^>]*)(?: (?:width|height)="\d+"){2}/, '<svg $1')
     svgImg = svgImg.replace(/">/, '" width="24" height="24">');
   }
 
