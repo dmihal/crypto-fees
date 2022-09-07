@@ -46,6 +46,10 @@ const Header = () => {
       </ul>
 
       <style jsx>{`
+        header {
+          display: flex;
+          justify-content: center;
+        }
         .header-links {
           display: flex;
           margin: 0;

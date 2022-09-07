@@ -54,6 +54,13 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
 
       <PlausibleProvider domain="cryptofees.info">
+        <div className="gitcoin">
+          CryptoFees is a non-profit public good. Support our work by making a {}
+          <a href="https://gitcoin.co/grants/1624/cryptofeesinfo" target="gitcoin">
+            $1 donation during the current Gitcoin grants round
+          </a>
+          ❤️
+        </div>
         <Header />
 
         <Component {...pageProps} />
@@ -77,6 +84,14 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
           border-top: 1px solid lightGray;
           text-align: center;
           padding: 2rem 0;
+        }
+        .gitcoin {
+          background: rgb(255 0 0 / 20%);
+          text-align: center;
+          padding: 4px;
+          margin: -0.5rem;
+          margin-bottom: 2px;
+          align-self: stretch;
         }
       `}</style>
       <style jsx global>{`
