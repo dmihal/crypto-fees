@@ -28,13 +28,21 @@ const Footer: React.FC = () => {
       <div>
         <b>cryptofees.info</b>
         {' | '}
-        <a href="https://ethereumnodes.com">ethereumnodes.com</a>
+        <a href="https://l2fees.info">l2fees.info</a>
+        {' | '}
+        <a href="https://openorgs.info">openorgs.info</a>
+        {' | '}
+        <a href="https://simplestakers.info">simplestakers.info</a>
+        {' | '}
+        <a href="https://ethburned.info">ethburned.info</a>
+        {' | '}
+        <a href="https://moneyprinter.info">moneyprinter.info</a>
         {' | '}
         <a href="https://money-movers.info">money-movers.info</a>
         {' | '}
         <a href="https://stakers.info">stakers.info</a>
         {' | '}
-        <a href="https://open-orgs.info">open-orgs.info</a>
+        <a href="https://ethereumnodes.com">ethereumnodes.com</a>
       </div>
 
       <style jsx>{`
