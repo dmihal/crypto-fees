@@ -54,13 +54,6 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
 
       <PlausibleProvider domain="cryptofees.info">
-        <div className="gitcoin">
-          CryptoFees is a non-profit public good. Support our work by making a {}
-          <a href="https://gitcoin.co/grants/1624/cryptofeesinfo" target="gitcoin">
-            $1 donation during the current Gitcoin grants round
-          </a>
-          ❤️
-        </div>
         <Header />
 
         <Component {...pageProps} />

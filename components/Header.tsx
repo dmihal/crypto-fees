@@ -14,10 +14,10 @@ const Header = () => {
           <a href="https://moneyprinter.info/">moneyprinter.info</a>
         </li>
         <li className="header-link hideable">
-          <a href="https://ethburned.info/">ethburned.info</a>
+          <a href="https://l2fees.info/">l2fees.info</a>
         </li>
         <li className="header-link hideable">
-          <a href="https://l2fees.info/">l2fees.info</a>
+          <a href="https://simplestakers.info/">simplestakers.info</a>
         </li>
         <li className="header-link">
           <a>More</a>
@@ -31,6 +31,12 @@ const Header = () => {
             </li>
             <li className="header-link showable">
               <a href="https://l2fees.info/">l2fees.info</a>
+            </li>
+            <li className="header-link showable">
+              <a href="https://simplestakers.info/">simplestakers.info</a>
+            </li>
+            <li className="header-link">
+              <a href="https://ethburned.info/">ethburned.info</a>
             </li>
             <li className="header-link">
               <a href="https://money-movers.info/">money-movers.info</a>
