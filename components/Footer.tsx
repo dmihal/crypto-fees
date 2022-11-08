@@ -30,6 +30,8 @@ const Footer: React.FC = () => {
         {' | '}
         <a href="https://l2fees.info">l2fees.info</a>
         {' | '}
+        <a href="https://cryptoflows.info">cryptoflows.info</a>
+        {' | '}
         <a href="https://openorgs.info">openorgs.info</a>
         {' | '}
         <a href="https://simplestakers.info">simplestakers.info</a>
