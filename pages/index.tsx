@@ -13,6 +13,7 @@ import ShareModal from 'components/ShareModal';
 import SocialTags from 'components/SocialTags';
 import Toolbar from 'components/Toolbar';
 import { useTranslation } from 'react-i18next';
+import NewSiteAlert from 'components/NewSiteAlert';
 
 interface HomeProps {
   data: ProtocolData[];
@@ -92,6 +93,8 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
         data={_data}
         date={formatDate(new Date())}
       />
+
+      <NewSiteAlert />
 
       <style jsx>{`
         main {
