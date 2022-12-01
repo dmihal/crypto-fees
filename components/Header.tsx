@@ -8,7 +8,7 @@ const Header = () => {
           <div>cryptofees.info</div>
         </li>
         <li className="header-link">
-          <a href="https://openorgs.info/">openorgs.info</a>
+          <a href="https://cryptoflows.info/">cryptoflows.info</a>
         </li>
         <li className="header-link hideable">
           <a href="https://moneyprinter.info/">moneyprinter.info</a>
@@ -23,7 +23,7 @@ const Header = () => {
           <a>More</a>
 
           <ul className="dropdown">
-            <li className="header-link showable">
+            <li className="header-link">
               <a href="https://openorgs.info/">openorgs.info</a>
             </li>
             <li className="header-link showable">
