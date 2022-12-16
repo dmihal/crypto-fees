@@ -7,11 +7,9 @@ import PlausibleProvider from 'next-plausible';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import useWindowSize from '../services/screenDimension'
-import {Header} from '@cryptostats/header.header'
+import { Header } from '@cryptostats/header.header';
 import Footer from 'components/Footer';
 import i18nReources from 'i18n.json';
-
 
 i18n
   .use(LanguageDetector)
@@ -29,10 +27,8 @@ i18n
 
 ReactGA.initialize('UA-150445352-3');
 
-
 const App: React.FC<AppProps> = ({ Component, pageProps }) => {
   const router = useRouter();
-  const size = useWindowSize();
 
   useEffect(() => {
     ReactGA.set({ page: router.asPath });
@@ -57,7 +53,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
       </Head>
 
       <PlausibleProvider domain="cryptofees.info">
-        <Header siteName='cryptofees.info' />
+        <Header siteName="cryptofees.info" />
 
         <Component {...pageProps} />
 
