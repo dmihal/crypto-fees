@@ -444,10 +444,10 @@
     core-js "^3.0.0"
     styled-components "5.3.6"
 
-"@cryptostats/header.sponsor_cta@^0.0.15":
-  version "0.0.15"
-  resolved "https://node.bit.cloud/@cryptostats/header.sponsor_cta/-/@cryptostats-header.sponsor_cta-0.0.15.tgz#f5dfb381412ad9f2ce836ba53a6c05a644a1779e"
-  integrity sha1-9d+zgUEq2fLOg2ulOmwFpkShd54=
+"@cryptostats/header.sponsor_cta@^0.0.16":
+  version "0.0.16"
+  resolved "https://node.bit.cloud/@cryptostats/header.sponsor_cta/-/@cryptostats-header.sponsor_cta-0.0.16.tgz#9dbcbe81fd454e7349aa1a24d0b615151141ac67"
+  integrity sha1-nby+gf1FTnNJqhok0LYVFRFBrGc=
   dependencies:
     core-js "^3.0.0"
     styled-components "5.3.6"
