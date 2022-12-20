@@ -1997,7 +1997,7 @@
         "affectsGlobalScope": false
       },
       "./components/footer.tsx": {
-        "version": "fbf82563ef1be6e24123dbe84f13b06efe8c2f8b3a24bc02b0c206a37329526f",
+        "version": "17ae909a98ca2244213b35d843236a6f698a3bdac1f02c984abc6549fbd9ce71",
         "signature": "87431251c33c5bad28cad86fddf1fbeb177e1db4eae7f64c953cf14e0916328f",
         "affectsGlobalScope": false
       },
@@ -2086,13 +2086,23 @@
         "signature": "dd5daf84e0584133c7bcbb7d4952ea2d003d39d06ae3df29903c121004199212",
         "affectsGlobalScope": false
       },
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/sponsor.d.ts": {
+        "version": "544f1dc5d7e3a0e541c229dfc623c95bf9392a2bd51dea43c16d64f23fad6bfd",
+        "signature": "544f1dc5d7e3a0e541c229dfc623c95bf9392a2bd51dea43c16d64f23fad6bfd",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/index.d.ts": {
+        "version": "19c6469ed9f476eab1e16abbe0301088959b38dabda9109b59d0f15d347916a2",
+        "signature": "19c6469ed9f476eab1e16abbe0301088959b38dabda9109b59d0f15d347916a2",
+        "affectsGlobalScope": false
+      },
       "./i18n.json": {
         "version": "3887ecee28cf0cd090023ee2b8bf7e460bd6c91dd330a28b60f9b37011e8deea",
         "signature": "37632a1e744688f89d1bacd4035d6799ef249344302635ad7ba44871d0e94d62",
         "affectsGlobalScope": true
       },
       "./pages/_app.tsx": {
-        "version": "f484a4796b9119f6dc43ffe7d6b572df51dbc04f4e7cc798c0d8c52dbe93741e",
+        "version": "2badd4357da0f2e41b4ba8a9c823ae9a26c224aa4bfaa1bfa92ce525dff99973",
         "signature": "9d2afca34e5c625f80cbaecf0ecd2561e640019c9de4298a8d63a2f70614ca05",
         "affectsGlobalScope": false
       },
@@ -2107,7 +2117,7 @@
         "affectsGlobalScope": false
       },
       "./pages/index.tsx": {
-        "version": "1151ddade4898f3aaa4022d48bdd6c584ed1d191eafdfd2af895f7ade2f0f513",
+        "version": "ccd7e7fc2f509a4f57b9e17cf43b8f7c770b645fb315e43e92f8ab0275b6c318",
         "signature": "f7064dac4e59c07da417fd5fec305ad08955b4dfc079c0d3a414b3d5fc1b191a",
         "affectsGlobalScope": false
       },
@@ -2640,6 +2650,18 @@
       ],
       "./node_modules/@cryptostats/header.header/dist/index.d.ts": [
         "./node_modules/@cryptostats/header.header/dist/header.d.ts",
+        "./node_modules/date-fns/typings.d.ts",
+        "./node_modules/next-images/index.d.ts",
+        "./node_modules/next/image-types/global.d.ts"
+      ],
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/index.d.ts": [
+        "./node_modules/@cryptostats/header.sponsor_cta/dist/sponsor.d.ts",
+        "./node_modules/date-fns/typings.d.ts",
+        "./node_modules/next-images/index.d.ts",
+        "./node_modules/next/image-types/global.d.ts"
+      ],
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/sponsor.d.ts": [
+        "./node_modules/@types/react/index.d.ts",
         "./node_modules/date-fns/typings.d.ts",
         "./node_modules/next-images/index.d.ts",
         "./node_modules/next/image-types/global.d.ts"
@@ -5624,6 +5646,7 @@
         "./components/footer.tsx",
         "./i18n.json",
         "./node_modules/@cryptostats/header.header/dist/index.d.ts",
+        "./node_modules/@cryptostats/header.sponsor_cta/dist/index.d.ts",
         "./node_modules/@types/react/index.d.ts",
         "./node_modules/date-fns/typings.d.ts",
         "./node_modules/i18next-browser-languagedetector/index.d.ts",
@@ -5925,6 +5948,18 @@
       ],
       "./node_modules/@cryptostats/header.header/dist/index.d.ts": [
         "./node_modules/@cryptostats/header.header/dist/header.d.ts",
+        "./node_modules/date-fns/typings.d.ts",
+        "./node_modules/next-images/index.d.ts",
+        "./node_modules/next/image-types/global.d.ts"
+      ],
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/index.d.ts": [
+        "./node_modules/@cryptostats/header.sponsor_cta/dist/sponsor.d.ts",
+        "./node_modules/date-fns/typings.d.ts",
+        "./node_modules/next-images/index.d.ts",
+        "./node_modules/next/image-types/global.d.ts"
+      ],
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/sponsor.d.ts": [
+        "./node_modules/@types/react/index.d.ts",
         "./node_modules/date-fns/typings.d.ts",
         "./node_modules/next-images/index.d.ts",
         "./node_modules/next/image-types/global.d.ts"
@@ -8984,6 +9019,8 @@
       "./node_modules/@babel/types/lib/index.d.ts",
       "./node_modules/@cryptostats/header.header/dist/header.d.ts",
       "./node_modules/@cryptostats/header.header/dist/index.d.ts",
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/index.d.ts",
+      "./node_modules/@cryptostats/header.sponsor_cta/dist/sponsor.d.ts",
       "./node_modules/@cryptostats/sdk/dist/adapter.d.ts",
       "./node_modules/@cryptostats/sdk/dist/basecryptostatssdk.d.ts",
       "./node_modules/@cryptostats/sdk/dist/collection.d.ts",
@@ -9576,6 +9613,14 @@
       ],
       [
         "./node_modules/@cryptostats/header.header/dist/index.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@cryptostats/header.sponsor_cta/dist/index.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@cryptostats/header.sponsor_cta/dist/sponsor.d.ts",
         1
       ],
       [
