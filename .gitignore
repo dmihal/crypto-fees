@@ -16,3 +16,5 @@ yarn-error.log*
 # misc
 .DS_Store
 .env
+
+.public/bit*
