@@ -95,13 +95,13 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
 
       <style jsx>{`
         main {
-          padding: 2rem 0 3rem;
+          padding: 2rem 0 1rem;
           flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          max-width: 700px;
+          max-width: 600px;
         }
 
         .title {
