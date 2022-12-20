@@ -444,6 +444,14 @@
     core-js "^3.0.0"
     styled-components "5.3.6"
 
+"@cryptostats/header.sponsor_cta@^0.0.16":
+  version "0.0.16"
+  resolved "https://node.bit.cloud/@cryptostats/header.sponsor_cta/-/@cryptostats-header.sponsor_cta-0.0.16.tgz#9dbcbe81fd454e7349aa1a24d0b615151141ac67"
+  integrity sha1-nby+gf1FTnNJqhok0LYVFRFBrGc=
+  dependencies:
+    core-js "^3.0.0"
+    styled-components "5.3.6"
+
 "@cryptostats/sdk@^0.2.13":
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/@cryptostats/sdk/-/sdk-0.2.13.tgz#1bd88404e18a5ec0f99872f330cd80d4eae3e8e9"
