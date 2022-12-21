@@ -8,7 +8,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import { Header } from '@cryptostats/header.header';
-import { Sponsor } from '@cryptostats/header.sponsor_cta';
+import { SponsorWrapper } from 'components/SponsorWrapper';
 import Footer from 'components/Footer';
 import i18nReources from 'i18n.json';
 
@@ -57,7 +57,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         <Header siteName="cryptofees.info" />
 
         <Component {...pageProps} />
-        <Sponsor />
+        <SponsorWrapper />
         <Footer />
       </PlausibleProvider>
 

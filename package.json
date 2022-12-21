@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@cryptostats/header.header": "^0.0.18",
-    "@cryptostats/header.sponsor_cta": "^0.0.15",
+    "@cryptostats/header.sponsor_cta": "^0.0.18",
     "@cryptostats/sdk": "^0.2.13",
     "@popperjs/core": "^2.9.2",
     "@types/react-transition-group": "^4.4.0",
