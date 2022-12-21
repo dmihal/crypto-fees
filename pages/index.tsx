@@ -101,7 +101,7 @@ export const Home: NextPage<HomeProps> = ({ data, bundles }) => {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-          max-width: 600px;
+          max-width: 700px;
         }
 
         .title {
