@@ -53,7 +53,7 @@ const App: React.FC<AppProps> = ({ Component, pageProps }) => {
         />
       </Head>
 
-      <PlausibleProvider domain="cryptofees.info">
+      <PlausibleProvider domain="cryptofees.info" trackOutboundLinks>
         <Header siteName="cryptofees.info" />
 
         <Component {...pageProps} />
