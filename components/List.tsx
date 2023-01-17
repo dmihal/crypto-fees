@@ -2,15 +2,27 @@ import React, { useState } from 'react';
 import { ProtocolData } from 'data/types';
 import { sortByDaily, sortByWeekly } from 'data/utils';
 import Row from './Row';
+import { usePlausible } from 'next-plausible';
 
 interface ListProps {
   data: ProtocolData[];
 }
 
-const List: React.FC<ListProps> = ({ data }) => {
-  const [sort, setSort] = useState('daily');
+const DEFAULT_ROWS_TO_DISPLAY = 20;
 
-  const sortedData = data.sort(sort === 'weekly' ? sortByWeekly : sortByDaily);
+const List: React.FC<ListProps> = ({ data }) => {
+  const plausible = usePlausible();
+  const [sort, setSort] = useState('daily');
+  const [showAll, setShowAll] = useState(false);
+
+  const sortedData = data
+    .sort(sort === 'weekly' ? sortByWeekly : sortByDaily)
+    .slice(0, showAll ? data.length : DEFAULT_ROWS_TO_DISPLAY);
+
+  const showAllClick = () => {
+    setShowAll(true);
+    plausible('show-all');
+  };
 
   return (
     <div className="list">
@@ -27,6 +39,12 @@ const List: React.FC<ListProps> = ({ data }) => {
       {sortedData.map((protocol: ProtocolData) => (
         <Row protocol={protocol} key={protocol.id} sort={sort} />
       ))}
+
+      {!showAll && (
+        <button className="show-all" onClick={showAllClick}>
+          Show all {data.length} protocols
+        </button>
+      )}
 
       <style jsx>{`
         .list {
@@ -79,6 +97,30 @@ const List: React.FC<ListProps> = ({ data }) => {
         .amount {
           min-width: 200px;
           text-align: right;
+        }
+
+        .show-all {
+          width: 100%;
+          border: none;
+          height: 32px;
+          position: relative;
+          font-family: 'Noto Sans TC', sans-serif;
+          font-size: 14px;
+          background: #fdedfb;
+          cursor: pointer;
+        }
+        .show-all:hover {
+          background: #ebade4;
+        }
+        .show-all:before {
+          content: '';
+          position: absolute;
+          left: 0;
+          right: 0;
+          background: linear-gradient(0deg, #969696b8, transparent);
+          height: 30px;
+          top: 0;
+          transform: translate(0, -30px);
         }
 
         @media (max-width: 700px) {
