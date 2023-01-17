@@ -9,13 +9,5 @@ export const SponsorWrapper = () => {
     plausible('sponsor-info');
   };
 
-  const onSponsorClick = (data: { name: string; image: string; url: string }) => {
-    plausible('sponsor-click', {
-      props: {
-        sponsorId: data.name,
-      },
-    });
-  };
-
-  return <Sponsor onSponsorInfo={onSponsorInfo} onSponsorClick={onSponsorClick} />;
+  return <Sponsor onSponsorInfo={onSponsorInfo} />;
 };
