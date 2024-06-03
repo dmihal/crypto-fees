@@ -146,7 +146,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     return !!val;
   });
 
-  return { props: { data: filteredData, bundles }, revalidate: 5 * 60 };
+  return { props: { data: filteredData, bundles }, revalidate: 20 * 60 };
 };
 
 export default Home;
